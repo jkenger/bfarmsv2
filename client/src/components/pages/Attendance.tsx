@@ -4,11 +4,13 @@ import AttendanceTable from "../ui/attendance-table";
 import Card from "../ui/card";
 import PunchOutButton from "../ui/punchout-button";
 import PunchInButton from "../ui/punchin-button";
+import { ModeToggle } from "../ui/mode-toggle";
 
 function Attendance() {
   return (
     <main>
       <div className="w-full px-6 md:w-1/2 mx-auto my-14">
+        <ModeToggle />
         <h1 className="heading text-[2.5rem] font-bold">Attendance</h1>
         <p className="sub-heading text-muted-foreground font-semibold">
           Good Morning!

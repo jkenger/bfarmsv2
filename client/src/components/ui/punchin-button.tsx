@@ -10,18 +10,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "./button";
+import { useTheme } from "../context/theme-provider";
 
 function PunchInButton() {
+  const { theme } = useTheme();
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          type="button"
-          className="bg-white text-secondary-foreground w-full mt-0"
-        >
-          Punch In
-        </Button>
+        {theme === "dark" ? (
+          <Button variant="secondary" className="w-full">
+            Punch in
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            type="button"
+            className="bg-white text-secondary-foreground w-full mt-0"
+          >
+            Punch In
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-primary text-primary-foreground">
         <DialogHeader>

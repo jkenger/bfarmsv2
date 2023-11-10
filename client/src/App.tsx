@@ -5,6 +5,7 @@ import Error from "./components/pages/Error";
 import Attendance from "./components/pages/Attendance";
 import Login from "./components/pages/Login";
 import { Roles } from "./types";
+import { ThemeProvider } from "./components/context/theme-provider";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;
