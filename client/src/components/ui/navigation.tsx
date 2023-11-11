@@ -12,8 +12,10 @@ import {
   FileSignature,
   LayoutGrid,
 } from "lucide-react";
+import { useTheme } from "../context/theme-provider";
 
 function Navigation() {
+  const { theme } = useTheme();
   return (
     <div className="flex h-full">
       <nav className="flex flex-col justify-between">
@@ -109,7 +111,11 @@ function Navigation() {
           </div>
         </div>
       </nav>
-      <main className="flex-grow h-full bg-background rounded-lg shadow-md">
+      <main
+        className={`flex-grow h-full rounded-lg shadow-md ${
+          theme === "light" ? "bg-background" : "bg-muted"
+        }`}
+      >
         <div className="">
           <Outlet />
         </div>
