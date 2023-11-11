@@ -4,6 +4,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { MoveRight } from "lucide-react";
 import { Links, Roles } from "@/types";
+import BfarHeading from "../ui/bfar-heading";
 
 function Login({ assign }: { assign: Roles }) {
   return (
@@ -12,9 +13,7 @@ function Login({ assign }: { assign: Roles }) {
         <div className="px-6 space-y-10 w-full md:w-5/6 -mt-14">
           <div className="flex items-center gap-2">
             <BFARLogo cn="w-20 h-16" />
-            <h1 className="text-3xl font-bold">
-              BFAR<span className="text-primary">MS</span>
-            </h1>
+            <BfarHeading />
           </div>
           <div>
             <p className="font-semibold">Sign in to your account</p>

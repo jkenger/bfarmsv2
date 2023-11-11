@@ -1,11 +1,21 @@
 import "./App.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Error from "./components/pages/Error";
 import Attendance from "./components/pages/Attendance";
 import Login from "./components/pages/Login";
 import { Roles } from "./types";
 import { ThemeProvider } from "./components/context/theme-provider";
+import React from "react";
+import { ModeToggle } from "./components/ui/mode-toggle";
+import Admin from "./components/layouts/Admin";
+import Navigation from "./components/ui/navigation";
+
+const isLoggedIn = true;
 
 const router = createBrowserRouter([
   {
@@ -14,21 +24,70 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    path: "/login",
+    path: "login",
     element: <Login assign={Roles.EMPLOYEE} />,
     errorElement: <Error />,
   },
+
   {
-    path: "/admin/login",
-    element: <Login assign={Roles.ADMIN} />,
+    path: "admin",
+    element: isLoggedIn ? <Admin /> : <Login assign={Roles.ADMIN} />,
     errorElement: <Error />,
+    children: [
+      {
+        path: "",
+        element: <Navigation />,
+        children: [
+          {
+            index: true,
+            path: "dashboard",
+            element: <div>Dashboard</div>,
+          },
+          {
+            path: "attendance",
+            element: <div>Attendance</div>,
+          },
+          {
+            path: "payroll",
+            element: <div>Payroll</div>,
+          },
+          {
+            path: "holidays",
+            element: <div>Holidays</div>,
+          },
+          {
+            path: "travelpass",
+            element: <div>Travel Pass</div>,
+          },
+          {
+            path: "deductions",
+            element: <div>Deductions</div>,
+          },
+          {
+            path: "leaves",
+            element: <div>Leaves</div>,
+          },
+          {
+            path: "",
+            element: <Navigate to="/admin/dashboard" />,
+          },
+          {
+            path: "*",
+            element: <Navigate to="/admin/dashboard" />,
+          },
+        ],
+      },
+    ],
   },
 ]);
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
+      <div className="relative">
+        <ModeToggle />
+        <RouterProvider router={router} />
+      </div>
     </ThemeProvider>
   );
 }

@@ -60,3 +60,6 @@
     font-family: "Inter", sans-serif;
   }
 }
+.active {
+  @apply bg-primary text-primary-foreground;
+}
