@@ -14,6 +14,7 @@ import React from "react";
 import { ModeToggle } from "./components/ui/mode-toggle";
 import Admin from "./components/layouts/Admin";
 import Navigation from "./components/ui/navigation";
+import { Button } from "./components/ui/button";
 
 const isLoggedIn = true;
 
@@ -40,7 +41,11 @@ const router = createBrowserRouter([
           {
             index: true,
             path: "dashboard",
-            element: <div>Dashboard</div>,
+            element: (
+              <div>
+                <Button>Button</Button>
+              </div>
+            ),
           },
           {
             path: "attendance",
