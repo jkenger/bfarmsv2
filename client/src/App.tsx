@@ -6,13 +6,20 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Error from "./components/pages/Error";
-import Attendance from "./components/pages/Attendance";
-import Login from "./components/pages/Login";
+import Attendance from "./components/pages/root/Attendance";
+import Login from "./components/pages/root/Login";
 import { Roles } from "./types";
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
-import Navigation from "./components/ui/navigation";
-import { Button } from "./components/ui/button";
+import Navigation from "./components/wrappers/Navigation";
+import AdminDTR from "./components/pages/admin/DailyTimeRecord";
+import AdminEmployees from "./components/pages/admin/Employees";
+import AdminPayroll from "./components/pages/admin/Payroll";
+import AdminHolidays from "./components/pages/admin/Holidays";
+import AdminTravelPass from "./components/pages/admin/TravelPass";
+import AdminDeductions from "./components/pages/admin/Deductions";
+import AdminLeaves from "./components/pages/admin/Leaves";
+import AdminDashboard from "./components/pages/admin/Dashboard";
 
 const isLoggedIn = true;
 
@@ -39,35 +46,35 @@ const router = createBrowserRouter([
           {
             index: true,
             path: "dashboard",
-            element: (
-              <div>
-                <Button>Button</Button>
-              </div>
-            ),
+            element: <AdminDashboard />,
           },
           {
-            path: "attendance",
-            element: <div>Attendance</div>,
+            path: "employees",
+            element: <AdminEmployees />,
+          },
+          {
+            path: "daily-time-records",
+            element: <AdminDTR />,
           },
           {
             path: "payroll",
-            element: <div>Payroll</div>,
+            element: <AdminPayroll />,
           },
           {
             path: "holidays",
-            element: <div>Holidays</div>,
+            element: <AdminHolidays />,
           },
           {
             path: "travelpass",
-            element: <div>Travel Pass</div>,
+            element: <AdminTravelPass />,
           },
           {
             path: "deductions",
-            element: <div>Deductions</div>,
+            element: <AdminDeductions />,
           },
           {
             path: "leaves",
-            element: <div>Leaves</div>,
+            element: <AdminLeaves />,
           },
           {
             path: "",
@@ -85,7 +92,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <div className="relative">
         {/* <ModeToggle /> */}
         <RouterProvider router={router} />

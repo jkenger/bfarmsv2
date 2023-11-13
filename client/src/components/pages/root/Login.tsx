@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import BFARLogo from "../ui/logo";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import BFARLogo from "../../ui/logo";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
 import { Links, Roles } from "@/types";
-import BfarHeading from "../ui/bfar-heading";
+import BfarHeading from "../../ui/bfar-heading";
 
 function Login({ assign }: { assign: Roles }) {
   return (

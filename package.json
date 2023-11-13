@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start-production-app": "npm i && cd client && npm i && npm run build && node server",
     "setup": "npm i && cd client && npm i && cd ..",
-    "setup-production-app": "npm i && cd client && npm i &&  npm run build",
+    "setup-production-app": "npm i && cd client && npm i && npm run build",
     "server": "nodemon server",
     "client": "cd client && npm run dev",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""

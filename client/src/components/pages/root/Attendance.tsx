@@ -1,9 +1,9 @@
-import ActionMessage from "../ui/action-message";
-import AttendanceTable from "../ui/attendance-table";
+import ActionMessage from "../../ui/action-message";
+import AttendanceTable from "../../ui/attendance-table";
 
-import Card from "../ui/card";
-import PunchOutButton from "../ui/punchout-button";
-import PunchInButton from "../ui/punchin-button";
+import Card from "../../ui/card";
+import PunchOutButton from "../../ui/punchout-button";
+import PunchInButton from "../../ui/punchin-button";
 
 function Attendance() {
   return (

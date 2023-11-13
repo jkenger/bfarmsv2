@@ -5,7 +5,7 @@ export enum Links {
 
   DASHBOARD = "/admin/dashboard",
   EMPLOYEES = "/admin/employees",
-  ATTENDANCE = "/admin/attendance",
+  DAILY_TIME_RECORDS = "/admin/daily-time-records",
   PAYROLL = "/admin/payroll",
   HOLIDAYS = "/admin/holidays",
   TRAVELPASS = "/admin/travelpass",
