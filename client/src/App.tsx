@@ -10,8 +10,6 @@ import Attendance from "./components/pages/Attendance";
 import Login from "./components/pages/Login";
 import { Roles } from "./types";
 import { ThemeProvider } from "./components/context/theme-provider";
-import React from "react";
-import { ModeToggle } from "./components/ui/mode-toggle";
 import Admin from "./components/layouts/Admin";
 import Navigation from "./components/ui/navigation";
 import { Button } from "./components/ui/button";
@@ -89,7 +87,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="relative">
-        <ModeToggle />
+        {/* <ModeToggle /> */}
         <RouterProvider router={router} />
       </div>
     </ThemeProvider>

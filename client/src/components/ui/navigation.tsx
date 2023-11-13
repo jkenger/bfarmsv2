@@ -29,9 +29,9 @@ function Navigation() {
   return (
     <div className={` flex flex-col md:flex-row h-full`}>
       <nav
-        className={`${
-          isMobile && " w-full top-0 pt-6"
-        } flex flex-col justify-between bg-muted/90 backdrop-blur-xl md:bg-muted md:backdrop-blur-none`}
+        className={`
+        ${isMobile && " w-full top-0 pt-6"} 
+        flex flex-col justify-between `}
       >
         <div className="px-6">
           <div className="flex justify-between items-center mb-6">
@@ -51,8 +51,9 @@ function Navigation() {
             )}
           </div>
           {/* Always show menu on desktop mode */}
+          {/* Desktop Links */}
           {!isMobile && (
-            <div className="md:block my-8">
+            <div className="md:block my-8 ">
               <ul className="flex flex-col gap-2 mt-4 text-sm font-semibold tracking-wide">
                 <li>
                   <NavLink
@@ -122,7 +123,7 @@ function Navigation() {
           )}
         </div>
 
-        {/* For Desktop */}
+        {/* For Desktop Avatar*/}
         {!isMobile && (
           <div className="md:block border-t px-6">
             <div className="flex items-center gap-2 py-4">
@@ -145,9 +146,13 @@ function Navigation() {
           </div>
         )}
 
-        {/* For Mobile */}
+        {/* For Mobile Links And Avatar*/}
         {isMobile && isMenuOpen && (
-          <div className="absolute top-[7em] w-full bg-muted/90 backdrop-blur-xl h-screen">
+          <div
+            className={`absolute top-[7em] w-full ${
+              theme === "light" ? "bg-muted" : "bg-background"
+            } h-full`}
+          >
             <div className="md:block mb-8 px-6">
               <ul
                 className="flex flex-col gap-2 mt-4 text-sm font-semibold tracking-wide"
@@ -241,7 +246,7 @@ function Navigation() {
         )}
       </nav>
       <main
-        className={`flex-grow h-full rounded-lg shadow-md mx-6 ${
+        className={`flex-grow h-full rounded-lg shadow-md mx-6 md:mx-0 ${
           theme === "light" ? "bg-background" : "bg-muted"
         }`}
       >
