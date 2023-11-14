@@ -49,6 +49,187 @@ function Leaves() {
           </Main.Heading>
         </Main.Header>
       </Main>
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
+
+      <Main>
+        <Main.Header>
+          <Main.Heading
+            title="Leave Types"
+            mobileButton={
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-primary self-start flex lg:hidden"
+              >
+                <Plus />
+              </Button>
+            }
+          >
+            <Input
+              id="searchLeaveTypes"
+              placeholder="Search"
+              className="lg:w-auto justify-start text-left font-normal"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-primary self-start hidden lg:flex gap-2"
+            >
+              <Plus />
+              <span>Create New Travel Pass</span>
+            </Button>
+          </Main.Heading>
+        </Main.Header>
+      </Main>
     </>
   );
 }

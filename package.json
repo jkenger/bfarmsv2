@@ -10,6 +10,7 @@
     "setup-production-app": "npm i && cd client && npm i && npm run build",
     "server": "nodemon server",
     "client": "cd client && npm run dev",
+    "prisma-deploy": "npx prisma migrate dev --name init --create-only && npx prisma migrate deploy",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "repository": {
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/jkenger/bfarmsv2#readme",
   "dependencies": {
+    "@prisma/client": "^5.5.2",
     "concurrently": "^8.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -32,7 +34,9 @@
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.3",
+    "prisma": "^5.5.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

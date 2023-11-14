@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  firstName  String
+  lastName   String
+  age        Int
+  avatar     String?
+
+  payrollGroup PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
+  payrollGroupId String? @unique
+  designation Designation? @relation(fields: [designationId], references: [id])
+  designationId String? @unique
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
+
+model PayrollGroup{
+  id         String   @id @default(uuid())
+  name       String
+  description String?
+  users       User?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
+
+
+model Designation {
+  id         String   @id @default(uuid())
+  name       String
+  description String?
+  user       User?
+  salary     Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
+
+// model House {
+//   id           String   @id @default(uuid())
+//   address      String   @unique
+//   wifiPassword String?
+//   ownerId      String
+//   owner        User     @relation("HouseOwner", fields: [ownerId], references: [id])
+//   builtById    String
+//   builtBy      User     @relation("HouseBuilder", fields: [builtById], references: [id])
+//   createdAt    DateTime @default(now())
+//   updatedAt    DateTime @updatedAt
+// }

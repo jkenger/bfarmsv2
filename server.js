@@ -9,9 +9,13 @@ import cookieParser from "cookie-parser";
 
 // Routes imports
 import index from "./routers/index.router.js";
+import admin from "./routers/admin.router.js";
 
 // Middleware imports
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
+
+// Prisma imports
+import { PrismaClient } from "@prisma/client";
 
 // Publics
 import path, { dirname } from "path";
@@ -23,6 +27,7 @@ dotenv.config();
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+const prisma = new PrismaClient();
 
 // Middlewares
 
@@ -39,6 +44,59 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/v1", index);
+app.use("/api/v1/admin", admin);
+
+// Tests from prisma routes
+// app.get("/api/v1/test", async (req, res) => {
+//   const allUsers = await prisma.user.findMany({
+//     include: {
+//       houseBuild: true,
+//       houseOwned: true,
+//     },
+//   });
+//   res.json(allUsers);
+// });
+
+// app.post("/api/v1/test", async (req, res) => {
+//   const user = await prisma.user.create({
+//     data: req.body,
+//   });
+//   res.json(user);
+// });
+
+// app.put("/api/v1/test/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const newAge = req.body.age;
+//   const updatedUser = await prisma.user.update({
+//     where: { id: Number(id) },
+//   });
+//   res.json(updatedUser);
+// });
+
+// app.delete("/api/v1/test/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const deletedUser = await prisma.user.delete({
+//     where: { id: Number(id) },
+//   });
+//   res.json(deletedUser);
+// });
+// app.post("/api/v1/test/house", async (req, res) => {
+//   const { address, ownerId, builtById } = req.body;
+//   console.log(req.body);
+//   const house = await prisma.house.create({
+//     data: {
+//       address,
+//       ownerId: ownerId,
+//       builtById: builtById,
+//     },
+//   });
+//   res.json(house);
+// });
+
+// app.get("/api/v1/test/house", async (req, res) => {
+//   const house = await prisma.house.findMany();
+//   res.json(house);
+// });
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./client/dist", "index.html"));
