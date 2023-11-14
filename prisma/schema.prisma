@@ -28,6 +28,8 @@ model User {
 model PayrollGroup{
   id         String   @id @default(uuid())
   name       String
+  fundCluster String
+  programName String?
   description String?
   users       User?
   createdAt  DateTime @default(now())

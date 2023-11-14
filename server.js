@@ -27,7 +27,7 @@ dotenv.config();
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ log: ["query", "info", "warn"] });
 
 // Middlewares
 
