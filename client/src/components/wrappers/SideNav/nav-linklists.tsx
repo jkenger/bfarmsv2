@@ -6,9 +6,9 @@ import {
   CandyCane,
   FileMinus2,
   FileSignature,
-  LayoutGrid,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Lists from "./lists";
 
 type Props = {
   className?: string;
@@ -17,25 +17,8 @@ type Props = {
 function NavLinkLists({ className }: Props) {
   return (
     <div className={className}>
-      <ul className="flex flex-col gap-2 mt-4 text-sm font-semibold tracking-wide">
-        <li>
-          <NavLink
-            to={Links.DASHBOARD}
-            className="flex items-center gap-2 rounded-md p-2"
-          >
-            <LayoutGrid size={16} strokeWidth={2} />
-            <span>Dashboard</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to={Links.EMPLOYEES}
-            className="flex items-center gap-2  rounded-md p-2"
-          >
-            <CalendarDays size={16} strokeWidth={2} />
-            <span>Employees</span>
-          </NavLink>
-        </li>
+      <ul className="flex flex-col gap-4 mt-4 text-sm font-semibold tracking-wide">
+        <Lists />
         <li>
           <NavLink
             to={Links.DAILY_TIME_RECORDS}

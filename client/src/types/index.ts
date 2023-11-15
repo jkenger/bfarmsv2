@@ -4,7 +4,10 @@ export enum Links {
   ADMIN_LOGIN = "/admin/login",
 
   DASHBOARD = "/admin/dashboard",
+
   EMPLOYEES = "/admin/employees",
+  DESIGNATIONS = "/admin/designations",
+
   DAILY_TIME_RECORDS = "/admin/daily-time-records",
   PAYROLL = "/admin/payroll",
   HOLIDAYS = "/admin/holidays",

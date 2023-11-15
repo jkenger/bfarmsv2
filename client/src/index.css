@@ -61,5 +61,5 @@
   }
 }
 .active {
-  @apply bg-primary text-primary-foreground;
+  @apply text-primary;
 }

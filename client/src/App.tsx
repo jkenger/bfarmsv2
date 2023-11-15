@@ -11,7 +11,7 @@ import Login from "./components/pages/root/Login";
 import { Roles } from "./types";
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
-import Navigation from "./components/wrappers/Navigation";
+import Navigation from "./components/wrappers/SideNav/Navigation";
 import AdminDTR from "./components/pages/admin/DailyTimeRecord";
 import AdminEmployees from "./components/pages/admin/Employees";
 import AdminPayroll from "./components/pages/admin/Payroll";
@@ -20,6 +20,7 @@ import AdminTravelPass from "./components/pages/admin/TravelPass";
 import AdminDeductions from "./components/pages/admin/Deductions";
 import AdminLeaves from "./components/pages/admin/Leaves";
 import AdminDashboard from "./components/pages/admin/Dashboard";
+import { loader as employeesLoader } from "./components/pages/admin/Employees";
 
 const isLoggedIn = true;
 
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
           {
             path: "employees",
             element: <AdminEmployees />,
+            loader: employeesLoader,
           },
           {
             path: "daily-time-records",

@@ -36,6 +36,22 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+const whitelist = ["http://localhost:3000", "http://localhost:5173"]; // Whitelisted origins
+
+const corsOptions = {
+  // Only if there is a cookie
+  // credentials: true,
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.static(path.resolve(__dirname, "./client/dist")));
 app.use(cors());
 app.use(cookieParser());
