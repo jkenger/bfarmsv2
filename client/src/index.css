@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    //--background: 0 0% 100%;
+    --background: 210 16.7% 97.6%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -23,7 +24,7 @@
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 262.1 83.3% 57.8%;
-    --radius: 0.3rem;
+    --radius: 0.4rem;
   }
 
   .dark {
@@ -53,18 +54,18 @@
     padding: 0;
   }
   body {
-    @apply bg-muted dark:bg-background text-foreground;
+    @apply bg-background text-foreground;
     font-family: "Inter", sans-serif;
   }
 
   ::-webkit-scrollbar {
-    @apply w-1 bg-background;
+    @apply w-1 h-1 bg-foreground;
   }
   ::-webkit-scrollbar-track {
     @apply bg-background w-1;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-primary /*color trackbar*/;
+    @apply rounded-md bg-foreground/20 /*color trackbar*/;
   }
 }
 

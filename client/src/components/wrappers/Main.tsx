@@ -2,7 +2,7 @@ import React from "react";
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex-grow md:h-full rounded-lg shadow-md mx-6 mt-6 md:mx-0 md:ml-4 bg-background">
+    <main className="flex-grow md:h-full rounded-lg  mx-6 mt-6 md:mx-0 md:ml-4 ">
       {children}
     </main>
   );

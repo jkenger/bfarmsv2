@@ -9,7 +9,7 @@ function NavLinkLists({ className }: Props) {
     <div className={className}>
       <ul
         className="flex flex-col gap-4 mt-4 text-xs font-semibold 
-      tracking-wide  h-[75vh] overflow-auto md:overflow-scroll "
+      tracking-wide  h-[75vh] overflow-auto md:overflow-hidden hover:overflow-y-scroll "
       >
         <Lists />
       </ul>

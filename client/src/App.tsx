@@ -11,7 +11,7 @@ import Login from "./components/pages/root/Login";
 import { Roles } from "./types";
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
-import Navigation from "./components/wrappers/side-nav/Navigation";
+import Navigation from "./components/wrappers/nav/Navigation";
 import AdminDTR from "./components/pages/admin/DailyTimeRecord";
 import AdminEmployees from "./components/pages/admin/employees/Employees";
 import AdminPayroll from "./components/pages/admin/Payroll";

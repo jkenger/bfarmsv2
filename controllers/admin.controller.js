@@ -10,7 +10,9 @@ const prisma = new PrismaClient();
 
 // Employees
 export const getEmployees = asyncHandler(async (req, res) => {
-  const allUsers = await prisma.user.findMany();
+  const allUsers = await prisma.user.findMany({
+    take: 20,
+  });
   res.status(StatusCodes.OK).json({
     message: allUsers,
   });
