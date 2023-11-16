@@ -47,19 +47,27 @@
     --input: 215 27.9% 16.9%;
     --ring: 263.4 70% 50.4%;
   }
-}
-
-@layer base {
   * {
     @apply border-border;
     margin: 0;
     padding: 0;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-muted dark:bg-background text-foreground;
     font-family: "Inter", sans-serif;
   }
+
+  ::-webkit-scrollbar {
+    @apply w-1 bg-background;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-background w-1;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-primary /*color trackbar*/;
+  }
 }
+
 .active {
   @apply text-primary;
 }

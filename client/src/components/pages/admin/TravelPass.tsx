@@ -2,11 +2,12 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
+import { IconProperties } from "@/types";
 import { Plus } from "lucide-react";
 
 function TravelPass() {
   return (
-    <Main>
+    <>
       <Main.Header>
         <Main.Heading
           title="Travel Pass"
@@ -16,7 +17,10 @@ function TravelPass() {
               variant="ghost"
               className="text-primary self-start flex lg:hidden"
             >
-              <Plus />
+              <Plus
+                size={IconProperties.SIZE}
+                strokeWidth={IconProperties.STROKE_WIDTH}
+              />
             </Button>
           }
         >
@@ -30,12 +34,15 @@ function TravelPass() {
             variant="ghost"
             className="text-primary self-start hidden lg:flex gap-2"
           >
-            <Plus />
+            <Plus
+              size={IconProperties.SIZE}
+              strokeWidth={IconProperties.STROKE_WIDTH}
+            />
             <span>Create New Travel Pass</span>
           </Button>
         </Main.Heading>
       </Main.Header>
-    </Main>
+    </>
   );
 }
 

@@ -4,9 +4,9 @@ import { useTheme } from "../context/theme-provider";
 function Admin() {
   const { theme } = useTheme();
   return (
-    <main className={`md:pt-8 h-screen ${theme === "light" ? "bg-muted" : ""}`}>
+    <section className={`${theme === "light" ? "bg-muted" : ""}`}>
       <Outlet />
-    </main>
+    </section>
   );
 }
 

@@ -2,11 +2,12 @@ import { Button } from "@/components/ui/button";
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
+import { IconProperties } from "@/types";
 import { Plus } from "lucide-react";
 
 function Payroll() {
   return (
-    <Main>
+    <>
       <Main.Header>
         <Main.Heading
           title="Payroll"
@@ -16,7 +17,10 @@ function Payroll() {
               variant="ghost"
               className="text-primary self-start flex lg:hidden"
             >
-              <Plus />
+              <Plus
+                size={IconProperties.SIZE}
+                strokeWidth={IconProperties.STROKE_WIDTH}
+              />
             </Button>
           }
         >
@@ -31,12 +35,15 @@ function Payroll() {
             variant="ghost"
             className="text-primary self-start hidden lg:flex gap-2"
           >
-            <Plus />
+            <Plus
+              size={IconProperties.SIZE}
+              strokeWidth={IconProperties.STROKE_WIDTH}
+            />
             <span>Create New Payroll</span>
           </Button>
         </Main.Heading>
       </Main.Header>
-    </Main>
+    </>
   );
 }
 

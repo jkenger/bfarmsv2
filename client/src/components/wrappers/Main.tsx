@@ -1,7 +1,11 @@
 import React from "react";
 
 function Main({ children }: { children: React.ReactNode }) {
-  return <main>{children}</main>;
+  return (
+    <main className="flex-grow md:h-full rounded-lg shadow-md mx-6 mt-6 md:mx-0 md:ml-4 bg-background">
+      {children}
+    </main>
+  );
 }
 
 function Header({ children }: { children: React.ReactNode }) {
@@ -23,9 +27,9 @@ function Heading({
 }) {
   return (
     <>
-      <div className="flex items-center justify-between w-full lg:mb-0 lg:w-auto">
-        <h1 className="text-xl font-semibold ">{title}</h1>
-        {mobileButton}
+      <div className="flex items-center justify-between w-full md:pt-0 lg:mb-0 lg:w-auto">
+        <h1 className="text-md font-semibold tracking-wide py-2">{title}</h1>
+        <div>{mobileButton}</div>
       </div>
       <div
         className={`${
@@ -38,7 +42,12 @@ function Heading({
   );
 }
 
+function Content({ children }: { children: React.ReactNode }) {
+  return <div className="mt-4 px-6 py-4 ">{children}</div>;
+}
+
 Main.Header = Header;
 Main.Heading = Heading;
+Main.Content = Content;
 
 export default Main;

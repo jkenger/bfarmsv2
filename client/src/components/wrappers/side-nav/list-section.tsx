@@ -10,7 +10,10 @@ function ListSection({
   handleOnClick: () => void;
 }) {
   return (
-    <div className="flex items-center gap-2 px-2" onClick={handleOnClick}>
+    <div
+      className="flex items-center gap-2 px-2 hover:cursor-pointer"
+      onClick={handleOnClick}
+    >
       <span>{title}</span>
       <ChevronLeft
         size={16}

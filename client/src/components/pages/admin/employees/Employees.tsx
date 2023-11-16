@@ -2,11 +2,13 @@ import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
 import { useLoaderData } from "react-router-dom";
 import fetch from "@/lib/utils";
+import { DataTable } from "../payments/data-table";
+import { TEmployees, employeeColumns } from "./employee.columns";
 
 export async function loader() {
   try {
     const { data } = await fetch.get("/admin/employees");
-    return data;
+    return data as TEmployees[];
   } catch (err: unknown) {
     if (err instanceof Error) {
       return { error: err.message };
@@ -16,10 +18,10 @@ export async function loader() {
 }
 
 function Employees() {
-  const loader = useLoaderData();
-  console.log(loader);
+  const { message: data } = useLoaderData() as { message: TEmployees[] };
+  console.log(data);
   return (
-    <Main>
+    <>
       <Main.Header>
         <Main.Heading title="Employees">
           <Input
@@ -29,7 +31,14 @@ function Employees() {
           />
         </Main.Heading>
       </Main.Header>
-    </Main>
+      <Main.Content>
+        {data ? (
+          <DataTable columns={employeeColumns} data={data} />
+        ) : (
+          <p>No Data</p>
+        )}
+      </Main.Content>
+    </>
   );
 }
 

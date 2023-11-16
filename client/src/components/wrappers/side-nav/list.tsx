@@ -5,7 +5,7 @@ type Props = {
 };
 
 function List({ children }: Props) {
-  return <li className="flex flex-col">{children}</li>;
+  return <li className="flex flex-col relative">{children}</li>;
 }
 
 export default List;
