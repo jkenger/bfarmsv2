@@ -1,17 +1,14 @@
 import { Button } from "@/components/ui/button";
 import DataTableHeader from "@/components/ui/data-table-header";
-import {
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import { IconProperties } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PenSquare, Trash } from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -125,9 +122,8 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
   {
     accessorKey: "actions",
     header: "",
-    cell: ({ row }) => {
-      const payment = row.original;
-      console.log(payment);
+    cell: () => {
+      // const employee = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -137,15 +133,26 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuItem>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2"
+              >
+                <PenSquare size={IconProperties.SIZE} />
+                Edit
+              </Button>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start gap-2"
+              >
+                <Trash size={IconProperties.SIZE} className="text-red-500" />
+                Delete
+              </Button>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

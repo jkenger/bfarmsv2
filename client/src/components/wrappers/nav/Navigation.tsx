@@ -1,13 +1,8 @@
-import { Link, Outlet } from "react-router-dom";
-import BFARLogo from "../../ui/logo";
-import BfarHeading from "../../ui/bfar-heading";
-import { Links } from "@/types";
-import { Menu } from "lucide-react";
+import { Outlet } from "react-router-dom";
+
 import { createContext, useContext, useState } from "react";
-import NavLinkLists from "./nav-linklists";
-import NavAvatar from "./nav-avatar";
+
 import Main from "../Main";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import SideNav from "./SideNav";
 import TopNav from "./TopNav";
 

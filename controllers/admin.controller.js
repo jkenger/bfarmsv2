@@ -10,9 +10,7 @@ const prisma = new PrismaClient();
 
 // Employees
 export const getEmployees = asyncHandler(async (req, res) => {
-  const allUsers = await prisma.user.findMany({
-    take: 20,
-  });
+  const allUsers = await prisma.user.findMany();
   res.status(StatusCodes.OK).json({
     message: allUsers,
   });
@@ -20,20 +18,22 @@ export const getEmployees = asyncHandler(async (req, res) => {
 
 export const createEmployee = asyncHandler(async (req, res) => {
   const data = req.body;
-  if (data.length > 1) {
-    console.log("Multiple employees adding");
-    const userAdded = await prisma.user.createMany({
-      data: data,
-      skipDuplicates: true,
-    });
-    console.log("userAdded");
-    return res.status(StatusCodes.OK).json({
-      message: userAdded,
-    });
+  if (Array.isArray(data)) {
+    if (data?.length > 1) {
+      console.log("Multiple employees adding");
+      const userAdded = await prisma.user.createMany({
+        data: data,
+        skipDuplicates: true,
+      });
+      console.log("userAdded");
+      return res.status(StatusCodes.OK).json({
+        message: userAdded,
+      });
+    }
   }
 
   const userAdded = await prisma.user.create({
-    data: data,
+    data,
   });
   res.status(StatusCodes.OK).json({
     message: userAdded,

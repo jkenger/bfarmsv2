@@ -10,7 +10,7 @@ datasource db {
 model User {
   id         String   @id @default(uuid())
   employeeId String   @unique
-  firstName  String
+  firstName  String   
   lastName   String
   age        Int
   avatar     String?

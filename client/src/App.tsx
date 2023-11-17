@@ -25,7 +25,21 @@ import Designations from "./components/pages/admin/employees/Designations";
 import Groups from "./components/pages/admin/payroll/Groups";
 import LeaveTypes from "./components/pages/admin/leaves/Types";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "./components/ui/toaster";
+
 const isLoggedIn = true;
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // 1 second
+
+      staleTime: 1000,
+      // staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -57,7 +71,7 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                loader: employeesLoader,
+                loader: employeesLoader(queryClient),
                 element: <AdminEmployees />,
               },
 
@@ -126,7 +140,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <RouterProvider router={router} />
+        <Toaster />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

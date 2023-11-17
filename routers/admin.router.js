@@ -8,13 +8,17 @@ import {
   createPayrollGroup,
   createDesignation,
 } from "../controllers/admin.controller.js";
+import { validateCreateEmployee } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
 
-// Desc    : Get Employees
-// Method  : GET /
-// Access  : Public
-router.route("/employees").get(getEmployees).post(createEmployee);
+// @Desc    : Get Employees
+// @Method  : GET /
+// @Access  : Public
+router
+  .route("/employees")
+  .get(getEmployees)
+  .post(validateCreateEmployee, createEmployee);
 router
   .route("/employees/designations")
   .get(getDesignations)

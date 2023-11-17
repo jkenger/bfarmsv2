@@ -8,7 +8,6 @@ type Props<T> = {
 };
 
 function DataTableHeader<T>({ column, children }: Props<T>) {
-  console.log(column);
   return (
     <div
       className="flex justify-between items-center hover:cursor-pointer"

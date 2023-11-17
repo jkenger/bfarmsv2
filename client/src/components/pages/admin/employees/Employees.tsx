@@ -1,43 +1,30 @@
 import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
-import { Form, useLoaderData } from "react-router-dom";
-import fetch from "@/lib/utils";
-import { DataTable } from "../../../ui/data-table";
+import { useLoaderData, defer, Await } from "react-router-dom";
+
 import { TEmployees, employeeColumns } from "./employee.columns";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { IconProperties } from "@/types";
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@radix-ui/react-label";
 import MutationSheet from "@/components/ui/mutation-sheet";
 import EmployeeAddForm from "./form/EmployeeAddForm";
+import { QueryClient } from "@tanstack/react-query";
+import { Suspense } from "react";
+import Error from "../../Error";
+import { getEmployees } from "./api/employee.api";
+import EmployeeTable from "./Table";
+import TableSkeleton from "@/components/ui/table-skeleton";
 
-export async function loader() {
-  try {
-    const { data } = await fetch.get("/admin/employees");
-    return data as TEmployees[];
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      return { error: err.message };
-    }
-    return { error: "An unknown error occurred" };
-  }
-}
+export const loader = (queryClient: QueryClient) => async () => {
+  return defer({
+    data: queryClient.ensureQueryData(getEmployees()),
+  });
+};
 
 function Employees() {
-  const { message: data } = useLoaderData() as { message: TEmployees[] };
-  console.log(data);
+  const { data: initialData } = useLoaderData() as { data: TEmployees };
+
   return (
     <>
       <Main.Header>
@@ -87,8 +74,11 @@ function Employees() {
         </Main.Heading>
       </Main.Header>
       <Main.Content>
-        <DataTable columns={employeeColumns} data={data} />
-        <DataTable columns={employeeColumns} data={data} />
+        <Suspense fallback={<TableSkeleton />}>
+          <Await resolve={initialData} errorElement={<Error />}>
+            <EmployeeTable employeeColumns={employeeColumns} />
+          </Await>
+        </Suspense>
       </Main.Content>
     </>
   );

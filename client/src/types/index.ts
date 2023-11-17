@@ -32,3 +32,8 @@ export enum IconProperties {
   SIZE = 16,
   STROKE_WIDTH = 2,
 }
+
+export enum QueryKeys {
+  EMPLOYEES = "employees",
+  DESIGNATIONS = "designations",
+}

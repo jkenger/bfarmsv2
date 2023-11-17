@@ -30,8 +30,8 @@ function MutationSheet({
   return (
     <Sheet>
       <SheetTrigger>{triggerElement}</SheetTrigger>
-      <SheetContent side="mutationRight" className="bg-card">
-        <SheetHeader>
+      <SheetContent side="mutationRight" className="bg-card px-0">
+        <SheetHeader className="px-6">
           <SheetTitle className="flex items-center gap-3">
             <span>{title}</span>
             <Badge variant="outline"> {table}</Badge>
@@ -40,17 +40,7 @@ function MutationSheet({
             {description}
           </SheetDescription>
         </SheetHeader>
-        {children}
-        <SheetFooter className="flex justify-end absolute bottom-4 right-4 w-full gap-2">
-          <SheetClose asChild>
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-          </SheetClose>
-          <Button variant="default" type="submit">
-            Add Column
-          </Button>
-        </SheetFooter>
+        <div className="h-[85vh] overflow-y-scroll px-6">{children}</div>
       </SheetContent>
     </Sheet>
   );
