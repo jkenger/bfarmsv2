@@ -24,7 +24,7 @@ const withValidationErrors = (validateValues) => {
   ];
 };
 
-export const validateCreateEmployee = withValidationErrors([
+export const validateEmployee = withValidationErrors([
   body("employeeId").notEmpty().withMessage("Employee ID must not be empty"),
   body("firstName").notEmpty().withMessage("First name must not be empty"),
   body("lastName").notEmpty().withMessage("Last name must not be empty"),
@@ -33,4 +33,8 @@ export const validateCreateEmployee = withValidationErrors([
     .withMessage("Email must not be empty")
     .isNumeric()
     .withMessage("Age must be a number"),
+]);
+
+export const validateIdEmployee = withValidationErrors([
+  param("id").notEmpty().withMessage("Employee ID must not be empty"),
 ]);

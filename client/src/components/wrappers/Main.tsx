@@ -29,7 +29,7 @@ function Heading({
     <>
       <div className="flex items-center justify-between w-full md:pt-0 lg:mb-0 lg:w-auto">
         <h1 className="text-md font-semibold tracking-wide py-2">{title}</h1>
-        <div>{mobileButton}</div>
+        <div className="lg:hidden">{mobileButton}</div>
       </div>
       <div
         className={`${

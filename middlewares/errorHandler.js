@@ -7,7 +7,12 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   if (
     message.includes("Unique constraint failed on the fields: (`employeeId`)")
   ) {
-    return res.status(StatusCodes.CONFLICT).json("Employee ID already exists");
+    return res.status(StatusCodes.CONFLICT).json("Id inserted already exists");
+  }
+  if (message.includes("not found")) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json("Data you are trying to retrieve/delete is not found");
   }
   return res.status(statusCode).json(message);
 };

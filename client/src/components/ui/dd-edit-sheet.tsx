@@ -1,39 +1,34 @@
+import React from "react";
+import { Badge } from "./badge";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
-
-import { Button } from "./button";
+} from "./sheet";
 
 type Props = {
-  triggerElement: React.ReactNode;
-  title?: string;
+  open?: boolean;
+  onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   table?: string;
   description?: string;
   children?: React.ReactNode;
 };
 
-function MutationSheet({
-  triggerElement,
-  title = "",
-  table = "",
-  description = "",
+function DropDownEditSheet({
+  open,
+  onOpen,
+  table = "unknown",
+  description,
   children,
 }: Props) {
   return (
-    <Sheet>
-      <SheetTrigger>{triggerElement}</SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpen}>
       <SheetContent side="mutationRight" className="bg-card px-0">
         <SheetHeader className="px-6">
           <SheetTitle className="flex items-center gap-3">
-            <span>{title}</span>
+            <span>Edit data to</span>
             <Badge variant="outline"> {table}</Badge>
           </SheetTitle>
           <SheetDescription className="text-start">
@@ -46,4 +41,4 @@ function MutationSheet({
   );
 }
 
-export default MutationSheet;
+export default DropDownEditSheet;

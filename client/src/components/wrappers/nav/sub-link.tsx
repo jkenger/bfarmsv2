@@ -1,4 +1,4 @@
-import { Links } from "@/types";
+import { Links } from "@/types/common";
 
 import React from "react";
 import { NavLink } from "react-router-dom";

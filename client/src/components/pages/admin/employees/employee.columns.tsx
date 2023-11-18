@@ -1,28 +1,11 @@
-import { Button } from "@/components/ui/button";
 import DataTableHeader from "@/components/ui/data-table-header";
-import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { IconProperties } from "@/types";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, PenSquare, Trash } from "lucide-react";
+import TableActions from "@/components/ui/table-actions";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type TEmployees = {
-  id: string;
-  employeeId: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  avatar?: string;
-  payrollGroupId?: string;
-  designationId?: string;
-  createdAt: string;
-};
+import { ColumnDef } from "@tanstack/react-table";
+import DeleteEmployee from "./form/DeleteEmployee";
+import EditEmployee from "./form/EditEmployee";
+
+export type TGlobalEmployees = TEmployees;
 
 export const employeeColumns: ColumnDef<TEmployees>[] = [
   {
@@ -122,39 +105,18 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
   {
     accessorKey: "actions",
     header: "",
-    cell: () => {
-      // const employee = row.original;
+    cell: ({ row }) => {
+      const employee = row.original;
+      console.log(employee);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start gap-2"
-              >
-                <PenSquare size={IconProperties.SIZE} />
-                Edit
-              </Button>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start gap-2"
-              >
-                <Trash size={IconProperties.SIZE} className="text-red-500" />
-                Delete
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <TableActions
+            deleteElement={<DeleteEmployee id={employee.id} />}
+            editElement={<EditEmployee item={employee} />}
+          />
+        </>
       );
     },
   },

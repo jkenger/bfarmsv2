@@ -1,8 +1,7 @@
 import BfarHeading from "@/components/ui/bfar-heading";
 import BFARLogo from "@/components/ui/logo";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Links } from "@/types";
-import React from "react";
+import { Links } from "@/types/common";
 import { Link } from "react-router-dom";
 import NavAvatar from "./nav-avatar";
 import { Menu } from "lucide-react";

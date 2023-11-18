@@ -13,7 +13,7 @@ import {
   SquareStack,
 } from "lucide-react";
 
-import { IconProperties, Links } from "@/types";
+import { IconProperties, Links } from "@/types/common";
 import List from "./list";
 import ListSection from "./list-section";
 import SubLink from "./sub-link";

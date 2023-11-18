@@ -3,7 +3,7 @@ import BFARLogo from "../../ui/logo";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { MoveRight } from "lucide-react";
-import { Links, Roles } from "@/types";
+import { Links, Roles } from "@/types/common";
 import BfarHeading from "../../ui/bfar-heading";
 
 function Login({ assign }: { assign: Roles }) {

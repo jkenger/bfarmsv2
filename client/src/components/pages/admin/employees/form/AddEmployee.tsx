@@ -1,30 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 
-import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { SheetClose, SheetFooter } from "@/components/ui/sheet";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEmployee } from "../api/employee.api";
-import { IconProperties } from "@/types";
-import { Loader2 } from "lucide-react";
+import FormSubmit from "./form-submit";
 
-export type TEmployeeInputs = {
-  employeeId: string;
-  firstName: string;
-  lastName: string;
-  age: string | number;
-};
-
-function EmployeeAddForm() {
+function AddEmployee() {
   const form = useForm<TEmployeeInputs>({
     defaultValues: {
       employeeId: "",
@@ -33,20 +12,11 @@ function EmployeeAddForm() {
       age: "",
     },
   });
-  const queryClient = useQueryClient();
-  const { mutate, isPending } = useMutation(
-    createEmployee({ queryClient, form })
-  );
 
-  const onSubmit: SubmitHandler<TEmployeeInputs> = (data) => {
-    mutate({
-      ...data,
-      age: Number(data.age),
-    });
-  };
   return (
     <Form {...form}>
-      <form
+      <FormSubmit session="create" form={form} />
+      {/* <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="mt-4 text-xs flex flex-col gap-4 text-muted-foreground"
       >
@@ -160,7 +130,7 @@ function EmployeeAddForm() {
               </Button>
             </div>
           </div>
-        </div> */}
+        </div> 
         <div className="flex flex-col gap-2">
           <div className="flex justify-between">
             <Label htmlFor="firstName" className="">
@@ -215,9 +185,9 @@ function EmployeeAddForm() {
             Add Column
           </Button>
         </SheetFooter>
-      </form>
+      </form> */}
     </Form>
   );
 }
 
-export default EmployeeAddForm;
+export default AddEmployee;

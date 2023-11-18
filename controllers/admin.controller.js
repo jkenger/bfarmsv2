@@ -40,6 +40,32 @@ export const createEmployee = asyncHandler(async (req, res) => {
   });
 });
 
+export const updateEmployee = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const userUpdated = await prisma.user.update({
+    where: {
+      id: id,
+    },
+    data,
+  });
+  res.status(StatusCodes.OK).json({
+    message: userUpdated,
+  });
+});
+
+export const deleteEmployee = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const userDeleted = await prisma.user.delete({
+    where: {
+      id: id,
+    },
+  });
+  res.status(StatusCodes.OK).json({
+    message: userDeleted,
+  });
+});
+
 /// Employees/Designation
 export const getDesignations = asyncHandler(async (req, res) => {
   const allDesignations = await prisma.designation.findMany();

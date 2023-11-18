@@ -1,14 +1,13 @@
 import { toast } from "@/components/ui/use-toast";
 import fetch from "@/lib/utils";
-import { QueryKeys } from "@/types";
 import { QueryClient } from "@tanstack/react-query";
-import { TEmployeeInputs } from "../form/EmployeeAddForm";
 import { UseFormReturn } from "react-hook-form";
 import { AxiosError } from "axios";
+import { QueryKeys } from "@/types/common";
 
 type TEmployeeMutation = {
   queryClient: QueryClient;
-  form: UseFormReturn<TEmployeeInputs, unknown, undefined>;
+  form?: UseFormReturn<TEmployeeInputs, unknown, undefined>;
 };
 
 export const getEmployees = () => {
@@ -42,7 +41,54 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       sheetCloseBtn?.click();
-      form.reset();
+      form?.reset();
+    },
+    onError: async (error: AxiosError) => {
+      toast({
+        title: "Error",
+        description: error.response?.data as string,
+      });
+    },
+  };
+};
+
+export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
+  const sheetCloseBtn = document.getElementById("sheetCloseBtn");
+  return {
+    mutationFn: async (data: TEmployeeInputs) => {
+      await fetch.put(`/admin/employees/${data.id}`, {
+        ...data,
+      });
+    },
+    onSuccess: async () => {
+      toast({
+        title: "Employee updated",
+        description: "Employee has been updated successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      sheetCloseBtn?.click();
+      form?.reset();
+    },
+    onError: async (error: AxiosError) => {
+      toast({
+        title: "Error",
+        description: error.response?.data as string,
+      });
+    },
+  };
+};
+
+export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
+  return {
+    mutationFn: async (id: string) => {
+      await fetch.delete(`/admin/employees/${id}`);
+    },
+    onSuccess: async () => {
+      toast({
+        title: "Employee deleted",
+        description: "Employee has been deleted successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
     onError: async (error: AxiosError) => {
       toast({

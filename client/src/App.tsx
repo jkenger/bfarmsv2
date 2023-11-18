@@ -8,7 +8,7 @@ import {
 import Error from "./components/pages/Error";
 import Attendance from "./components/pages/root/Attendance";
 import Login from "./components/pages/root/Login";
-import { Roles } from "./types";
+
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
 import Navigation from "./components/wrappers/nav/Navigation";
@@ -28,6 +28,7 @@ import LeaveTypes from "./components/pages/admin/leaves/Types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "./components/ui/toaster";
+import { Roles } from "./types/common";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -74,7 +75,6 @@ const router = createBrowserRouter([
                 loader: employeesLoader(queryClient),
                 element: <AdminEmployees />,
               },
-
               {
                 path: "designations",
                 element: <Designations />,

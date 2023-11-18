@@ -1,7 +1,7 @@
 import { useNavigate, useRouteError } from "react-router-dom";
 import img from "@/assets/images/not-found.svg";
 import { Button } from "@/components/ui/button";
-import { Links } from "@/types";
+import { Links } from "@/types/common";
 
 type Error = {
   status: number;

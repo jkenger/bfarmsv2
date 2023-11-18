@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
-import { IconProperties } from "@/types";
+import { IconProperties } from "@/types/common";
 import { Plus } from "lucide-react";
 
 function Payroll() {
