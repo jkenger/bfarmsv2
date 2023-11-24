@@ -3,15 +3,17 @@ import { twMerge } from "tailwind-merge";
 
 import axios from "axios";
 
+const localUrl = "http://localhost:3000/api/v1";
+// const prodUrl = process.env.REACT_APP_API_URL;
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const fetch = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: localUrl,
 
   // Only if there is a cookie
-  // withCredentials: true,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json",
   },

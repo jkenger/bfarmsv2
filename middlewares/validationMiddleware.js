@@ -25,12 +25,13 @@ const withValidationErrors = (validateValues) => {
 };
 
 export const validateEmployee = withValidationErrors([
-  body("employeeId").notEmpty().withMessage("Employee ID must not be empty"),
-  body("firstName").notEmpty().withMessage("First name must not be empty"),
-  body("lastName").notEmpty().withMessage("Last name must not be empty"),
-  body("age")
+  body().toArray(),
+  body("*.employeeId").notEmpty().withMessage("Employee ID must not be empty"),
+  body("*.firstName").notEmpty().withMessage("First name must not be empty"),
+  body("*.lastName").notEmpty().withMessage("Last name must not be empty"),
+  body("*.age")
     .notEmpty()
-    .withMessage("Email must not be empty")
+    .withMessage("Age must not be empty")
     .isNumeric()
     .withMessage("Age must be a number"),
 ]);

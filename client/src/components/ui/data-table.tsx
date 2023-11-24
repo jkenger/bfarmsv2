@@ -18,19 +18,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "./button";
 import { useState } from "react";
+import TableLoader from "./table-loader";
+import { useIsFetching } from "@tanstack/react-query";
+import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
+import useFilterParams from "../hooks/useFilterParams";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  numOfPages?: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  numOfPages = 0,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const isFetching = useIsFetching();
+  const { page } = useFilterParams();
   const table = useReactTable({
     data,
     columns,
@@ -42,10 +49,9 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
-
   return (
     <div>
-      <div className="rounded-md border">
+      <div className="rounded-md border relative">
         <Table className="bg-card">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -97,25 +103,17 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
+        {isFetching ? <TableLoader /> : ""}
       </div>
       {/* Pagination Controls */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div id="footer" className="flex justify-end items-center gap-2">
+        <div>
+          <span className="text-sm text-muted-foreground">
+            Showing page <span className="text-primary">{page}</span> of{" "}
+            {numOfPages} results
+          </span>
+        </div>
+        <DataTablePaginationNoBtn numOfPages={numOfPages} />
       </div>
     </div>
   );

@@ -1,9 +1,8 @@
 import DataTableHeader from "@/components/ui/data-table-header";
-import TableActions from "@/components/ui/table-actions";
-
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "./form/DeleteEmployee";
 import EditEmployee from "./form/EditEmployee";
+import DataTableActions from "@/components/ui/data-table-actions";
 
 export type TGlobalEmployees = TEmployees;
 
@@ -13,7 +12,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Employee Id</span>
+          <span>Employee</span>
         </DataTableHeader>
       );
     },
@@ -27,7 +26,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>First Name</span>
+          <span>Name</span>
         </DataTableHeader>
       );
     },
@@ -37,7 +36,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Last Name</span>
+          <span>Surname</span>
         </DataTableHeader>
       );
     },
@@ -63,7 +62,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     },
   },
   {
-    accessorKey: "payrollGroupId",
+    accessorKey: "payrollGroup",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
@@ -73,7 +72,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     },
   },
   {
-    accessorKey: "designationId",
+    accessorKey: "designation",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
@@ -107,12 +106,13 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: "",
     cell: ({ row }) => {
       const employee = row.original;
-      console.log(employee);
+
       // eslint-disable-next-line react-hooks/rules-of-hooks
 
       return (
         <>
-          <TableActions
+          <DataTableActions
+            key={employee.id}
             deleteElement={<DeleteEmployee id={employee.id} />}
             editElement={<EditEmployee item={employee} />}
           />

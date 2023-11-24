@@ -36,11 +36,16 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-const whitelist = ["http://localhost:3000", "http://localhost:5173"]; // Whitelisted origins
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://f8rmn02v-5173.asse.devtunnels.ms",
+  "https://global.rel.tunnels.api.visualstudio.com",
+]; // Whitelisted origins
 
 const corsOptions = {
-  // Only if there is a cookie
-  // credentials: true,
+  // true,nly if there is a cookie
+  credentials: false,
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
@@ -49,8 +54,8 @@ const corsOptions = {
     }
   },
 };
-
-app.use(cors());
+//
+app.use(cors(corsOptions));
 
 app.use(express.static(path.resolve(__dirname, "./client/dist")));
 

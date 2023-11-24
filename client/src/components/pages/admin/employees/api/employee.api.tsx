@@ -1,6 +1,6 @@
 import { toast } from "@/components/ui/use-toast";
 import fetch from "@/lib/utils";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { AxiosError } from "axios";
 import { QueryKeys } from "@/types/common";
@@ -10,19 +10,36 @@ type TEmployeeMutation = {
   form?: UseFormReturn<TEmployeeInputs, unknown, undefined>;
 };
 
-export const getEmployees = () => {
+type TQueryParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sp: string;
+};
+
+export const getEmployees = ({
+  page = 1,
+  limit = 10,
+  search = "",
+  sp,
+}: TQueryParams) => {
   return {
-    queryKey: [QueryKeys.EMPLOYEES],
+    queryKey: [QueryKeys.EMPLOYEES, page, search, sp],
     queryFn: async () => {
       try {
         // await new Promise((r) => setTimeout(r, 3000));
-
-        return await fetch.get("/admin/employees");
+        console.log("api search", search);
+        return await fetch.get<TEmployees>(
+          `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
+        );
       } catch (err) {
         const error = err as Error;
+        console.log(error);
         return error.message;
       }
     },
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5,
   };
 };
 
@@ -95,6 +112,9 @@ export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
         title: "Error",
         description: error.response?.data as string,
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
   };
 };

@@ -1,12 +1,12 @@
 import { Skeleton } from "./skeleton";
-import { Loader2 } from "lucide-react";
+import TableLoader from "./table-loader";
 
-function TableSkeleton() {
+function TableFallBack() {
   return (
     <Skeleton className="h-[550px] bg-muted relative flex items-center justify-center">
-      <Loader2 className="text-primary animate-spin " />
+      <TableLoader />
     </Skeleton>
   );
 }
 
-export default TableSkeleton;
+export default TableFallBack;

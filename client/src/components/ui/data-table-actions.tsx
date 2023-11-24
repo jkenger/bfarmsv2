@@ -1,5 +1,5 @@
 import React, { cloneElement } from "react";
-import { MoreVertical, PenSquare, Trash } from "lucide-react";
+import { Delete, MoreVertical, PenSquare, Trash } from "lucide-react";
 
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { IconProperties } from "@/types/common";
@@ -15,7 +15,7 @@ type Props = {
   editElement: React.ReactNode;
 };
 
-function TableActions({ deleteElement, editElement }: Props) {
+function DataTableActions({ deleteElement, editElement }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
   return (
@@ -35,7 +35,6 @@ function TableActions({ deleteElement, editElement }: Props) {
             className="w-full justify-start gap-2"
             onClick={() => setOpenEditDialog(true)}
           >
-            <PenSquare size={IconProperties.SIZE} />
             Edit
           </Button>
         </DropdownMenuItem>
@@ -43,11 +42,15 @@ function TableActions({ deleteElement, editElement }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start gap-2"
+            className="w-full justify-between gap-2"
             onClick={() => setOpenDeleteDialog(true)}
           >
-            <Trash size={IconProperties.SIZE} className="text-red-500" />
             Delete
+            <Delete
+              size={IconProperties.SIZE}
+              strokeWidth={IconProperties.STROKE_WIDTH}
+              className="text-red-500"
+            />
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -65,4 +68,4 @@ function TableActions({ deleteElement, editElement }: Props) {
   );
 }
 
-export default TableActions;
+export default DataTableActions;

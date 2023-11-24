@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
-import { IconProperties } from "@/types/types";
+import { IconProperties } from "@/types/common";
+
 import { ArrowRight } from "lucide-react";
 import React from "react";
 

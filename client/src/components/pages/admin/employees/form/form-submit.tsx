@@ -15,6 +15,8 @@ import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { createEmployee, editEmployee } from "../api/employee.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IconProperties } from "@/types/common";
+import { useLayoutEffect, useRef } from "react";
+import Group from "./group";
 
 type Props<T> = {
   session: "create" | "edit";
@@ -25,14 +27,20 @@ type Props<T> = {
 function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
   const queryClient = useQueryClient();
   const action = session === "create" ? createEmployee : editEmployee;
-  const { mutate, isPending } = useMutation(action({ queryClient, form }));
-  console.log(form.getValues());
+  const { mutate, isPending: isSubmitting } = useMutation(
+    action({ queryClient, form })
+  );
   const onSubmit: SubmitHandler<TEmployeeInputs> = (data) => {
     mutate({
       ...data,
       age: Number(data.age),
     });
   };
+  const inputRef = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
@@ -43,9 +51,13 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
         name="id"
         render={({ field }) => (
           <FormItem className="sr-only">
-            <FormLabel className="text-xs text-muted-foreground">id</FormLabel>
+            <FormLabel className="text-xs">id</FormLabel>
             <FormControl>
-              <Input placeholder="column_data" {...field} />
+              <Input
+                placeholder="column_data"
+                {...field}
+                disabled={isSubmitting}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -59,11 +71,13 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
         }}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs text-muted-foreground">
-              Employee Id
-            </FormLabel>
+            <FormLabel className="text-xs">Employee Id</FormLabel>
             <FormControl>
-              <Input placeholder="column_data" {...field} />
+              <Input
+                placeholder="column_data"
+                {...field}
+                disabled={isSubmitting}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -77,11 +91,14 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
         }}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs text-muted-foreground">
-              First Name
-            </FormLabel>
+            <FormLabel className="text-xs">First Name</FormLabel>
             <FormControl>
-              <Input placeholder="column_data" {...field} />
+              <Input
+                {...field}
+                placeholder="column_data"
+                ref={inputRef}
+                disabled={isSubmitting}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -95,11 +112,13 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
         }}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs text-muted-foreground">
-              Last Name
-            </FormLabel>
+            <FormLabel className="text-xs">Last Name</FormLabel>
             <FormControl>
-              <Input placeholder="column_data" {...field} />
+              <Input
+                placeholder="column_data"
+                {...field}
+                disabled={isSubmitting}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -120,46 +139,50 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
         }}
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs text-muted-foreground">Age</FormLabel>
+            <FormLabel className="text-xs">Age</FormLabel>
             <FormControl>
-              <Input placeholder="column_data" {...field} />
+              <Input
+                placeholder="column_data"
+                {...field}
+                disabled={isSubmitting}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
 
-      {/* <div className="flex flex-col gap-2">
-          <div className="flex justify-between">
-            <Label htmlFor="firstName" className="">
-              Payroll Group
-            </Label>
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between">
+          <Label htmlFor="firstName" className="">
+            Payroll Group
+          </Label>
 
-            <p>Optional</p>
+          <p>Optional</p>
+        </div>
+        <div className="bg-card rounded-lg text-muted-foreground border p-4 flex flex-col gap-2">
+          <p>
+            The following id for this group will be{" "}
+            <span className="text-primary">added</span>:{" "}
+          </p>
+          <div className="flex flex-col gap-4 items-start">
+            <Group assignTo="id">023023020302032</Group>
+            <Group assignTo="cluster"> NIFEP/BASIL</Group>
+            <Group assignTo="project_name">
+              CARPS FINGERLING PRODUCTION AND HATCHERY
+              DEVELOPMENT/ADMINISTRATION AND OPERATION OF NIFTC/BASIL
+            </Group>
           </div>
-          <div className="bg-card rounded-lg text-muted-foreground border p-4 flex flex-col gap-2">
-            <p>
-              The following id for this group will be{" "}
-              <span className="text-primary">added</span>:{" "}
-            </p>
-            <div className="flex flex-col gap-4 items-start">
-              <Group assignTo="id">023023020302032</Group>
-              <Group assignTo="cluster"> NIFEP/BASIL</Group>
-              <Group assignTo="project_name">
-                CARPS FINGERLING PRODUCTION AND HATCHERY
-                DEVELOPMENT/ADMINISTRATION AND OPERATION OF NIFTC/BASIL
-              </Group>
-            </div>
-            <div className="space-x-2 mt-4">
-              <Button variant="outline" size="sm" className="text-foreground">
-                Edit group{" "}
-              </Button>
-              <Button variant="outline" size="sm" className="text-foreground">
-                Remove
-              </Button>
-            </div>
+          <div className="space-x-2 mt-4">
+            <Button variant="outline" size="sm" className="text-foreground">
+              Edit group{" "}
+            </Button>
+            <Button variant="outline" size="sm" className="text-foreground">
+              Remove
+            </Button>
           </div>
-        </div> */}
+        </div>
+      </div>
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <Label htmlFor="firstName" className="">
@@ -203,8 +226,8 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
             Cancel
           </Button>
         </SheetClose>
-        <Button variant="default" type="submit" disabled={isPending}>
-          {isPending && (
+        <Button variant="default" type="submit" disabled={isSubmitting}>
+          {isSubmitting && (
             <Loader2
               size={IconProperties.SIZE}
               strokeWidth={IconProperties.STROKE_WIDTH}

@@ -11,13 +11,23 @@ type Props = {
 };
 function DeleteEmployee({ open, onOpen, id }: Props) {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(deleteEmployee({ queryClient }));
+  const { mutate, isPending } = useMutation(deleteEmployee({ queryClient }));
 
   function handleDelete() {
     mutate(id ?? "");
+    if (!isPending) {
+      onOpen?.(false);
+    }
   }
 
-  return <DeleteDialog open={open} onOpen={onOpen} onDelete={handleDelete} />;
+  return (
+    <DeleteDialog
+      open={open}
+      onOpen={onOpen}
+      onDelete={handleDelete}
+      isDeleting={isPending}
+    />
+  );
 }
 
 export default DeleteEmployee;

@@ -10,9 +10,127 @@ const prisma = new PrismaClient();
 
 // Employees
 export const getEmployees = asyncHandler(async (req, res) => {
-  const allUsers = await prisma.user.findMany();
+  const search = req.query.search;
+  const page = Number(req.query.page) || 1;
+  const sp = req.query.sp;
+  const toSort = sp.split(",")[0];
+  const sortOrder = sp.split(",")[1];
+
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit; // Page 2: (2 - 1) * 10 = 10
+
+  let pageQuery = {
+    skip: skip,
+    take: limit,
+  };
+  let filter = {};
+  let sort = {
+    orderBy: {
+      updatedAt: "desc",
+    },
+  };
+  let queryObject = { ...pageQuery, ...sort };
+
+  //query for search
+  if (search || search.length) {
+    filter = {
+      where: {
+        OR: [
+          {
+            employeeId: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            firstName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            lastName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            payrollGroup: {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            designation: {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
+    };
+    queryObject = {
+      ...filter,
+    };
+  }
+  if (sp || sp.length) {
+    sort = {
+      orderBy: {
+        [toSort]: sortOrder,
+      },
+    };
+    if (toSort === "payrollGroup") {
+      sort = {
+        orderBy: {
+          payrollGroup: {
+            name: sortOrder,
+          },
+        },
+      };
+    }
+    if (toSort === "designation") {
+      sort = {
+        orderBy: {
+          designation: {
+            name: sortOrder,
+          },
+        },
+      };
+    }
+    if (toSort === "salary") {
+      sort = {
+        orderBy: {
+          designation: {
+            salary: sortOrder,
+          },
+        },
+      };
+    }
+  }
+  queryObject = {
+    ...queryObject,
+    ...sort,
+  };
+  console.log(queryObject);
+
+  const data = await prisma.user.findMany(queryObject);
+  const dataCount = await prisma.user.count(filter);
+  const numOfPages = Math.ceil(dataCount / limit);
+
+  if (!data || !data.length) {
+    return res.status(StatusCodes.OK).json({
+      data: [],
+      numOfPages,
+    });
+  }
+
   res.status(StatusCodes.OK).json({
-    message: allUsers,
+    data,
+    numOfPages,
   });
 });
 
@@ -33,7 +151,7 @@ export const createEmployee = asyncHandler(async (req, res) => {
   }
 
   const userAdded = await prisma.user.create({
-    data,
+    data: data[0],
   });
   res.status(StatusCodes.OK).json({
     message: userAdded,
@@ -47,7 +165,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
     where: {
       id: id,
     },
-    data,
+    data: data[0],
   });
   res.status(StatusCodes.OK).json({
     message: userUpdated,

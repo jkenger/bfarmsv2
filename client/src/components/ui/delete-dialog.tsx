@@ -8,14 +8,16 @@ import {
   DialogFooter,
 } from "./dialog";
 import { Button } from "./button";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: () => void;
+  isDeleting?: boolean;
 };
 
-function DeleteDialog({ open, onOpen, onDelete }: Props) {
+function DeleteDialog({ open, onOpen, onDelete, isDeleting }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpen}>
       <DialogContent>
@@ -27,7 +29,13 @@ function DeleteDialog({ open, onOpen, onDelete }: Props) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="submit" variant="destructive" onClick={onDelete}>
+          <Button
+            type="submit"
+            variant="destructive"
+            onClick={onDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting && <Loader2 className="text-primary" />}
             Delete
           </Button>
         </DialogFooter>

@@ -24,7 +24,6 @@ function EditEmployee<T extends TEmployeeInputs>({
       age: item.age,
     },
   });
-  console.log(item.id);
   return (
     <DropDownEditSheet table="employees" open={open} onOpen={onOpen}>
       <Form {...form}>

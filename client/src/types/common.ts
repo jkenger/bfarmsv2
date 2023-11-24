@@ -37,3 +37,8 @@ export enum QueryKeys {
   EMPLOYEES = "employees",
   DESIGNATIONS = "designations",
 }
+
+export enum SortType {
+  ASC = "asc",
+  DESC = "desc",
+}

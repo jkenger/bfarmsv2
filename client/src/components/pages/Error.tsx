@@ -32,11 +32,22 @@ function Error() {
   }
 
   return (
-    <div>
-      <h1>{error?.message}</h1>
-      <Button onClick={() => navigate(-1)} variant="link">
-        Home Page
-      </Button>
+    <div className="grid h-[500px] px-4 bg-background place-content-center">
+      <div className="text-center">
+        <h1 className="font-black text-red-500 text-9xl">500</h1>
+
+        <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Uh-oh!
+        </p>
+
+        <p className="mt-4 text-muted-foreground">
+          Oops! Something went wrong on our end. Please try again later..
+        </p>
+
+        <Button onClick={() => navigate(-1)} variant="link">
+          Home Page
+        </Button>
+      </div>
     </div>
   );
 }

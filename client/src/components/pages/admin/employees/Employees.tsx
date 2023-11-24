@@ -1,4 +1,3 @@
-import { Input } from "@/components/ui/input";
 import Main from "@/components/wrappers/Main";
 import { useLoaderData, defer, Await } from "react-router-dom";
 
@@ -13,17 +12,30 @@ import { Suspense } from "react";
 import Error from "../../Error";
 import { getEmployees } from "./api/employee.api";
 import EmployeeTable from "./Table";
-import TableSkeleton from "@/components/ui/table-skeleton";
 import { IconProperties } from "@/types/common";
+import useFilterParams from "@/components/hooks/useFilterParams";
+import { Input } from "@/components/ui/input";
+import debounce from "debounce";
+import TableFallBack from "@/components/ui/table-fallback";
 
-export const loader = (queryClient: QueryClient) => async () => {
-  return defer({
-    data: queryClient.ensureQueryData(getEmployees()),
-  });
-};
+export const loader =
+  (queryClient: QueryClient) =>
+  async ({ request }: { request: Request }) => {
+    const url = new URL(request.url);
+    const page = Number(new URLSearchParams(url.search).get("page")) || 1;
+    const limit = Number(new URLSearchParams(url.search).get("limit")) || 10;
+    const search = new URLSearchParams(url.search).get("search") || "";
+    const sp = new URLSearchParams(url.search).get("sp") || "";
+    return defer({
+      data: queryClient.ensureQueryData(
+        getEmployees({ page, limit, search, sp })
+      ),
+    });
+  };
 
 function Employees() {
   const { data: initialData } = useLoaderData() as { data: TEmployees };
+  const { handlePageChange, handleSearchChange } = useFilterParams();
 
   return (
     <>
@@ -55,12 +67,17 @@ function Employees() {
             </MutationSheet>
           }
         >
+          {/* Search */}
           <Input
             id="search"
             placeholder="Search"
             className="w-full md:w-auto justify-start text-left font-normal"
+            onChange={debounce((e) => {
+              handleSearchChange(e.target.value);
+              handlePageChange(1);
+            }, 500)}
           />
-
+          {/* Create New Employee Sheet*/}
           <MutationSheet
             triggerElement={
               <div
@@ -86,9 +103,14 @@ function Employees() {
         </Main.Heading>
       </Main.Header>
       <Main.Content>
-        <Suspense fallback={<TableSkeleton />}>
+        <Suspense fallback={<TableFallBack />}>
           <Await resolve={initialData} errorElement={<Error />}>
-            <EmployeeTable employeeColumns={employeeColumns} />
+            {(data) => (
+              <EmployeeTable
+                employeeColumns={employeeColumns}
+                initialData={data}
+              />
+            )}
           </Await>
         </Suspense>
       </Main.Content>
