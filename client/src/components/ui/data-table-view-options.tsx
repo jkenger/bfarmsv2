@@ -25,13 +25,9 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 lg:flex"
-        >
+        <Button variant="outline" size="sm">
           <Eye
-            size={IconProperties.SIZE}
+            size={IconProperties.SIZE_ICON}
             strokeWidth={IconProperties.STROKE_WIDTH}
           />
         </Button>

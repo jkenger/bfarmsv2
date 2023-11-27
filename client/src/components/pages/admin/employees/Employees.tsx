@@ -13,9 +13,6 @@ import Error from "../../Error";
 import { getEmployees } from "./api/employee.api";
 import EmployeeTable from "./Table";
 import { IconProperties } from "@/types/common";
-import useFilterParams from "@/components/hooks/useFilterParams";
-import { Input } from "@/components/ui/input";
-import debounce from "debounce";
 import TableFallBack from "@/components/ui/table-fallback";
 
 export const loader =
@@ -35,8 +32,6 @@ export const loader =
 
 function Employees() {
   const { data: initialData } = useLoaderData() as { data: TEmployees };
-  const { handlePageChange, handleSearchChange } = useFilterParams();
-
   return (
     <>
       <Main.Header>
@@ -67,16 +62,6 @@ function Employees() {
             </MutationSheet>
           }
         >
-          {/* Search */}
-          <Input
-            id="search"
-            placeholder="Search"
-            className="w-full md:w-auto justify-start text-left font-normal"
-            onChange={debounce((e) => {
-              handleSearchChange(e.target.value);
-              handlePageChange(1);
-            }, 500)}
-          />
           {/* Create New Employee Sheet*/}
           <MutationSheet
             triggerElement={

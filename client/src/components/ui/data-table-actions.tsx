@@ -23,7 +23,11 @@ function DataTableActions({ deleteElement, editElement }: Props) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
-          <MoreVertical className="h-4 w-4" />
+          <MoreVertical
+            className="h-4 w-4"
+            size={IconProperties.SIZE_ICON}
+            strokeWidth={IconProperties.STROKE_WIDTH}
+          />
         </Button>
       </DropdownMenuTrigger>
 
@@ -47,7 +51,7 @@ function DataTableActions({ deleteElement, editElement }: Props) {
           >
             Delete
             <Delete
-              size={IconProperties.SIZE}
+              size={IconProperties.SIZE_ICON}
               strokeWidth={IconProperties.STROKE_WIDTH}
               className="text-red-500"
             />

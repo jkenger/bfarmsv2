@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { createContext, useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getEmployees } from "./api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
 import usePaginationParams from "@/components/hooks/useFilterParams";
@@ -22,12 +22,6 @@ const initialState = {
 };
 
 const EmployeeTableContext = createContext<TEmployeeTableContext>(initialState);
-
-// Props
-//  employeeColumns: ColumnDef<TEmployees>[];
-// Hooks
-//  usePaginationParams
-
 function EmployeeTable({ employeeColumns }: Props) {
   const { page, limit, search, sp } = usePaginationParams();
 
@@ -38,7 +32,7 @@ function EmployeeTable({ employeeColumns }: Props) {
     isSuccess,
     error,
   } = useQuery(getEmployees({ page, limit, search, sp }));
-  console.log(error);
+  const queryClient = useQueryClient();
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
@@ -47,6 +41,10 @@ function EmployeeTable({ employeeColumns }: Props) {
     data,
     numOfPages,
   };
+
+  function refetch() {
+    queryClient.invalidateQueries(getEmployees({ page, limit, search, sp }));
+  }
 
   return (
     <EmployeeTableContext.Provider value={value}>
@@ -66,6 +64,7 @@ function EmployeeTable({ employeeColumns }: Props) {
             columns={employeeColumns}
             data={data}
             numOfPages={numOfPages}
+            dataReloader={refetch}
           />
         </div>
       )}

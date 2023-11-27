@@ -17,7 +17,7 @@ function Group({ children, assignTo }: Props) {
       </Badge>
       <div className="mt-1">
         <ArrowRight
-          size={IconProperties.SIZE}
+          size={IconProperties.SIZE_ICON}
           strokeWidth={IconProperties.STROKE_WIDTH}
         />
       </div>

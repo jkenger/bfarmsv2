@@ -11,11 +11,6 @@ type TEmployees = {
   createdAt: string;
 };
 
-type TDesignation = {
-  id: string;
-  designation: string;
-};
-
 type TEmployeeInputs = {
   id: string;
   employeeId: string;
@@ -23,6 +18,11 @@ type TEmployeeInputs = {
   middleName?: string;
   lastName: string;
   age: string | number;
+};
+
+type TDesignation = {
+  id: string;
+  designation: string;
 };
 
 type TTableActions = TEmployees & TDesignation;

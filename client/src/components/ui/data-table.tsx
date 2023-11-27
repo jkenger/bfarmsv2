@@ -23,25 +23,32 @@ import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
+import { RotateCw } from "lucide-react";
+import { Button } from "./button";
+import { IconProperties } from "@/types/common";
+import debounce from "debounce";
+import { Input } from "./input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   numOfPages?: number;
+  dataReloader?: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   numOfPages = 0,
+  dataReloader,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
-
   const isFetching = useIsFetching();
-  const { page } = useFilterParams();
+  const { page, handleSearchChange, handlePageChange, search } =
+    useFilterParams();
   const table = useReactTable({
     data,
     columns,
@@ -49,6 +56,8 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
+
+  // Set column visibility on mount
   useLayoutEffect(() => {
     if (!columnVisibility.length) {
       table.setColumnVisibility(columnVisibility as VisibilityState);
@@ -59,12 +68,50 @@ export function DataTable<TData, TValue>({
       } as VisibilityState);
     }
   }, [columnVisibility, table]);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className="space-y-2">
-      <DataTableViewOptions
-        table={table}
-        onSetColumnVisibility={setColumnVisibility}
-      />
+      <div className="flex items-center justify-between">
+        {/* Search  Input*/}
+        <Input
+          id="search"
+          placeholder="Search"
+          ref={inputRef}
+          defaultValue={search ? search : ""}
+          className="w-full md:w-auto justify-start text-left font-normal"
+          onChange={debounce((e) => {
+            handleSearchChange(e.target.value);
+            handlePageChange(1);
+          }, 500)}
+        />
+        <div className="flex justify-end gap-2">
+          {/* Column Vibility Button */}
+          <DataTableViewOptions
+            table={table}
+            onSetColumnVisibility={
+              setColumnVisibility as React.Dispatch<
+                React.SetStateAction<VisibilityState>
+              >
+            }
+          />
+          {/* Refresh Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={isFetching > 0}
+            onClick={dataReloader}
+          >
+            <RotateCw
+              className={`${isFetching && "animate-spin"}`}
+              size={IconProperties.SIZE_ICON}
+              strokeWidth={IconProperties.STROKE_WIDTH}
+            />
+          </Button>
+        </div>
+      </div>
+
       <div className="rounded-md border relative">
         <Table className="bg-card">
           <TableHeader>

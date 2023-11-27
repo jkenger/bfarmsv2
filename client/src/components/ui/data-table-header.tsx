@@ -30,25 +30,25 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
         <div>
           {order === "" && field === "" && (
             <ChevronsUpDown
-              size={IconProperties.SIZE}
+              size={IconProperties.SIZE_ICON}
               strokeWidth={IconProperties.STROKE_WIDTH}
             />
           )}
           {order && column.id !== field && (
             <ChevronsUpDown
-              size={IconProperties.SIZE}
+              size={IconProperties.SIZE_ICON}
               strokeWidth={IconProperties.STROKE_WIDTH}
             />
           )}
           {order === SortType.ASC && column.id === field && (
             <ArrowUp
-              size={IconProperties.SIZE}
+              size={IconProperties.SIZE_ICON}
               strokeWidth={IconProperties.STROKE_WIDTH}
             />
           )}
           {order === SortType.DESC && column.id === field && (
             <ArrowDown
-              size={IconProperties.SIZE}
+              size={IconProperties.SIZE_ICON}
               strokeWidth={IconProperties.STROKE_WIDTH}
             />
           )}
@@ -67,7 +67,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
             <span className="text-muted-foreground">
               <ArrowUp
                 className="text-muted-foreground"
-                size={IconProperties.SIZE}
+                size={IconProperties.SIZE_ICON}
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             </span>
@@ -85,7 +85,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
             <span className="text-muted-foreground">
               <ArrowDown
                 className="text-muted-foreground"
-                size={IconProperties.SIZE}
+                size={IconProperties.SIZE_ICON}
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             </span>
@@ -103,7 +103,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
             <span className="text-muted-foreground">
               <EyeOff
                 className="text-muted-foreground"
-                size={IconProperties.SIZE}
+                size={IconProperties.SIZE_ICON}
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             </span>

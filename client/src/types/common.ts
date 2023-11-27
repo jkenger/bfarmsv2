@@ -30,6 +30,7 @@ export enum Roles {
 
 export enum IconProperties {
   SIZE = 16,
+  SIZE_ICON = 14,
   STROKE_WIDTH = 2,
 }
 

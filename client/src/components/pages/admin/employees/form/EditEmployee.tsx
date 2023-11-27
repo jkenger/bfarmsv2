@@ -21,6 +21,7 @@ function EditEmployee<T extends TEmployeeInputs>({
       employeeId: item.employeeId,
       firstName: item.firstName,
       lastName: item.lastName,
+      middleName: item.middleName,
       age: item.age,
     },
   });
