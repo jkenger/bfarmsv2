@@ -26,40 +26,23 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Full Name</span>
+          <span>Name</span>
         </DataTableHeader>
       );
     },
     cell: ({ row }) => {
       const firstName = row.original.firstName || "";
+      const middleName = row.original.middleName || "";
       const lastName = row.original.lastName || "";
       return (
         <span>
-          {firstName} {lastName}
+          {lastName} {firstName}{" "}
+          {middleName !== "" ? middleName.charAt(0) + "." : ""}{" "}
         </span>
       );
     },
   },
-  {
-    accessorKey: "firstName",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>First Name</span>
-        </DataTableHeader>
-      );
-    },
-  },
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Last Name</span>
-        </DataTableHeader>
-      );
-    },
-  },
+
   {
     accessorKey: "age",
     header: ({ column }) => {

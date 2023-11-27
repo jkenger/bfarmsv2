@@ -4,13 +4,43 @@
 import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
 import fs from "fs";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient().$extends({
+  query: {
+    user: {
+      async $allOperations({ operation, args, query }) {
+        if (operation === "create") {
+          return await query({
+            ...args,
+            data: {
+              ...args.data,
+              fullName: `${args.data.lastName} ${args.data.firstName} ${args.data.middleName}`,
+            },
+          });
+        }
+        if (operation === "update") {
+          const user = await query(args);
+          return await query({
+            ...args,
+            data: {
+              ...args.data,
+
+              fullName: `${user.lastName} ${user.firstName} ${user.middleName}`,
+            },
+          });
+        }
+
+        return query(args);
+      },
+    },
+  },
+});
 
 // Employees
 export const getEmployees = asyncHandler(async (req, res) => {
-  const search = req.query.search;
+  // await prisma.user.deleteAllUsers();
+  const search = req.query.search.trim();
   const page = Number(req.query.page) || 1;
   const sp = req.query.sp;
   const toSort = sp.split(",")[0];
@@ -29,12 +59,13 @@ export const getEmployees = asyncHandler(async (req, res) => {
       updatedAt: "desc",
     },
   };
-  let queryObject = { ...pageQuery, ...sort };
-
+  let queryObject = { ...pageQuery };
+  console.log(search);
   //query for search
   if (search || search.length) {
     filter = {
       where: {
+        // Search through all the fields
         OR: [
           {
             employeeId: {
@@ -43,7 +74,40 @@ export const getEmployees = asyncHandler(async (req, res) => {
             },
           },
           {
+            fullName: {
+              contains: search,
+              equals: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            fullName: {
+              // lastName
+              startsWith: search.split(" ").reverse()[0],
+              mode: "insensitive",
+            },
+          },
+          {
+            fullName: {
+              // firstName
+              startsWith: search.split(" ")[0],
+              mode: "insensitive",
+            },
+          },
+          {
+            fullName: {
+              contains: search.split(" ").reverse().join(" "),
+              mode: "insensitive",
+            },
+          },
+          {
             firstName: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            middleName: {
               contains: search,
               mode: "insensitive",
             },
@@ -85,14 +149,7 @@ export const getEmployees = asyncHandler(async (req, res) => {
     };
     if (toSort === "fullName") {
       sort = {
-        orderBy: [
-          {
-            firstName: sortOrder,
-          },
-          {
-            lastName: sortOrder,
-          },
-        ],
+        orderBy: { fullName: sortOrder },
       };
     }
     if (toSort === "payrollGroup") {
@@ -127,9 +184,8 @@ export const getEmployees = asyncHandler(async (req, res) => {
     ...queryObject,
     ...sort,
   };
-  console.log(queryObject);
-
   const data = await prisma.user.findMany(queryObject);
+  console.log(data);
   const dataCount = await prisma.user.count(filter);
   const numOfPages = Math.ceil(dataCount / limit);
 

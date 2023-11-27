@@ -60,7 +60,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
         <DropdownMenuItem asChild>
           <Button
             variant="ghost"
-            className="w-full h-8 space-x-2 flex justify-start"
+            className="w-full h-8 space-x-2 flex justify-start hover:cursor-pointer"
             onClick={() => handleSortChange([column.id, SortType.ASC])}
             disabled={isFetching > 0}
           >
@@ -78,7 +78,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
         <DropdownMenuItem asChild>
           <Button
             variant="ghost"
-            className="w-full h-8 space-x-2 flex justify-start"
+            className="w-full h-8 space-x-2 flex justify-start hover:cursor-pointer"
             onClick={() => handleSortChange([column.id, SortType.DESC])}
             disabled={isFetching > 0}
           >

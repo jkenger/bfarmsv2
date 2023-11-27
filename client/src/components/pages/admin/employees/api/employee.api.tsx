@@ -25,10 +25,21 @@ export const getEmployees = ({
 }: TQueryParams) => {
   return {
     queryKey: [QueryKeys.EMPLOYEES, page, search, sp],
-    queryFn: async () =>
-      await fetch.get<TEmployees>(
-        `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
-      ),
+    queryFn: async () => {
+      try {
+        return await fetch.get<TEmployees>(
+          `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
+        );
+      } catch (e) {
+        const error = e as AxiosError;
+        console.log(error);
+        toast({
+          title: "Error",
+          description: error.response?.data as string,
+        });
+      }
+    },
+
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   };

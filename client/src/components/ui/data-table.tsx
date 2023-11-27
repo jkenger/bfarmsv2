@@ -39,7 +39,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
-  console.log(columnVisibility);
+
   const isFetching = useIsFetching();
   const { page } = useFilterParams();
   const table = useReactTable({
@@ -50,8 +50,13 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
   useLayoutEffect(() => {
-    if (columnVisibility) {
-      table.setColumnVisibility(columnVisibility);
+    if (!columnVisibility.length) {
+      table.setColumnVisibility(columnVisibility as VisibilityState);
+    } else {
+      table.setColumnVisibility({
+        firstName: false,
+        lastName: false,
+      } as VisibilityState);
     }
   }, [columnVisibility, table]);
   return (

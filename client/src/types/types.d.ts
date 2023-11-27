@@ -2,6 +2,7 @@ type TEmployees = {
   id: string;
   employeeId: string;
   firstName: string;
+  middleName?: string;
   lastName: string;
   age: number;
   avatar?: string;
@@ -19,6 +20,7 @@ type TEmployeeInputs = {
   id: string;
   employeeId: string;
   firstName: string;
+  middleName?: string;
   lastName: string;
   age: string | number;
 };

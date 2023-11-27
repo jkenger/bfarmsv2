@@ -38,7 +38,7 @@ function EmployeeTable({ employeeColumns }: Props) {
     isSuccess,
     error,
   } = useQuery(getEmployees({ page, limit, search, sp }));
-
+  console.log(error);
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages

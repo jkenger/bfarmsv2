@@ -106,6 +106,33 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
+        name="middleName"
+        rules={{
+          minLength: {
+            value: 2,
+            message: "Middle name must be at least 2 characters",
+          },
+        }}
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex justify-between">
+              <FormLabel className="text-xs">Middle Name</FormLabel>
+              <p>Optional</p>
+            </div>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="column_data"
+                ref={inputRef}
+                disabled={isSubmitting}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="lastName"
         rules={{
           required: "This field is required",
