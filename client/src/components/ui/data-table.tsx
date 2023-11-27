@@ -2,10 +2,10 @@
 
 import {
   ColumnDef,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  SortingState,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -18,11 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
 import TableLoader from "./table-loader";
 import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams from "../hooks/useFilterParams";
+import { DataTableViewOptions } from "./data-table-view-options";
+import { useLayoutEffect } from "react";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,7 +37,9 @@ export function DataTable<TData, TValue>({
   data,
   numOfPages = 0,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnVisibility, setColumnVisibility] =
+    useLocalStorageState<VisibilityState>([], "columnVisibility");
+  console.log(columnVisibility);
   const isFetching = useIsFetching();
   const { page } = useFilterParams();
   const table = useReactTable({
@@ -43,14 +47,19 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-    },
   });
+  useLayoutEffect(() => {
+    if (columnVisibility) {
+      table.setColumnVisibility(columnVisibility);
+    }
+  }, [columnVisibility, table]);
   return (
-    <div>
+    <div className="space-y-2">
+      <DataTableViewOptions
+        table={table}
+        onSetColumnVisibility={setColumnVisibility}
+      />
       <div className="rounded-md border relative">
         <Table className="bg-card">
           <TableHeader>

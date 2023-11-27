@@ -25,19 +25,10 @@ export const getEmployees = ({
 }: TQueryParams) => {
   return {
     queryKey: [QueryKeys.EMPLOYEES, page, search, sp],
-    queryFn: async () => {
-      try {
-        // await new Promise((r) => setTimeout(r, 3000));
-        console.log("api search", search);
-        return await fetch.get<TEmployees>(
-          `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
-        );
-      } catch (err) {
-        const error = err as Error;
-        console.log(error);
-        return error.message;
-      }
-    },
+    queryFn: async () =>
+      await fetch.get<TEmployees>(
+        `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
+      ),
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   };

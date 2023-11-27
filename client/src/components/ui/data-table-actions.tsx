@@ -1,5 +1,5 @@
 import React, { cloneElement } from "react";
-import { Delete, MoreVertical, PenSquare, Trash } from "lucide-react";
+import { Delete, MoreVertical } from "lucide-react";
 
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { IconProperties } from "@/types/common";

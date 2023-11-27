@@ -22,11 +22,30 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     ),
   },
   {
+    accessorKey: "fullName",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Full Name</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      const firstName = row.original.firstName || "";
+      const lastName = row.original.lastName || "";
+      return (
+        <span>
+          {firstName} {lastName}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: "firstName",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Name</span>
+          <span>First Name</span>
         </DataTableHeader>
       );
     },
@@ -36,7 +55,7 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Surname</span>
+          <span>Last Name</span>
         </DataTableHeader>
       );
     },

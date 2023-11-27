@@ -1,13 +1,10 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getEmployees } from "./api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
-import TableSkeleton from "@/components/ui/table-loader";
 import usePaginationParams from "@/components/hooks/useFilterParams";
 import TableLoader from "@/components/ui/table-loader";
-import BFARLogo from "@/components/ui/logo";
-import TableFallBack from "@/components/ui/table-fallback";
 
 type Props = {
   employeeColumns: ColumnDef<TEmployees>[];

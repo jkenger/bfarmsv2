@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from "lucide-react";
 
 import { Column } from "@tanstack/react-table";
 import useFilterParams from "../hooks/useFilterParams";
@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./button";
+import { useIsFetching } from "@tanstack/react-query";
 
 type Props<T> = {
   column: Column<T, unknown>;
@@ -19,10 +20,9 @@ type Props<T> = {
 
 function DataTableHeader<T>({ column, children }: Props<T>) {
   const { handleSortChange, getSortOrder } = useFilterParams();
+  const isFetching = useIsFetching();
   const { field, order } = getSortOrder();
-  if (order) {
-    console.log(field, order);
-  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex gap-2 justify-between items-center hover:cursor-pointer">
@@ -62,9 +62,11 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
             variant="ghost"
             className="w-full h-8 space-x-2 flex justify-start"
             onClick={() => handleSortChange([column.id, SortType.ASC])}
+            disabled={isFetching > 0}
           >
             <span className="text-muted-foreground">
               <ArrowUp
+                className="text-muted-foreground"
                 size={IconProperties.SIZE}
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
@@ -78,9 +80,11 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
             variant="ghost"
             className="w-full h-8 space-x-2 flex justify-start"
             onClick={() => handleSortChange([column.id, SortType.DESC])}
+            disabled={isFetching > 0}
           >
             <span className="text-muted-foreground">
               <ArrowDown
+                className="text-muted-foreground"
                 size={IconProperties.SIZE}
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
@@ -89,6 +93,23 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
           </Button>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Button
+            variant="ghost"
+            className="w-full h-8 space-x-2 flex justify-start"
+            onClick={() => column.toggleVisibility(false)}
+            disabled={isFetching > 0}
+          >
+            <span className="text-muted-foreground">
+              <EyeOff
+                className="text-muted-foreground"
+                size={IconProperties.SIZE}
+                strokeWidth={IconProperties.STROKE_WIDTH}
+              />
+            </span>
+            <span>Hide</span>
+          </Button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
