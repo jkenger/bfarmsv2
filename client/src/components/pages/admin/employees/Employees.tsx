@@ -16,24 +16,11 @@ import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
 // import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
-export const loader =
-  (queryClient: QueryClient) =>
-  async ({ request }: { request: Request }) => {
-    const url = new URL(request.url);
-    const page = Number(new URLSearchParams(url.search).get("page")) || 1;
-    const limit = Number(new URLSearchParams(url.search).get("limit")) || 10;
-    const search = new URLSearchParams(url.search).get("search") || "";
-    const sp = new URLSearchParams(url.search).get("sp") || "";
-    const group = new URLSearchParams(url.search).get("group") || "";
-    const designation =
-      new URLSearchParams(url.search).get("designation") || "";
-    console.log(new URLSearchParams(url.search));
-    return defer({
-      data: queryClient.ensureQueryData(
-        getEmployees({ page, limit, search, sp, group, designation })
-      ),
-    });
-  };
+export const loader = (queryClient: QueryClient) => async () => {
+  return defer({
+    data: queryClient.ensureQueryData(getEmployees()),
+  });
+};
 
 function Employees() {
   const { data: initialData } = useLoaderData() as { data: TEmployees };

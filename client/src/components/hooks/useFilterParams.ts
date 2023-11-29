@@ -3,12 +3,12 @@ import { useSearchParams } from "react-router-dom";
 
 const useFilterParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 10;
-  const search = searchParams.get("search") || "";
-  const sp = searchParams.get("sp") || "";
-  const group = searchParams.get("group") || "";
-  const designation = searchParams.get("designation") || "";
+  // const page = Number(searchParams.get("page")) || 1;
+  // const limit = Number(searchParams.get("limit")) || 10;
+  // const search = searchParams.get("search") || "";
+  // const sp = searchParams.get("sp") || "";
+  // const group = searchParams.get("group") || "";
+  // const designation = searchParams.get("designation") || "";
 
   function setFilterParams(name: string, value: Array<string | number>) {
     console.log(value);
@@ -70,26 +70,33 @@ const useFilterParams = () => {
     return { field: "", order: "" };
   }
 
-  function getSearchParams() {
-    return {
-      page,
-      limit,
-      search,
-      sp,
-      group,
-      designation,
-    };
-  }
-
   return {
     setFilterParams,
     handlePageChange,
     handleSearchChange,
     handleGroupChange,
     handleDesignationChange,
-    getSearchParams,
     handleSortChange,
     getSortOrder,
+  };
+};
+
+export const getSearchParams = () => {
+  const request = new Request(window.location.href);
+  const url = new URL(request.url);
+  const page = new URLSearchParams(url.search).get("page") || "1";
+  const limit = new URLSearchParams(url.search).get("limit") || "10";
+  const search = new URLSearchParams(url.search).get("search") || "";
+  const sp = new URLSearchParams(url.search).get("sp") || "";
+  const group = new URLSearchParams(url.search).get("group") || "";
+  const designation = new URLSearchParams(url.search).get("designation") || "";
+  return {
+    page,
+    limit,
+    search,
+    sp,
+    group,
+    designation,
   };
 };
 

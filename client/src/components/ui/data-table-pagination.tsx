@@ -1,10 +1,11 @@
 import { Button } from "./button";
-import usePaginationParams from "../hooks/useFilterParams";
+import usePaginationParams, { getSearchParams } from "../hooks/useFilterParams";
 import { useIsFetching } from "@tanstack/react-query";
 
 function DataTablePagination({ numOfPages = 0 }: { numOfPages?: number }) {
-  const { getSearchParams, handlePageChange } = usePaginationParams();
-  const { page: currentPage } = getSearchParams();
+  const { handlePageChange } = usePaginationParams();
+  const { page } = getSearchParams();
+  const currentPage = Number(page);
   const isFetching = useIsFetching();
   // Should not be reil
 

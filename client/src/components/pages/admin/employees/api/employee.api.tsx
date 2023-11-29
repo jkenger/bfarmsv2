@@ -4,38 +4,15 @@ import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 import { AxiosError } from "axios";
 import { QueryKeys } from "@/types/common";
+import { getSearchParams } from "@/components/hooks/useFilterParams";
 
 type TEmployeeMutation = {
   queryClient: QueryClient;
   form?: UseFormReturn<TEmployeeInputs, unknown, undefined>;
 };
 
-type TQueryParams = {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sp: string;
-  group: string;
-  designation: string;
-};
-
-export const getEmployees = ({
-  page = 1,
-  limit = 10,
-  search = "",
-  sp,
-  group = "",
-  designation = "",
-}: TQueryParams) => {
-  const searchParams = new URLSearchParams({
-    page: String(page),
-    limit: String(limit),
-    search,
-    sp,
-    group,
-    designation,
-  });
-  console.log(searchParams.toString());
+export const getEmployees = () => {
+  const searchParams = new URLSearchParams(getSearchParams());
   return {
     queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
     queryFn: async () => {

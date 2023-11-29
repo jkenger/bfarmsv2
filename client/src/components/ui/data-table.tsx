@@ -21,7 +21,7 @@ import {
 import TableLoader from "./table-loader";
 import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
-import useFilterParams from "../hooks/useFilterParams";
+import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
@@ -51,7 +51,6 @@ export function DataTable<TData, TValue>({
   const {
     handleSearchChange,
     handlePageChange,
-    getSearchParams,
     handleGroupChange,
     handleDesignationChange,
   } = useFilterParams();

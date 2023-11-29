@@ -1,9 +1,10 @@
 import { Button } from "./button";
-import usePaginationParams from "../hooks/useFilterParams";
+import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 
 function DataTablePaginationNoBtn({ numOfPages = 0 }: { numOfPages?: number }) {
-  const { getSearchParams, setFilterParams } = usePaginationParams();
-  const { page: currentPage } = getSearchParams();
+  const { setFilterParams } = useFilterParams();
+  const { page } = getSearchParams();
+  const currentPage = Number(page);
   // Should not be reil
 
   function handlePageChange(page: number) {
