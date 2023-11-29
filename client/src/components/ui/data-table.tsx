@@ -25,12 +25,13 @@ import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
-import { RotateCw } from "lucide-react";
+import { RotateCw, X } from "lucide-react";
 import { Button } from "./button";
 import { IconProperties } from "@/types/common";
 import debounce from "debounce";
 import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
+import { useSearchParams } from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -53,7 +54,9 @@ export function DataTable<TData, TValue>({
     handlePageChange,
     handleGroupChange,
     handleDesignationChange,
+    handleResetParams,
   } = useFilterParams();
+  const [searchParams] = useSearchParams();
   const { page, search } = getSearchParams();
   const table = useReactTable({
     data,
@@ -76,7 +79,7 @@ export function DataTable<TData, TValue>({
   }, [columnVisibility, table]);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log(table.getAllColumns());
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -117,10 +120,17 @@ export function DataTable<TData, TValue>({
           <FacetedFilterButton
             onSelectedChange={handleDesignationChange}
             // filter={jobStatusfilter}
-            options={["groupOptions", "groupOptions2"]}
+            options={["groupOptions", "groupOptions2", "grpsda2"]}
           >
             Designations
           </FacetedFilterButton>
+          {/* Reset */}
+          {searchParams.size > 0 && (
+            <Button variant="ghost" size="sm" onClick={handleResetParams}>
+              Reset
+              <X size={IconProperties.SIZE} className="ml-2" />
+            </Button>
+          )}
         </div>
         <div className="flex justify-end gap-2">
           {/* Column Vibility Button */}

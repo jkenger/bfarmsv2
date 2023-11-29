@@ -11,7 +11,6 @@ const useFilterParams = () => {
   // const designation = searchParams.get("designation") || "";
 
   function setFilterParams(name: string, value: Array<string | number>) {
-    console.log(value);
     searchParams.set(name, value.join(","));
     if (value.length === 0) searchParams.delete(name);
     setSearchParams(searchParams);
@@ -61,6 +60,10 @@ const useFilterParams = () => {
     }
   }
 
+  function handleResetParams() {
+    setSearchParams("");
+  }
+
   function getSortOrder() {
     const sp = searchParams.get("sp");
     if (sp) {
@@ -77,6 +80,7 @@ const useFilterParams = () => {
     handleGroupChange,
     handleDesignationChange,
     handleSortChange,
+    handleResetParams,
     getSortOrder,
   };
 };
@@ -90,13 +94,22 @@ export const getSearchParams = () => {
   const sp = new URLSearchParams(url.search).get("sp") || "";
   const group = new URLSearchParams(url.search).get("group") || "";
   const designation = new URLSearchParams(url.search).get("designation") || "";
-  return {
+
+  const employeeSearchParams = {
     page,
     limit,
     search,
     sp,
     group,
     designation,
+  };
+
+  return {
+    page,
+    limit,
+    search,
+    sp,
+    employeeSearchParams,
   };
 };
 

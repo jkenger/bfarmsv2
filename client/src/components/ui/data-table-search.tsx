@@ -11,7 +11,7 @@ const DataTableSearch = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          "flex items-center gap-2 h-9 w-full rounded-md border border-input bg-transparent px-3 text-xs shadow-sm  ",
+          "flex items-center gap-2 h-8 w-full rounded-md border border-input bg-transparent px-3 text-xs shadow-sm  ",
           className
         )}
       >
@@ -20,7 +20,7 @@ const DataTableSearch = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           {...props}
-          className="w-full rounded-md h-9 bg-transparent file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-md h-8 bg-transparent file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
     );

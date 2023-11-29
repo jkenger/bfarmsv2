@@ -12,7 +12,8 @@ type TEmployeeMutation = {
 };
 
 export const getEmployees = () => {
-  const searchParams = new URLSearchParams(getSearchParams());
+  const { employeeSearchParams } = getSearchParams();
+  const searchParams = new URLSearchParams(employeeSearchParams);
   return {
     queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
     queryFn: async () => {

@@ -4,6 +4,7 @@ import { Button } from "./button";
 import React, { Key, useEffect, useState } from "react";
 import { Badge } from "./badge";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+
 import {
   Command,
   CommandEmpty,
@@ -13,6 +14,7 @@ import {
   CommandList,
 } from "./command";
 import { Check, Filter } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 type Props<A> = {
   children: React.ReactNode;
@@ -26,16 +28,24 @@ function FacetedFilterButton<A>({
 }: Props<A>) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const filterCount = selectedValues.length || 0;
+  const [searchParams] = useSearchParams();
 
   // Set State on mount
   useEffect(() => {
     onSelectedChange(selectedValues as unknown as A);
   }, [selectedValues]);
 
+  // Remove if your values do not depends on search params
+  useEffect(() => {
+    if (searchParams.size === 0) {
+      setSelectedValues([]);
+    }
+  }, [searchParams]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="border-dashed ">
+        <Button size="sm" variant="outline" className="border-dashed ">
           <span className="flex items-center justify-center gap-2">
             <span>
               {" "}
@@ -49,11 +59,11 @@ function FacetedFilterButton<A>({
           )}
           {filterCount <= 2 && (
             <div className=" space-x-2">
-              {selectedValues?.map((list) => (
-                <React.Fragment key={list}>
-                  {list && (
-                    <Badge variant="secondary" key={list as Key}>
-                      {list as string}{" "}
+              {selectedValues?.map((value) => (
+                <React.Fragment key={value}>
+                  {value && (
+                    <Badge variant="secondary" key={value as Key}>
+                      {value as string}{" "}
                     </Badge>
                   )}
                 </React.Fragment>
@@ -69,7 +79,7 @@ function FacetedFilterButton<A>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start">
+      <PopoverContent align="start" className="p-0 w-auto">
         <Command>
           <CommandInput placeholder={`Filter by ${children}`} />
           <CommandList>
@@ -92,12 +102,12 @@ function FacetedFilterButton<A>({
                 >
                   <div
                     className={`flex items-center justify-center text-xs w-4 h-4 rounded-sm border text-white ${
-                      selectedValues?.includes(s as string)
+                      selectedValues?.includes(s.toLowerCase() as string)
                         ? "bg-primary"
-                        : "bg-white"
+                        : "bg-secondary"
                     }`}
                   >
-                    {selectedValues?.includes(s as string) && (
+                    {selectedValues?.includes(s.toLowerCase() as string) && (
                       <Check size="16" />
                     )}
                   </div>
