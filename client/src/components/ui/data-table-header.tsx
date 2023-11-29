@@ -26,7 +26,7 @@ function DataTableHeader<T>({ column, children }: Props<T>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex gap-2 justify-between items-center hover:cursor-pointer">
-        {children}
+        <span className="font-semibold">{children}</span>
         <div>
           {order === "" && field === "" && (
             <ChevronsUpDown

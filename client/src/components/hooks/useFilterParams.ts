@@ -7,8 +7,11 @@ const useFilterParams = () => {
   const limit = Number(searchParams.get("limit")) || 10;
   const search = searchParams.get("search") || "";
   const sp = searchParams.get("sp") || "";
+  const group = searchParams.get("group") || "";
+  const designation = searchParams.get("designation") || "";
 
   function setFilterParams(name: string, value: Array<string | number>) {
+    console.log(value);
     searchParams.set(name, value.join(","));
     if (value.length === 0) searchParams.delete(name);
     setSearchParams(searchParams);
@@ -39,6 +42,25 @@ const useFilterParams = () => {
       setSearchParams(searchParams);
     }
   }
+
+  function handleGroupChange(group: string[]) {
+    if (group?.length) {
+      setFilterParams("group", group);
+    } else {
+      searchParams.delete("group");
+      setSearchParams(searchParams);
+    }
+  }
+
+  function handleDesignationChange(designation: string[]) {
+    if (designation?.length) {
+      setFilterParams("designation", designation);
+    } else {
+      searchParams.delete("designation");
+      setSearchParams(searchParams);
+    }
+  }
+
   function getSortOrder() {
     const sp = searchParams.get("sp");
     if (sp) {
@@ -48,19 +70,29 @@ const useFilterParams = () => {
     return { field: "", order: "" };
   }
 
+  function getSearchParams() {
+    return {
+      page,
+      limit,
+      search,
+      sp,
+      group,
+      designation,
+    };
+  }
+
   return {
     setFilterParams,
-    page,
     handlePageChange,
-    search,
     handleSearchChange,
-    sp,
+    handleGroupChange,
+    handleDesignationChange,
+    getSearchParams,
     handleSortChange,
     getSortOrder,
-    limit,
   };
 };
 
-export type setPaginationParamsType = ReturnType<typeof useFilterParams>;
+export type setFilterParamsType = ReturnType<typeof useFilterParams>;
 
 export default useFilterParams;

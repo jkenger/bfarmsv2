@@ -14,6 +14,7 @@ import { getEmployees } from "./api/employee.api";
 import EmployeeTable from "./Table";
 import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
+// import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
 export const loader =
   (queryClient: QueryClient) =>
@@ -23,9 +24,13 @@ export const loader =
     const limit = Number(new URLSearchParams(url.search).get("limit")) || 10;
     const search = new URLSearchParams(url.search).get("search") || "";
     const sp = new URLSearchParams(url.search).get("sp") || "";
+    const group = new URLSearchParams(url.search).get("group") || "";
+    const designation =
+      new URLSearchParams(url.search).get("designation") || "";
+    console.log(new URLSearchParams(url.search));
     return defer({
       data: queryClient.ensureQueryData(
-        getEmployees({ page, limit, search, sp })
+        getEmployees({ page, limit, search, sp, group, designation })
       ),
     });
   };
@@ -35,8 +40,12 @@ function Employees() {
   return (
     <>
       <Main.Header>
+        {/* <Main.BreadCrumbs>
+          <BreadCrumb title="Employees" />
+        </Main.BreadCrumbs> */}
         <Main.Heading
           title="Employees"
+          access="Admin"
           mobileButton={
             <MutationSheet
               triggerElement={
@@ -63,6 +72,7 @@ function Employees() {
           }
         >
           {/* Create New Employee Sheet*/}
+
           <MutationSheet
             triggerElement={
               <div

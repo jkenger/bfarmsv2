@@ -185,7 +185,7 @@ export const getEmployees = asyncHandler(async (req, res) => {
     ...sort,
   };
   const data = await prisma.user.findMany(queryObject);
-  console.log(data);
+  console.log(queryObject);
   const dataCount = await prisma.user.count(filter);
   const numOfPages = Math.ceil(dataCount / limit);
 

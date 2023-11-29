@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import NavAvatar from "./nav-avatar";
 import { Menu } from "lucide-react";
 import { useNavigation } from "./Navigation";
-
 function TopNav() {
   const { handleMenuOpen } = useNavigation();
   return (
@@ -20,6 +19,7 @@ function TopNav() {
             <BfarHeading sizeClass="text-xl" />
           </div>
         </Link>
+
         <div className="md:hidden flex items-center ">
           <ModeToggle />
           <NavAvatar />

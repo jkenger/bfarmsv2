@@ -76,6 +76,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
               <Input
                 placeholder="column_data"
                 {...field}
+                ref={inputRef}
                 disabled={isSubmitting}
               />
             </FormControl>
@@ -96,7 +97,6 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
               <Input
                 {...field}
                 placeholder="column_data"
-                ref={inputRef}
                 disabled={isSubmitting}
               />
             </FormControl>
@@ -123,7 +123,6 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
               <Input
                 {...field}
                 placeholder="column_data"
-                ref={inputRef}
                 disabled={isSubmitting}
               />
             </FormControl>

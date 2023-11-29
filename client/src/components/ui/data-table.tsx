@@ -29,7 +29,8 @@ import { RotateCw } from "lucide-react";
 import { Button } from "./button";
 import { IconProperties } from "@/types/common";
 import debounce from "debounce";
-import { Input } from "./input";
+import FacetedFilterButton from "./data-table-faceted-filter";
+import DataTableSearch from "./data-table-search";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,8 +48,14 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
   const isFetching = useIsFetching();
-  const { page, handleSearchChange, handlePageChange, search } =
-    useFilterParams();
+  const {
+    handleSearchChange,
+    handlePageChange,
+    getSearchParams,
+    handleGroupChange,
+    handleDesignationChange,
+  } = useFilterParams();
+  const { page, search } = getSearchParams();
   const table = useReactTable({
     data,
     columns,
@@ -70,22 +77,52 @@ export function DataTable<TData, TValue>({
   }, [columnVisibility, table]);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
+  console.log(table.getAllColumns());
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        {/* Search  Input*/}
-        <Input
-          id="search"
-          placeholder="Search"
-          ref={inputRef}
-          defaultValue={search ? search : ""}
-          className="w-full md:w-auto justify-start text-left font-normal"
-          onChange={debounce((e) => {
-            handleSearchChange(e.target.value);
-            handlePageChange(1);
-          }, 500)}
-        />
+        <div className="flex gap-2">
+          {/* Search  Input*/}
+          <DataTableSearch
+            placeholder="Search"
+            id="search"
+            ref={inputRef}
+            defaultValue={search ? search : ""}
+            className="w-full md:w-auto justify-start text-left font-normal"
+            onChange={debounce((e) => {
+              handleSearchChange(e.target.value);
+              handlePageChange(1);
+            }, 500)}
+          />
+
+          {/* <div className="">
+            <Input
+              id="search"
+              placeholder="Search"
+              ref={inputRef}
+              defaultValue={search ? search : ""}
+              className="w-full md:w-auto justify-start text-left font-normal"
+              onChange={debounce((e) => {
+                handleSearchChange(e.target.value);
+                handlePageChange(1);
+              }, 500)}
+            />
+          </div> */}
+          <FacetedFilterButton
+            onSelectedChange={handleGroupChange}
+            // filter={jobStatusfilter}
+            options={["sampel1", "sample2"]}
+          >
+            Payroll Group
+          </FacetedFilterButton>
+          <FacetedFilterButton
+            onSelectedChange={handleDesignationChange}
+            // filter={jobStatusfilter}
+            options={["groupOptions", "groupOptions2"]}
+          >
+            Designations
+          </FacetedFilterButton>
+        </div>
         <div className="flex justify-end gap-2">
           {/* Column Vibility Button */}
           <DataTableViewOptions

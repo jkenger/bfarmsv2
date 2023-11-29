@@ -3,7 +3,8 @@ import usePaginationParams from "../hooks/useFilterParams";
 import { useIsFetching } from "@tanstack/react-query";
 
 function DataTablePagination({ numOfPages = 0 }: { numOfPages?: number }) {
-  const { page: currentPage, handlePageChange } = usePaginationParams();
+  const { getSearchParams, handlePageChange } = usePaginationParams();
+  const { page: currentPage } = getSearchParams();
   const isFetching = useIsFetching();
   // Should not be reil
 

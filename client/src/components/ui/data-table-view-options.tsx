@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Eye } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { IconProperties } from "@/types/common";
 
 interface DataTableViewOptionsProps<TData> {
@@ -25,11 +25,14 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Eye
-            size={IconProperties.SIZE_ICON}
-            strokeWidth={IconProperties.STROKE_WIDTH}
-          />
+        <Button variant="outline" size="sm" className="space-x-2">
+          <span>
+            <SlidersHorizontal
+              size={IconProperties.SIZE_ICON}
+              strokeWidth={IconProperties.STROKE_WIDTH}
+            />
+          </span>
+          <span> View</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">

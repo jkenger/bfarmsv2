@@ -15,6 +15,8 @@ type TQueryParams = {
   limit?: number;
   search?: string;
   sp: string;
+  group: string;
+  designation: string;
 };
 
 export const getEmployees = ({
@@ -22,13 +24,24 @@ export const getEmployees = ({
   limit = 10,
   search = "",
   sp,
+  group = "",
+  designation = "",
 }: TQueryParams) => {
+  const searchParams = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    search,
+    sp,
+    group,
+    designation,
+  });
+  console.log(searchParams.toString());
   return {
-    queryKey: [QueryKeys.EMPLOYEES, page, search, sp],
+    queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
     queryFn: async () => {
       try {
         return await fetch.get<TEmployees>(
-          `/admin/employees?page=${page}&limit=${limit}&search=${search}&sp=${sp}`
+          `/admin/employees?${searchParams.toString()}`
         );
       } catch (e) {
         const error = e as AxiosError;

@@ -3,8 +3,8 @@ import { createContext, useContext } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getEmployees } from "./api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
-import usePaginationParams from "@/components/hooks/useFilterParams";
 import TableLoader from "@/components/ui/table-loader";
+import useFilterParams from "@/components/hooks/useFilterParams";
 
 type Props = {
   employeeColumns: ColumnDef<TEmployees>[];
@@ -23,7 +23,7 @@ const initialState = {
 
 const EmployeeTableContext = createContext<TEmployeeTableContext>(initialState);
 function EmployeeTable({ employeeColumns }: Props) {
-  const { page, limit, search, sp } = usePaginationParams();
+  const { getSearchParams } = useFilterParams();
 
   const {
     data: res,
@@ -31,8 +31,8 @@ function EmployeeTable({ employeeColumns }: Props) {
     isError,
     isSuccess,
     error,
-  } = useQuery(getEmployees({ page, limit, search, sp }));
-  const queryClient = useQueryClient();
+    refetch,
+  } = useQuery(getEmployees(getSearchParams()));
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
@@ -42,9 +42,11 @@ function EmployeeTable({ employeeColumns }: Props) {
     numOfPages,
   };
 
-  function refetch() {
-    queryClient.invalidateQueries(getEmployees({ page, limit, search, sp }));
-  }
+  // function refetch() {
+  //   queryClient.invalidateQueries(
+  //     getEmployees({ page, limit, search, sp, group, designation })
+  //   );
+  // }
 
   return (
     <EmployeeTableContext.Provider value={value}>

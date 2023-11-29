@@ -12,14 +12,10 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Employee</span>
+          <span>Code</span>
         </DataTableHeader>
       );
     },
-
-    cell: ({ row }) => (
-      <div className=" px-3">{row.getValue("employeeId")}</div>
-    ),
   },
   {
     accessorKey: "fullName",
