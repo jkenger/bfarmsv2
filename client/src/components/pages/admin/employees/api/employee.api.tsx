@@ -39,6 +39,7 @@ export const getEmployees = () => {
 export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
+    mutationKey: [QueryKeys.EMPLOYEES],
     mutationFn: async (data: TEmployeeInputs) => {
       await fetch.post("/admin/employees", {
         ...data,

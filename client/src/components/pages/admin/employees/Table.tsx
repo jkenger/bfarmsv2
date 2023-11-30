@@ -39,6 +39,8 @@ function EmployeeTable({ employeeColumns }: Props) {
     numOfPages,
   };
 
+  console.log(data);
+
   // function refetch() {
   //   queryClient.invalidateQueries(
   //     getEmployees({ page, limit, search, sp, group, designation })

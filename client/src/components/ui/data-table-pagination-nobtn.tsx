@@ -1,15 +1,20 @@
 import { Button } from "./button";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
+import { Input } from "./input";
+import debounce from "debounce";
+import { useEffect, useRef } from "react";
 
 function DataTablePaginationNoBtn({ numOfPages = 0 }: { numOfPages?: number }) {
-  const { setFilterParams } = useFilterParams();
+  const { handlePageChange } = useFilterParams();
   const { page } = getSearchParams();
+  const pageInputRef = useRef<HTMLInputElement>(null);
   const currentPage = Number(page);
   // Should not be reil
 
-  function handlePageChange(page: number) {
-    setFilterParams("page", [page]);
-  }
+  useEffect(() => {
+    if (pageInputRef.current)
+      pageInputRef.current.value = currentPage.toString();
+  }, [currentPage]);
 
   // page buttons to render
   return (
@@ -26,6 +31,20 @@ function DataTablePaginationNoBtn({ numOfPages = 0 }: { numOfPages?: number }) {
       >
         Previous
       </Button>
+      <Input
+        className="w-12"
+        defaultValue={currentPage}
+        ref={pageInputRef}
+        onChange={debounce((e) => {
+          if (Number(e.target.value) > numOfPages) handlePageChange(numOfPages);
+          if (Number(e.target.value) < 1) handlePageChange(1);
+          if (
+            Number(e.target.value) >= 1 &&
+            Number(e.target.value) <= numOfPages
+          )
+            handlePageChange(Number(e.target.value));
+        }, 500)}
+      />
       <Button
         variant="outline"
         size="sm"

@@ -98,7 +98,7 @@ function FacetedFilterButton<A>({
                       }
                     });
                   }}
-                  className="space-x-1"
+                  className="space-x-2"
                 >
                   <div
                     className={`flex items-center justify-center text-xs w-4 h-4 rounded-sm border text-white ${

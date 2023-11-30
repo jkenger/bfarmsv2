@@ -54,13 +54,9 @@ export const getEmployees = asyncHandler(async (req, res) => {
     take: limit,
   };
   let filter = {};
-  let sort = {
-    orderBy: {
-      updatedAt: "desc",
-    },
-  };
+
   let queryObject = { ...pageQuery };
-  console.log(search);
+
   //query for search
   if (search || search.length) {
     filter = {
@@ -137,55 +133,78 @@ export const getEmployees = asyncHandler(async (req, res) => {
         ],
       },
     };
-    queryObject = {
-      ...filter,
-    };
   }
+
+  let sort = {
+    orderBy: [],
+  };
   if (sp || sp.length) {
     sort = {
-      orderBy: {
-        [toSort]: sortOrder,
-      },
+      orderBy: [
+        {
+          [toSort]: sortOrder,
+        },
+      ],
     };
-    if (toSort === "fullName") {
-      sort = {
-        orderBy: { fullName: sortOrder },
-      };
-    }
+
     if (toSort === "payrollGroup") {
       sort = {
-        orderBy: {
-          payrollGroup: {
-            name: sortOrder,
+        orderBy: [
+          {
+            payrollGroup: {
+              name: sortOrder,
+            },
           },
-        },
+        ],
       };
     }
     if (toSort === "designation") {
       sort = {
-        orderBy: {
-          designation: {
-            name: sortOrder,
+        orderBy: [
+          {
+            designation: {
+              name: sortOrder,
+            },
           },
-        },
+        ],
       };
     }
     if (toSort === "salary") {
       sort = {
-        orderBy: {
-          designation: {
-            salary: sortOrder,
+        orderBy: [
+          {
+            designation: {
+              salary: sortOrder,
+            },
           },
-        },
+        ],
       };
     }
   }
+  sort = {
+    orderBy: [
+      ...sort.orderBy,
+      {
+        updatedAt: "desc",
+      },
+      {
+        createdAt: "desc",
+      },
+      {
+        employeeId: "desc",
+      },
+    ],
+  };
   queryObject = {
     ...queryObject,
+    ...filter,
     ...sort,
   };
-  const data = await prisma.user.findMany(queryObject);
+
   console.log(queryObject);
+  const data = await prisma.user.findMany(queryObject);
+  // console.log(data);
+
   const dataCount = await prisma.user.count(filter);
   const numOfPages = Math.ceil(dataCount / limit);
 

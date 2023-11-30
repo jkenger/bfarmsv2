@@ -1,7 +1,7 @@
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
-import DeleteEmployee from "./form/DeleteEmployee";
-import EditEmployee from "./form/EditEmployee";
+import DeleteEmployee from "../form/DeleteEmployee";
+import EditEmployee from "../form/EditEmployee";
 import DataTableActions from "@/components/ui/data-table-actions";
 
 export type TGlobalEmployees = TEmployees;

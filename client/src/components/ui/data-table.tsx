@@ -19,19 +19,35 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableLoader from "./table-loader";
-import { useIsFetching } from "@tanstack/react-query";
+import {
+  Mutation,
+  useIsFetching,
+  useIsMutating,
+  useMutation,
+  useMutationState,
+  useQueryClient,
+} from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { RotateCw, X } from "lucide-react";
 import { Button } from "./button";
-import { IconProperties } from "@/types/common";
+import { IconProperties, QueryKeys } from "@/types/common";
 import debounce from "debounce";
 import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
 import { useSearchParams } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { Badge } from "./badge";
+import { createEmployee } from "../pages/admin/employees/api/employee.api";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,21 +65,49 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
   const isFetching = useIsFetching();
+  const isMutating = useIsMutating();
   const {
     handleSearchChange,
     handlePageChange,
     handleGroupChange,
     handleDesignationChange,
     handleResetParams,
+    handlePageLimit,
   } = useFilterParams();
   const [searchParams] = useSearchParams();
-  const { page, search } = getSearchParams();
+  const { page, search, limit } = getSearchParams();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(createEmployee({ queryClient }));
+
+  const variables = useMutationState({
+    filters: { mutationKey: [QueryKeys.EMPLOYEES], status: "pending" },
+    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
+      mutation.state.variables,
+  }) as TEmployeeInputs[];
+  const errorVariables = useMutationState({
+    filters: { mutationKey: [QueryKeys.EMPLOYEES], status: "error" },
+    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
+      mutation.state.variables,
+  }) as TEmployeeInputs[];
+
+  const status = useMutationState({
+    filters: { mutationKey: [QueryKeys.EMPLOYEES] },
+    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
+      mutation.state.status,
+  });
+
+  console.log(status);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: Number(limit),
+      },
+    },
   });
 
   // Set column visibility on mount
@@ -77,9 +121,10 @@ export function DataTable<TData, TValue>({
       } as VisibilityState);
     }
   }, [columnVisibility, table]);
-
   const inputRef = useRef<HTMLInputElement>(null);
-
+  useEffect(() => {
+    table.setPageSize(Number(limit));
+  }, [table, limit]);
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -97,19 +142,6 @@ export function DataTable<TData, TValue>({
             }, 500)}
           />
 
-          {/* <div className="">
-            <Input
-              id="search"
-              placeholder="Search"
-              ref={inputRef}
-              defaultValue={search ? search : ""}
-              className="w-full md:w-auto justify-start text-left font-normal"
-              onChange={debounce((e) => {
-                handleSearchChange(e.target.value);
-                handlePageChange(1);
-              }, 500)}
-            />
-          </div> */}
           <FacetedFilterButton
             onSelectedChange={handleGroupChange}
             // filter={jobStatusfilter}
@@ -126,7 +158,14 @@ export function DataTable<TData, TValue>({
           </FacetedFilterButton>
           {/* Reset */}
           {searchParams.size > 0 && (
-            <Button variant="ghost" size="sm" onClick={handleResetParams}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                handleResetParams();
+                if (inputRef.current) inputRef.current.value = "";
+              }}
+            >
               Reset
               <X size={IconProperties.SIZE} className="ml-2" />
             </Button>
@@ -182,9 +221,75 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
+            <TableRow className={`h-12 max-h-12 relative `}>
+              {isMutating > 0 && variables.length && (
+                <>
+                  <TableCell key={variables[0].employeeId}>
+                    {variables[0].employeeId}
+                  </TableCell>
+                  <TableCell key={variables[0].firstName}>
+                    {variables[0].lastName} {variables[0].firstName}{" "}
+                    {variables[0].middleName}
+                  </TableCell>
+                  <TableCell key={variables[0].age}>
+                    {variables[0].age}
+                  </TableCell>
+                  <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
+                    <Badge className="hover:cursor-default">
+                      Adding your data.
+                    </Badge>
+                  </div>
+                </>
+              )}
+              {status[0] === "error" && !isMutating && (
+                <>
+                  {/* bg-red-200 text-red-700 font-bold */}
+                  <TableCell key={errorVariables[0].employeeId}>
+                    {errorVariables[0].employeeId}
+                  </TableCell>
+                  <TableCell key={errorVariables[0].lastName}>
+                    {errorVariables[0].lastName} {errorVariables[0].firstName}{" "}
+                    {errorVariables[0].middleName}
+                  </TableCell>
+                  <TableCell key={errorVariables[0].age}>
+                    {errorVariables[0].age}
+                  </TableCell>
+                  <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
+                    <Badge
+                      variant="destructive"
+                      className="hover:cursor-default"
+                    >
+                      There is a problem adding your data.
+                    </Badge>
+                    <Button
+                      variant="outline"
+                      size="xs"
+                      className="font-semibold my-1 ml-2"
+                      onClick={() =>
+                        mutate({
+                          ...errorVariables[0],
+                          age: Number(errorVariables[0].age),
+                        })
+                      }
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* <TableCell colSpan={columns.length}>
+                {isMutating > 0 && (
+                  <span className="animate-pulse border border-white/30 absolute flex items-center justify-center inset-0 w-full h-full bg-primary/30">
+                    <span className="text-green-500">Adding data...</span>
+                  </span>
+                )}
+              </TableCell> */}
+            </TableRow>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="h-12 max-h-12"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -214,6 +319,26 @@ export function DataTable<TData, TValue>({
       </div>
       {/* Pagination Controls */}
       <div id="footer" className="flex justify-end items-center gap-2">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <Select
+            value={`${limit}`}
+            onValueChange={(value) => {
+              handlePageLimit(Number(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div>
           <span className="text-sm text-muted-foreground">
             Showing page <span className="text-primary">{page}</span> of{" "}

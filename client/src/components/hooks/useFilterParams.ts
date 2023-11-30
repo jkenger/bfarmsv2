@@ -59,6 +59,14 @@ const useFilterParams = () => {
       setSearchParams(searchParams);
     }
   }
+  function handlePageLimit(limit: number) {
+    if (limit !== 10) {
+      setFilterParams("limit", [limit]);
+    } else {
+      searchParams.delete("limit");
+      setSearchParams(searchParams);
+    }
+  }
 
   function handleResetParams() {
     setSearchParams("");
@@ -81,6 +89,7 @@ const useFilterParams = () => {
     handleDesignationChange,
     handleSortChange,
     handleResetParams,
+    handlePageLimit,
     getSortOrder,
   };
 };

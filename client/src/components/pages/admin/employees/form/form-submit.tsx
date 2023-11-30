@@ -9,12 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import { Loader2 } from "lucide-react";
 
 import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { createEmployee, editEmployee } from "../api/employee.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IconProperties } from "@/types/common";
 import { useLayoutEffect, useRef } from "react";
 import Group from "./group";
 
@@ -27,9 +25,7 @@ type Props<T> = {
 function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
   const queryClient = useQueryClient();
   const action = session === "create" ? createEmployee : editEmployee;
-  const { mutate, isPending: isSubmitting } = useMutation(
-    action({ queryClient, form })
-  );
+  const { mutate } = useMutation(action({ queryClient, form }));
   const onSubmit: SubmitHandler<TEmployeeInputs> = (data) => {
     mutate({
       ...data,
@@ -53,11 +49,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
           <FormItem className="sr-only">
             <FormLabel className="text-xs">id</FormLabel>
             <FormControl>
-              <Input
-                placeholder="column_data"
-                {...field}
-                disabled={isSubmitting}
-              />
+              <Input placeholder="column_data" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -73,12 +65,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
           <FormItem>
             <FormLabel className="text-xs">Employee Id</FormLabel>
             <FormControl>
-              <Input
-                placeholder="column_data"
-                {...field}
-                ref={inputRef}
-                disabled={isSubmitting}
-              />
+              <Input placeholder="column_data" {...field} ref={inputRef} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -94,11 +81,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
           <FormItem>
             <FormLabel className="text-xs">First Name</FormLabel>
             <FormControl>
-              <Input
-                {...field}
-                placeholder="column_data"
-                disabled={isSubmitting}
-              />
+              <Input {...field} placeholder="column_data" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -120,11 +103,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
               <p>Optional</p>
             </div>
             <FormControl>
-              <Input
-                {...field}
-                placeholder="column_data"
-                disabled={isSubmitting}
-              />
+              <Input {...field} placeholder="column_data" />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -140,11 +119,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
           <FormItem>
             <FormLabel className="text-xs">Last Name</FormLabel>
             <FormControl>
-              <Input
-                placeholder="column_data"
-                {...field}
-                disabled={isSubmitting}
-              />
+              <Input placeholder="column_data" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -167,11 +142,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
           <FormItem>
             <FormLabel className="text-xs">Age</FormLabel>
             <FormControl>
-              <Input
-                placeholder="column_data"
-                {...field}
-                disabled={isSubmitting}
-              />
+              <Input placeholder="column_data" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -252,16 +223,11 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
             Cancel
           </Button>
         </SheetClose>
-        <Button variant="default" type="submit" disabled={isSubmitting}>
-          {isSubmitting && (
-            <Loader2
-              size={IconProperties.SIZE}
-              strokeWidth={IconProperties.STROKE_WIDTH}
-              className="text-primary-foreground animate-spin"
-            />
-          )}
-          Add Column
-        </Button>
+        <SheetClose asChild>
+          <Button variant="default" type="submit">
+            Add Column
+          </Button>
+        </SheetClose>
       </SheetFooter>
     </form>
   );

@@ -1,7 +1,7 @@
 import Main from "@/components/wrappers/Main";
 import { useLoaderData, defer, Await } from "react-router-dom";
 
-import { employeeColumns } from "./employee.columns";
+import { employeeColumns } from "./table-columns/employee.columns";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
