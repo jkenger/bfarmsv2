@@ -41,7 +41,7 @@ const whitelist = [
   "http://localhost:5173",
   "https://f8rmn02v-5173.asse.devtunnels.ms",
   "https://global.rel.tunnels.api.visualstudio.com",
-  "https://bfarmsv2.onrender.com/",
+  "https://bfarmsv2.onrender.com",
 ]; // Whitelisted origins
 
 const corsOptions = {
