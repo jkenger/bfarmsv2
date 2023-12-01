@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ColumnDef,
   VisibilityState,
@@ -22,10 +20,10 @@ import TableLoader from "./table-loader";
 import {
   Mutation,
   useIsFetching,
-  useIsMutating,
-  useMutation,
+  // useIsMutating,
+  // useMutation,
   useMutationState,
-  useQueryClient,
+  // useQueryClient,
 } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
@@ -47,7 +45,9 @@ import {
   SelectValue,
 } from "./select";
 import { Badge } from "./badge";
-import { createEmployee } from "../pages/admin/employees/api/employee.api";
+// import { createEmployee } from "../pages/admin/employees/api/employee.api";
+import AddEmployee from "../pages/admin/employees/form/AddEmployee";
+import MutationSheet from "./btn-add-sheet";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
   const isFetching = useIsFetching();
-  const isMutating = useIsMutating();
+  // const isMutating = useIsMutating();
   const {
     handleSearchChange,
     handlePageChange,
@@ -76,10 +76,8 @@ export function DataTable<TData, TValue>({
   } = useFilterParams();
   const [searchParams] = useSearchParams();
   const { page, search, limit } = getSearchParams();
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation(createEmployee({ queryClient }));
 
-  const variables = useMutationState({
+  const pendingVariables = useMutationState({
     filters: { mutationKey: [QueryKeys.EMPLOYEES], status: "pending" },
     select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
       mutation.state.variables,
@@ -90,13 +88,12 @@ export function DataTable<TData, TValue>({
       mutation.state.variables,
   }) as TEmployeeInputs[];
 
-  const status = useMutationState({
+  const state = useMutationState({
     filters: { mutationKey: [QueryKeys.EMPLOYEES] },
     select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
-      mutation.state.status,
+      mutation.state,
   });
 
-  console.log(status);
   const table = useReactTable({
     data,
     columns,
@@ -221,39 +218,41 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            <TableRow className={`h-12 max-h-12 relative `}>
-              {isMutating > 0 && variables.length && (
-                <>
-                  <TableCell key={variables[0].employeeId}>
-                    {variables[0].employeeId}
+            {pendingVariables.length > 0 &&
+              pendingVariables.map((variable) => (
+                <TableRow
+                  className={`h-12 max-h-12 relative `}
+                  key={variable.employeeId}
+                >
+                  <TableCell key={variable.employeeId}>
+                    {variable.employeeId}
                   </TableCell>
-                  <TableCell key={variables[0].firstName}>
-                    {variables[0].lastName} {variables[0].firstName}{" "}
-                    {variables[0].middleName}
+                  <TableCell key={variable.firstName}>
+                    {variable.lastName} {variable.firstName}{" "}
+                    {variable.middleName}
                   </TableCell>
-                  <TableCell key={variables[0].age}>
-                    {variables[0].age}
-                  </TableCell>
+                  <TableCell key={variable.age}>{variable.age}</TableCell>
                   <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
                     <Badge className="hover:cursor-default">
                       Adding your data.
                     </Badge>
                   </div>
-                </>
-              )}
-              {status[0] === "error" && !isMutating && (
-                <>
-                  {/* bg-red-200 text-red-700 font-bold */}
-                  <TableCell key={errorVariables[0].employeeId}>
-                    {errorVariables[0].employeeId}
+                </TableRow>
+              ))}
+            {errorVariables.length > 0 &&
+              errorVariables.map((variable, i) => (
+                <TableRow
+                  className={`h-12 max-h-12 relative `}
+                  key={variable.employeeId}
+                >
+                  <TableCell key={variable.employeeId}>
+                    {variable.employeeId}
                   </TableCell>
-                  <TableCell key={errorVariables[0].lastName}>
-                    {errorVariables[0].lastName} {errorVariables[0].firstName}{" "}
-                    {errorVariables[0].middleName}
+                  <TableCell key={variable.firstName}>
+                    {variable.lastName} {variable.firstName}{" "}
+                    {variable.middleName}
                   </TableCell>
-                  <TableCell key={errorVariables[0].age}>
-                    {errorVariables[0].age}
-                  </TableCell>
+                  <TableCell key={variable.age}>{variable.age}</TableCell>
                   <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
                     <Badge
                       variant="destructive"
@@ -261,31 +260,28 @@ export function DataTable<TData, TValue>({
                     >
                       There is a problem adding your data.
                     </Badge>
-                    <Button
-                      variant="outline"
-                      size="xs"
-                      className="font-semibold my-1 ml-2"
-                      onClick={() =>
-                        mutate({
-                          ...errorVariables[0],
-                          age: Number(errorVariables[0].age),
-                        })
+                    <MutationSheet
+                      triggerElement={
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          className="font-semibold my-1 ml-2"
+                        >
+                          Retry
+                        </Button>
+                      }
+                      title="Add new data to"
+                      table="Employees"
+                      error={
+                        // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+                        state[i].error?.response?.data
                       }
                     >
-                      Retry
-                    </Button>
+                      <AddEmployee item={variable} />
+                    </MutationSheet>
                   </div>
-                </>
-              )}
-
-              {/* <TableCell colSpan={columns.length}>
-                {isMutating > 0 && (
-                  <span className="animate-pulse border border-white/30 absolute flex items-center justify-center inset-0 w-full h-full bg-primary/30">
-                    <span className="text-green-500">Adding data...</span>
-                  </span>
-                )}
-              </TableCell> */}
-            </TableRow>
+                </TableRow>
+              ))}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

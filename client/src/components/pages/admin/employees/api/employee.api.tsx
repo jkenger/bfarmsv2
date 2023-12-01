@@ -18,9 +18,7 @@ export const getEmployees = () => {
     queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
     queryFn: async () => {
       try {
-        return await fetch.get<TEmployees>(
-          `/admin/employees?${searchParams.toString()}`
-        );
+        return await fetch.get(`/admin/employees?${searchParams.toString()}`);
       } catch (e) {
         const error = e as AxiosError;
         console.log(error);
@@ -37,7 +35,6 @@ export const getEmployees = () => {
 };
 
 export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
-  const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
     mutationKey: [QueryKeys.EMPLOYEES],
     mutationFn: async (data: TEmployeeInputs) => {
@@ -51,7 +48,6 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
         description: "Employee has been created successfully",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
-      sheetCloseBtn?.click();
       form?.reset();
     },
     onError: async (error: AxiosError) => {

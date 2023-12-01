@@ -13,6 +13,7 @@ type Props = {
   title?: string;
   table?: string;
   description?: string;
+  error?: string;
   children?: React.ReactNode;
 };
 
@@ -21,6 +22,7 @@ function MutationSheet({
   title = "",
   table = "",
   description = "",
+  error = "",
   children,
 }: Props) {
   return (
@@ -32,8 +34,10 @@ function MutationSheet({
             <span>{title}</span>
             <Badge variant="outline"> {table}</Badge>
           </SheetTitle>
-          <SheetDescription className="text-start">
-            {description}
+          <SheetDescription
+            className={`text-start ${error ? " text-red-500" : ""}`}
+          >
+            {description} {error ? error : ""}
           </SheetDescription>
         </SheetHeader>
         <div className="h-[85vh] overflow-y-scroll px-6">{children}</div>

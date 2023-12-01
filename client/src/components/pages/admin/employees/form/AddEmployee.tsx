@@ -3,13 +3,13 @@ import { Form } from "@/components/ui/form";
 
 import FormSubmit from "./form-submit";
 
-function AddEmployee() {
+function AddEmployee({ item }: { item?: TEmployeeInputs }) {
   const form = useForm<TEmployeeInputs>({
     defaultValues: {
-      employeeId: "",
-      firstName: "",
-      lastName: "",
-      age: "",
+      employeeId: item ? item.employeeId : "",
+      firstName: item ? item.firstName : "",
+      lastName: item ? item.lastName : "",
+      age: item ? item.age : "",
     },
   });
 
