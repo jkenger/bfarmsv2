@@ -5,6 +5,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
@@ -26,11 +27,15 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
   const queryClient = useQueryClient();
   const action = session === "create" ? createEmployee : editEmployee;
   const { mutate } = useMutation(action({ queryClient, form }));
+  const field = useFormField();
+  console.log(field);
   const onSubmit: SubmitHandler<TEmployeeInputs> = (data) => {
+    const closeSheet = document.getElementById("sheetCloseBtn");
     mutate({
       ...data,
       age: Number(data.age),
     });
+    closeSheet?.click();
   };
   const inputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
@@ -223,11 +228,10 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
             Cancel
           </Button>
         </SheetClose>
-        <SheetClose asChild>
-          <Button variant="default" type="submit">
-            Add Column
-          </Button>
-        </SheetClose>
+
+        <Button variant="default" type="submit">
+          Add Column
+        </Button>
       </SheetFooter>
     </form>
   );

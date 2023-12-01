@@ -94,6 +94,8 @@ export function DataTable<TData, TValue>({
       mutation.state,
   });
 
+  console.log(state);
+
   const table = useReactTable({
     data,
     columns,
