@@ -36,6 +36,9 @@ export enum IconProperties {
 
 export enum QueryKeys {
   EMPLOYEES = "employees",
+  CREATE_EMPLOYEE = "createEmployee",
+  DELETE_EMPLOYEE = "deleteEmployee",
+  EDIT_EMPLOYEE = "editEmployee",
   DESIGNATIONS = "designations",
 }
 

@@ -3,15 +3,19 @@ import { createContext, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getEmployees } from "./api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
-import TableLoader from "@/components/ui/table-loader";
 
+import { useEmployee } from "./providers/EmployeeProvider";
+import MutationSheet from "@/components/ui/btn-add-sheet";
+import { Button } from "@/components/ui/button";
+import EditEmployee from "./form/EditEmployee";
+import AddEmployee from "./form/AddEmployee";
 type Props = {
-  employeeColumns: ColumnDef<TEmployees>[];
+  employeeColumns: ColumnDef<TDataFields>[];
   initialData: TEmployees[];
 };
 
 export type TEmployeeTableContext = {
-  data: TEmployees[];
+  data: TDataFields[];
   numOfPages: number;
 };
 
@@ -24,7 +28,6 @@ const EmployeeTableContext = createContext<TEmployeeTableContext>(initialState);
 function EmployeeTable({ employeeColumns }: Props) {
   const {
     data: res,
-    isPending,
     isError,
     isSuccess,
     error,
@@ -39,31 +42,66 @@ function EmployeeTable({ employeeColumns }: Props) {
     numOfPages,
   };
 
-  // function refetch() {
-  //   queryClient.invalidateQueries(
-  //     getEmployees({ page, limit, search, sp, group, designation })
-  //   );
-  // }
+  const { createMutation, deleteMutation, editMutation } = useEmployee();
 
   return (
     <EmployeeTableContext.Provider value={value}>
-      {isPending && (
-        <div className="relative">
-          <DataTable
-            columns={employeeColumns}
-            data={data}
-            numOfPages={numOfPages}
-          />
-          <TableLoader />
-        </div>
-      )}
       {isSuccess && (
         <div className="relative">
-          <DataTable
+          <DataTable<TDataFields, string>
             columns={employeeColumns}
             data={data}
             numOfPages={numOfPages}
             dataReloader={refetch}
+            mutations={{
+              create: createMutation,
+              edit: editMutation,
+              delete: deleteMutation,
+            }}
+            onEditErrorAction={
+              <MutationSheet
+                triggerElement={
+                  <Button
+                    variant="outline"
+                    size="xs"
+                    className="font-semibold my-1 ml-2"
+                  >
+                    Retry
+                  </Button>
+                }
+                title="Update data in"
+                table="Employees"
+                error={
+                  // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+                  editMutation.error?.response?.data
+                }
+              >
+                <EditEmployee toEditItem={editMutation.variables} />
+              </MutationSheet>
+            }
+            onCreateErrorAction={
+              <MutationSheet
+                triggerElement={
+                  <Button
+                    variant="outline"
+                    size="xs"
+                    className="font-semibold my-1 ml-2"
+                  >
+                    Retry
+                  </Button>
+                }
+                title="Update data in"
+                table="Employees"
+                error={
+                  // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+                  createMutation.error?.response?.data
+                }
+              >
+                <AddEmployee toEditItem={createMutation.variables} />
+              </MutationSheet>
+            }
+            // deleteElement={<DeleteEmployee />}
+            // editElement={<EditEmployee />}
           />
         </div>
       )}

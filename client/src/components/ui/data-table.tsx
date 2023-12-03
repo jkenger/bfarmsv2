@@ -17,14 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableLoader from "./table-loader";
-import {
-  Mutation,
-  useIsFetching,
-  // useIsMutating,
-  // useMutation,
-  useMutationState,
-  // useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationResult, useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
@@ -32,7 +25,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { RotateCw, X } from "lucide-react";
 import { Button } from "./button";
-import { IconProperties, QueryKeys } from "@/types/common";
+import { IconProperties } from "@/types/common";
 import debounce from "debounce";
 import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
@@ -44,23 +37,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
-import { Badge } from "./badge";
-// import { createEmployee } from "../pages/admin/employees/api/employee.api";
-import AddEmployee from "../pages/admin/employees/form/AddEmployee";
-import MutationSheet from "./btn-add-sheet";
-
+import {
+  DataTableColumnStatusAdding,
+  DataTableColumnStatusAddingFails,
+  DataTableColumnStatusDelete,
+  DataTableColumnStatusDeleteFails,
+  DataTableColumnStatusEdit,
+  DataTableColumnStatusEditFails,
+} from "./data-table-column-status";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   numOfPages?: number;
   dataReloader?: () => void;
+  mutations?: {
+    create: UseMutationResult<void, Error, TAdminForms, unknown>;
+    delete: UseMutationResult<string, Error, string, unknown>;
+    edit: UseMutationResult<void, Error, TAdminForms, unknown>;
+  };
+  onEditErrorAction?: React.ReactElement;
+  onCreateErrorAction?: React.ReactElement;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends TDataFields, TValue>({
   columns,
   data,
   numOfPages = 0,
   dataReloader,
+  mutations,
+  onEditErrorAction,
+  onCreateErrorAction,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
@@ -77,26 +83,7 @@ export function DataTable<TData, TValue>({
   const [searchParams] = useSearchParams();
   const { page, search, limit } = getSearchParams();
 
-  const pendingVariables = useMutationState({
-    filters: { mutationKey: [QueryKeys.EMPLOYEES], status: "pending" },
-    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
-      mutation.state.variables,
-  }) as TEmployeeInputs[];
-  const errorVariables = useMutationState({
-    filters: { mutationKey: [QueryKeys.EMPLOYEES], status: "error" },
-    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
-      mutation.state.variables,
-  }) as TEmployeeInputs[];
-
-  const state = useMutationState({
-    filters: { mutationKey: [QueryKeys.EMPLOYEES] },
-    select: (mutation: Mutation<unknown, Error, unknown, unknown>) =>
-      mutation.state,
-  });
-
-  console.log(state);
-
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -124,6 +111,7 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     table.setPageSize(Number(limit));
   }, [table, limit]);
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -155,6 +143,7 @@ export function DataTable<TData, TValue>({
           >
             Designations
           </FacetedFilterButton>
+
           {/* Reset */}
           {searchParams.size > 0 && (
             <Button
@@ -180,6 +169,7 @@ export function DataTable<TData, TValue>({
               >
             }
           />
+
           {/* Refresh Button */}
           <Button
             variant="outline"
@@ -200,10 +190,7 @@ export function DataTable<TData, TValue>({
         <Table className="bg-card">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="[&>*:first-child]:pl-4 "
-              >
+              <TableRow key={headerGroup.id} className="[&>*:first-child]:pl-4">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -220,85 +207,77 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {pendingVariables.length > 0 &&
-              pendingVariables.map((variable) => (
-                <TableRow
-                  className={`h-12 max-h-12 relative `}
-                  key={variable.employeeId}
-                >
-                  <TableCell key={variable.employeeId}>
-                    {variable.employeeId}
-                  </TableCell>
-                  <TableCell key={variable.firstName}>
-                    {variable.lastName} {variable.firstName}{" "}
-                    {variable.middleName}
-                  </TableCell>
-                  <TableCell key={variable.age}>{variable.age}</TableCell>
-                  <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
-                    <Badge className="hover:cursor-default">
-                      Adding your data.
-                    </Badge>
-                  </div>
-                </TableRow>
-              ))}
-            {errorVariables.length > 0 &&
-              errorVariables.map((variable, i) => (
-                <TableRow
-                  className={`h-12 max-h-12 relative `}
-                  key={variable.employeeId}
-                >
-                  <TableCell key={variable.employeeId}>
-                    {variable.employeeId}
-                  </TableCell>
-                  <TableCell key={variable.firstName}>
-                    {variable.lastName} {variable.firstName}{" "}
-                    {variable.middleName}
-                  </TableCell>
-                  <TableCell key={variable.age}>{variable.age}</TableCell>
-                  <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
-                    <Badge
-                      variant="destructive"
-                      className="hover:cursor-default"
-                    >
-                      There is a problem adding your data.
-                    </Badge>
-                    <MutationSheet
-                      triggerElement={
-                        <Button
-                          variant="outline"
-                          size="xs"
-                          className="font-semibold my-1 ml-2"
-                        >
-                          Retry
-                        </Button>
-                      }
-                      title="Add new data to"
-                      table="Employees"
-                      error={
-                        // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-                        state[i].error?.response?.data
-                      }
-                    >
-                      <AddEmployee item={variable} />
-                    </MutationSheet>
-                  </div>
-                </TableRow>
-              ))}
+            {/* Render every activity on query states */}
+            {mutations?.create.isPending && (
+              <TableRow
+                key={mutations?.create.submittedAt}
+                className="h-12 max-h12 relative"
+              >
+                <DataTableColumnStatusAdding />
+              </TableRow>
+            )}
+
+            {mutations?.create.isError && (
+              <TableRow
+                key={mutations?.create.submittedAt}
+                className="h-12 max-h12 relative"
+              >
+                <DataTableColumnStatusAddingFails
+                  mutation={mutations.create}
+                  action={onCreateErrorAction}
+                />
+              </TableRow>
+            )}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="h-12 max-h-12"
+                  className="h-12 max-h-12 relative"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <>
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    </>
                   ))}
+
+                  {mutations?.edit.isPending &&
+                    mutations.edit.variables.id === row.original.id && (
+                      <DataTableColumnStatusEdit
+                        variables={mutations.edit.variables}
+                      />
+                    )}
+                  {mutations?.edit.isError &&
+                    mutations.edit.variables.id === row.original.id && (
+                      <DataTableColumnStatusEditFails
+                        mutation={mutations.edit}
+                        action={onEditErrorAction}
+                      />
+                    )}
+
+                  {mutations?.delete.isPending && (
+                    <>
+                      {mutations?.delete.variables === row.original.id && (
+                        <DataTableColumnStatusDelete
+                          variables={mutations?.delete.variables}
+                        />
+                      )}
+                    </>
+                  )}
+                  {mutations?.delete.isError && (
+                    <>
+                      {mutations?.delete.variables === row.original.id && (
+                        <DataTableColumnStatusDeleteFails
+                          mutation={mutations.delete}
+                        />
+                      )}
+                    </>
+                  )}
                 </TableRow>
               ))
             ) : (

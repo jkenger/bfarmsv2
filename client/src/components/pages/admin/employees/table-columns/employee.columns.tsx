@@ -1,12 +1,12 @@
+import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "../form/DeleteEmployee";
 import EditEmployee from "../form/EditEmployee";
-import DataTableActions from "@/components/ui/data-table-actions";
 
 export type TGlobalEmployees = TEmployees;
 
-export const employeeColumns: ColumnDef<TEmployees>[] = [
+export const employeeColumns: ColumnDef<TDataFields>[] = [
   {
     accessorKey: "employeeId",
     header: ({ column }) => {
@@ -103,16 +103,16 @@ export const employeeColumns: ColumnDef<TEmployees>[] = [
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => {
-      const employee = row.original;
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-
       return (
         <>
           <DataTableActions
-            key={employee.id}
-            deleteElement={<DeleteEmployee id={employee.id} />}
-            editElement={<EditEmployee item={employee} />}
+            key={row.original.id}
+            deleteElement={
+              <DeleteEmployee id={row.original.id} trigger={false} />
+            }
+            editElement={
+              <EditEmployee toEditItem={row.original} from="tableAction" />
+            }
           />
         </>
       );

@@ -5,33 +5,30 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  useFormField,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
 
-import { SubmitHandler, UseFormReturn } from "react-hook-form";
-import { createEmployee, editEmployee } from "../api/employee.api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  FieldValues,
+  Path,
+  SubmitHandler,
+  UseFormReturn,
+} from "react-hook-form";
+import { UseMutationResult } from "@tanstack/react-query";
 import { useLayoutEffect, useRef } from "react";
 import Group from "./group";
 
 type Props<T> = {
-  session: "create" | "edit";
-  form: UseFormReturn<TEmployeeInputs, unknown, undefined>;
-  items?: T;
+  form: UseFormReturn<T & FieldValues, unknown, undefined>;
+  mutation?: UseMutationResult<void, Error, TEmployeeForms, unknown>;
 };
 
-function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
-  const queryClient = useQueryClient();
-  const action = session === "create" ? createEmployee : editEmployee;
-  const { mutate } = useMutation(action({ queryClient, form }));
-  const field = useFormField();
-  console.log(field);
-  const onSubmit: SubmitHandler<TEmployeeInputs> = (data) => {
+function FormSubmit<T extends TAdminForms>({ form, mutation }: Props<T>) {
+  const onSubmit: SubmitHandler<T> = (data) => {
     const closeSheet = document.getElementById("sheetCloseBtn");
-    mutate({
+    mutation?.mutate({
       ...data,
       age: Number(data.age),
     });
@@ -49,7 +46,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
     >
       <FormField
         control={form.control}
-        name="id"
+        name={"id" as Path<T & FieldValues>}
         render={({ field }) => (
           <FormItem className="sr-only">
             <FormLabel className="text-xs">id</FormLabel>
@@ -62,7 +59,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
-        name="employeeId"
+        name={"employeeId" as Path<T & FieldValues>}
         rules={{
           required: "This field is required",
         }}
@@ -78,7 +75,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
-        name="firstName"
+        name={"firstName" as Path<T & FieldValues>}
         rules={{
           required: "This field is required",
         }}
@@ -94,7 +91,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
-        name="middleName"
+        name={"middleName" as Path<T & FieldValues>}
         rules={{
           minLength: {
             value: 2,
@@ -116,7 +113,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
-        name="lastName"
+        name={"lastName" as Path<T & FieldValues>}
         rules={{
           required: "This field is required",
         }}
@@ -132,7 +129,7 @@ function FormSubmit<T extends TTableActions>({ session, form }: Props<T>) {
       />
       <FormField
         control={form.control}
-        name="age"
+        name={"age" as Path<T & FieldValues>}
         rules={{
           required: "This field is required",
           validate: (value) => {

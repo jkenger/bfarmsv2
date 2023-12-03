@@ -6,20 +6,35 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger,
 } from "./dialog";
 import { Button } from "./button";
-import { Loader2 } from "lucide-react";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 type Props = {
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   onDelete: () => void;
-  isDeleting?: boolean;
+  trigger?: boolean;
+  children?: React.ReactNode;
 };
 
-function DeleteDialog({ open, onOpen, onDelete, isDeleting }: Props) {
+function DeleteDialog({
+  open,
+  onOpen,
+  onDelete,
+  trigger = true,
+  children = "Delete",
+}: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpen}>
+      {trigger && (
+        <DialogTrigger>
+          <Button variant="outline" size="xs">
+            {children}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you sure absolutely sure?</DialogTitle>
@@ -29,15 +44,11 @@ function DeleteDialog({ open, onOpen, onDelete, isDeleting }: Props) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            type="submit"
-            variant="destructive"
-            onClick={onDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting && <Loader2 className="text-primary" />}
-            Delete
-          </Button>
+          <DialogClose asChild>
+            <Button type="submit" variant="destructive" onClick={onDelete}>
+              Delete
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

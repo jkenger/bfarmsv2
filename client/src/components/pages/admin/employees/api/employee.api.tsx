@@ -1,14 +1,19 @@
-import { toast } from "@/components/ui/use-toast";
 import fetch from "@/lib/utils";
 import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
-import { AxiosError } from "axios";
+
 import { QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
+import { toast } from "sonner";
 
 type TEmployeeMutation = {
   queryClient: QueryClient;
-  form?: UseFormReturn<TEmployeeInputs, unknown, undefined>;
+  form?: UseFormReturn<TEmployeeForms, unknown, undefined>;
+};
+
+export type getEmployeeResponse = {
+  data: TEmployees[];
+  numOfPages: number;
 };
 
 export const getEmployees = () => {
@@ -17,16 +22,7 @@ export const getEmployees = () => {
   return {
     queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
     queryFn: async () => {
-      try {
-        return await fetch.get(`/admin/employees?${searchParams.toString()}`);
-      } catch (e) {
-        const error = e as AxiosError;
-        console.log(error);
-        toast({
-          title: "Error",
-          description: error.response?.data as string,
-        });
-      }
+      return await fetch.get(`/admin/employees?${searchParams.toString()}`);
     },
 
     placeholderData: keepPreviousData,
@@ -36,24 +32,23 @@ export const getEmployees = () => {
 
 export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   return {
-    mutationKey: [QueryKeys.EMPLOYEES],
-    mutationFn: async (data: TEmployeeInputs) => {
+    mutationKey: [QueryKeys.CREATE_EMPLOYEE],
+    mutationFn: async (data: TAdminForms) => {
       await fetch.post("/admin/employees", {
         ...data,
       });
     },
     onSuccess: async () => {
-      toast({
-        title: "Employee created",
-        description: "Employee has been created successfully",
+      toast.success(`Employee Created`, {
+        description: "A new employee has been successfully addded.",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       form?.reset();
     },
-    onError: async (error: AxiosError) => {
-      toast({
-        title: "Error",
-        description: error.response?.data as string,
+    onError: async () => {
+      toast.error(`Failed to Delete Employee`, {
+        description:
+          "The employee could not be removed due to an issue. Please try again.",
       });
     },
   };
@@ -62,24 +57,25 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
 export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
-    mutationFn: async (data: TEmployeeInputs) => {
+    mutationKey: [QueryKeys.EDIT_EMPLOYEE],
+    mutationFn: async (data: TEmployeeForms) => {
       await fetch.put(`/admin/employees/${data.id}`, {
         ...data,
       });
     },
     onSuccess: async () => {
-      toast({
-        title: "Employee updated",
-        description: "Employee has been updated successfully",
+      toast.success(`Employee Updated`, {
+        description: "Changes to the employee details have been saved.",
       });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       sheetCloseBtn?.click();
       form?.reset();
     },
-    onError: async (error: AxiosError) => {
-      toast({
-        title: "Error",
-        description: error.response?.data as string,
+    onError: async () => {
+      toast.error(`Failed to Update Employee`, {
+        description:
+          "Changes to the employee details could not be saved. Please retry.",
       });
     },
   };
@@ -87,24 +83,23 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
 
 export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
   return {
+    mutationKey: [QueryKeys.DELETE_EMPLOYEE],
     mutationFn: async (id: string) => {
       await fetch.delete(`/admin/employees/${id}`);
+      return id;
     },
     onSuccess: async () => {
-      toast({
-        title: "Employee deleted",
-        description: "Employee has been deleted successfully",
+      toast.warning(`Employee Deleted`, {
+        className: "bg-primary",
+        description: "The employee has been removed from the records.",
       });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
-    onError: async (error: AxiosError) => {
-      toast({
-        title: "Error",
-        description: error.response?.data as string,
+    onError: async () => {
+      toast.error("Failed to Delete Employee", {
+        description:
+          "The employee could not be removed due to an issue. Please try again.",
       });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
   };
 };

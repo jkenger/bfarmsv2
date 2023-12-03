@@ -28,7 +28,7 @@ function DropDownEditSheet({
       <SheetContent side="mutationRight" className="bg-card px-0">
         <SheetHeader className="px-6">
           <SheetTitle className="flex items-center gap-3">
-            <span>Edit data to</span>
+            <span>Update data in</span>
             <Badge variant="outline"> {table}</Badge>
           </SheetTitle>
           <SheetDescription className="text-start">

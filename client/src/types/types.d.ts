@@ -11,7 +11,9 @@ type TEmployees = {
   createdAt: string;
 };
 
-type TEmployeeInputs = {
+type TAdminForms = TEmployeeForms;
+
+type TEmployeeForms = {
   id: string;
   employeeId: string;
   firstName: string;
@@ -25,4 +27,8 @@ type TDesignation = {
   designation: string;
 };
 
-type TTableActions = TEmployees & TDesignation;
+type TTableValues = {
+  id: string;
+};
+
+type TDataFields = TEmployees & TDesignation;

@@ -1,21 +1,33 @@
-import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 
-import FormSubmit from "./form-submit";
+import { useForm } from "react-hook-form";
 
-function AddEmployee({ item }: { item?: TEmployeeInputs }) {
-  const form = useForm<TEmployeeInputs>({
+import { useLayoutEffect, useRef } from "react";
+
+import { useEmployee } from "../providers/EmployeeProvider";
+import FormSubmit from "./form-submit";
+type Props = {
+  toEditItem?: TAdminForms;
+};
+
+function AddEmployee({ toEditItem }: Props) {
+  const form = useForm<TAdminForms>({
     defaultValues: {
-      employeeId: item ? item.employeeId : "",
-      firstName: item ? item.firstName : "",
-      lastName: item ? item.lastName : "",
-      age: item ? item.age : "",
+      employeeId: toEditItem ? toEditItem.employeeId : "",
+      firstName: toEditItem ? toEditItem.firstName : "",
+      lastName: toEditItem ? toEditItem.lastName : "",
+      age: toEditItem ? toEditItem.age : "",
     },
   });
+  const { createMutation } = useEmployee();
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  useLayoutEffect(() => {
+    inputRef.current?.focus();
+  }, []);
   return (
     <Form {...form}>
-      <FormSubmit session="create" form={form} />
+      <FormSubmit<TAdminForms> form={form} mutation={createMutation} />
     </Form>
   );
 }
