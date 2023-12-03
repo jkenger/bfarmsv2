@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import TableLoader from "./table-loader";
+
 import { UseMutationResult, useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
@@ -30,6 +30,7 @@ import debounce from "debounce";
 import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
 import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
   Select,
   SelectContent,
@@ -111,6 +112,29 @@ export function DataTable<TData extends TDataFields, TValue>({
   useEffect(() => {
     table.setPageSize(Number(limit));
   }, [table, limit]);
+
+  // Framer motion variables
+  const MotionTableBody = motion(TableBody);
+  const TableBodyVariant = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+  const MotionTableRow = motion(TableRow);
+  const TableRowVariant = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+    },
+  };
 
   return (
     <div className="space-y-2">
@@ -206,7 +230,11 @@ export function DataTable<TData extends TDataFields, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <MotionTableBody
+            initial="hidden"
+            whileInView="visible"
+            variants={TableBodyVariant}
+          >
             {/* Render every activity on query states */}
             {mutations?.create.isPending && (
               <TableRow
@@ -230,8 +258,9 @@ export function DataTable<TData extends TDataFields, TValue>({
             )}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="h-12 max-h-12 relative"
+                <MotionTableRow
+                  variants={TableRowVariant}
+                  className={`h-12 max-h-12 relative `}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -278,7 +307,7 @@ export function DataTable<TData extends TDataFields, TValue>({
                       )}
                     </>
                   )}
-                </TableRow>
+                </MotionTableRow>
               ))
             ) : (
               <TableRow>
@@ -290,9 +319,9 @@ export function DataTable<TData extends TDataFields, TValue>({
                 </TableCell>
               </TableRow>
             )}
-          </TableBody>
+          </MotionTableBody>
         </Table>
-        {isFetching ? <TableLoader /> : ""}
+        {/* {isFetching ? <TableLoader /> : ""} */}
       </div>
       {/* Pagination Controls */}
       <div id="footer" className="flex justify-end items-center gap-2">

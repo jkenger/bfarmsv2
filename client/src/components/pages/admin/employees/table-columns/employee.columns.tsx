@@ -32,7 +32,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
       const lastName = row.original.lastName || "";
       return (
         <span>
-          {lastName} {firstName}{" "}
+          {lastName}, {firstName}{" "}
           {middleName !== "" ? middleName.charAt(0) + "." : ""}{" "}
         </span>
       );

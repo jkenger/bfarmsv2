@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import { Badge } from "./badge";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -22,6 +23,7 @@ const DataTableSearch = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
           className="w-full rounded-md h-8 bg-transparent file:border-0 file:bg-transparent file:text-xs file:font-medium placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50"
         />
+        <Badge variant="outline">all</Badge>
       </div>
     );
   }
