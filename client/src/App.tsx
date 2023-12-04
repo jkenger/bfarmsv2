@@ -30,7 +30,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
 import { Roles } from "./types/common";
 import EmployeeQueryProvider from "./components/pages/admin/employees/providers/EmployeeQueryProvider";
-import EmployeeProvider from "./components/pages/admin/employees/providers/EmployeeProvider";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -74,9 +73,7 @@ const router = createBrowserRouter([
                 loader: employeesLoader(queryClient),
                 element: (
                   <EmployeeQueryProvider>
-                    <EmployeeProvider>
-                      <AdminEmployees />
-                    </EmployeeProvider>
+                    <AdminEmployees />
                   </EmployeeQueryProvider>
                 ),
               },

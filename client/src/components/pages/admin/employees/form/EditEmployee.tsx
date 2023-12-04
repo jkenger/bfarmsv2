@@ -2,8 +2,8 @@ import DropDownEditSheet from "@/components/ui/dd-edit-sheet";
 import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
-import { useEmployee } from "../providers/EmployeeProvider";
 import FormSubmit from "./form-submit";
+import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -29,7 +29,7 @@ function EditEmployee<T extends TAdminForms>({
     },
   });
 
-  const { editMutation } = useEmployee();
+  const { editMutation } = useEmployeeQuery();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table="employees" open={open} onOpen={onOpen}>

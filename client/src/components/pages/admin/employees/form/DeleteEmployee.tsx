@@ -1,7 +1,7 @@
 import React from "react";
 
 import DeleteDialog from "@/components/ui/delete-dialog";
-import { useEmployee } from "../providers/EmployeeProvider";
+import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 
 type Props = {
   id?: string;
@@ -11,7 +11,7 @@ type Props = {
   children?: React.ReactNode;
 };
 function DeleteEmployee({ open, onOpen, id, trigger = true, children }: Props) {
-  const { deleteMutation } = useEmployee();
+  const { deleteMutation } = useEmployeeQuery();
   function handleDelete() {
     deleteMutation.mutate(id as string);
   }

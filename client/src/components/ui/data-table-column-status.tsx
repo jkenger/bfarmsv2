@@ -11,7 +11,7 @@ type Props = {
 
 function DataTableColumnStatus({ children }: Props) {
   return (
-    <div className="flex items-center justify-center bg-muted/80 gap-2 absolute inset-0">
+    <div className="flex items-center justify-center backdrop-blur-sm bg-muted gap-2 absolute inset-0">
       {children}
     </div>
   );

@@ -1,5 +1,4 @@
 import {
-  ColumnDef,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -16,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { UseMutationResult, useIsFetching } from "@tanstack/react-query";
+import TableLoader from "./table-loader";
+import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
@@ -30,7 +29,6 @@ import debounce from "debounce";
 import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
 import { useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import {
   Select,
   SelectContent,
@@ -46,33 +44,12 @@ import {
   DataTableColumnStatusEdit,
   DataTableColumnStatusEditFails,
 } from "./data-table-column-status";
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  numOfPages?: number;
-  dataReloader?: () => void;
-  mutations?: {
-    create: UseMutationResult<void, Error, TAdminForms, unknown>;
-    delete: UseMutationResult<string, Error, string, unknown>;
-    edit: UseMutationResult<void, Error, TAdminForms, unknown>;
-  };
-  onEditErrorAction?: React.ReactElement;
-  onCreateErrorAction?: React.ReactElement;
-}
+import { DataTableProps, useDataTable } from "../context/data-table-provider";
 
-export function DataTable<TData extends TDataFields, TValue>({
-  columns,
-  data,
-  numOfPages = 0,
-  dataReloader,
-  mutations,
-  onEditErrorAction,
-  onCreateErrorAction,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends TDataFields, TValue>() {
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
   const isFetching = useIsFetching();
-  // const isMutating = useIsMutating();
   const {
     handleSearchChange,
     handlePageChange,
@@ -83,6 +60,15 @@ export function DataTable<TData extends TDataFields, TValue>({
   } = useFilterParams();
   const [searchParams] = useSearchParams();
   const { page, search, limit } = getSearchParams();
+  const {
+    columns,
+    data,
+    numOfPages,
+    dataReloader,
+    mutations,
+    onEditErrorAction,
+    onCreateErrorAction,
+  } = useDataTable() as DataTableProps<TData, TValue>;
 
   const table = useReactTable<TData>({
     data,
@@ -112,29 +98,6 @@ export function DataTable<TData extends TDataFields, TValue>({
   useEffect(() => {
     table.setPageSize(Number(limit));
   }, [table, limit]);
-
-  // Framer motion variables
-  const MotionTableBody = motion(TableBody);
-  const TableBodyVariant = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-  const MotionTableRow = motion(TableRow);
-  const TableRowVariant = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-    },
-  };
 
   return (
     <div className="space-y-2">
@@ -230,11 +193,7 @@ export function DataTable<TData extends TDataFields, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <MotionTableBody
-            initial="hidden"
-            whileInView="visible"
-            variants={TableBodyVariant}
-          >
+          <TableBody>
             {/* Render every activity on query states */}
             {mutations?.create.isPending && (
               <TableRow
@@ -258,9 +217,9 @@ export function DataTable<TData extends TDataFields, TValue>({
             )}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <MotionTableRow
-                  variants={TableRowVariant}
-                  className={`h-12 max-h-12 relative `}
+                <TableRow
+                  className={`h-12 max-h-12 relative $ext-card
+                  `}
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
@@ -307,7 +266,7 @@ export function DataTable<TData extends TDataFields, TValue>({
                       )}
                     </>
                   )}
-                </MotionTableRow>
+                </TableRow>
               ))
             ) : (
               <TableRow>
@@ -319,9 +278,9 @@ export function DataTable<TData extends TDataFields, TValue>({
                 </TableCell>
               </TableRow>
             )}
-          </MotionTableBody>
+          </TableBody>
         </Table>
-        {/* {isFetching ? <TableLoader /> : ""} */}
+        {isFetching ? <TableLoader /> : ""}
       </div>
       {/* Pagination Controls */}
       <div id="footer" className="flex justify-end items-center gap-2">

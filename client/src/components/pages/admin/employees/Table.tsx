@@ -1,31 +1,23 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { createContext, useContext } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 import { getEmployees } from "./api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
 
-import { useEmployee } from "./providers/EmployeeProvider";
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { Button } from "@/components/ui/button";
 import EditEmployee from "./form/EditEmployee";
 import AddEmployee from "./form/AddEmployee";
+import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
+import { AxiosError } from "axios";
+import DataTableProvider from "@/components/context/data-table-provider";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
   initialData: TEmployees[];
 };
 
-export type TEmployeeTableContext = {
-  data: TDataFields[];
-  numOfPages: number;
-};
-
-const initialState = {
-  data: [],
-  numOfPages: 0,
-};
-
-const EmployeeTableContext = createContext<TEmployeeTableContext>(initialState);
 function EmployeeTable({ employeeColumns }: Props) {
+  // useQuery for fetching employee is needed here
   const {
     data: res,
     isError,
@@ -37,28 +29,24 @@ function EmployeeTable({ employeeColumns }: Props) {
   const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
-  const value: TEmployeeTableContext = {
-    data,
-    numOfPages,
-  };
-
-  const { createMutation, deleteMutation, editMutation } = useEmployee();
-
+  const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
+  const editMutationError = editMutation?.error as AxiosError;
+  const createMutationError = createMutation?.error as AxiosError;
   return (
-    <EmployeeTableContext.Provider value={value}>
+    <>
       {isSuccess && (
-        <div className="relative">
-          <DataTable<TDataFields, string>
-            columns={employeeColumns}
-            data={data}
-            numOfPages={numOfPages}
-            dataReloader={refetch}
-            mutations={{
+        <DataTableProvider<TDataFields, string>
+          value={{
+            columns: employeeColumns,
+            data,
+            numOfPages,
+            dataReloader: refetch,
+            mutations: {
               create: createMutation,
               edit: editMutation,
               delete: deleteMutation,
-            }}
-            onEditErrorAction={
+            },
+            onEditErrorAction: (
               <MutationSheet
                 triggerElement={
                   <Button
@@ -71,15 +59,12 @@ function EmployeeTable({ employeeColumns }: Props) {
                 }
                 title="Update data in"
                 table="Employees"
-                error={
-                  // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-                  editMutation.error?.response?.data
-                }
+                error={editMutationError?.response?.data as string}
               >
                 <EditEmployee toEditItem={editMutation.variables} />
               </MutationSheet>
-            }
-            onCreateErrorAction={
+            ),
+            onCreateErrorAction: (
               <MutationSheet
                 triggerElement={
                   <Button
@@ -92,32 +77,19 @@ function EmployeeTable({ employeeColumns }: Props) {
                 }
                 title="Update data in"
                 table="Employees"
-                error={
-                  // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-                  createMutation.error?.response?.data
-                }
+                error={createMutationError?.response?.data as string}
               >
                 <AddEmployee toEditItem={createMutation.variables} />
               </MutationSheet>
-            }
-            // deleteElement={<DeleteEmployee />}
-            // editElement={<EditEmployee />}
-          />
-        </div>
+            ),
+          }}
+        >
+          <DataTable />
+        </DataTableProvider>
       )}
       {isError && <div className="relative">{error.message}</div>}
-    </EmployeeTableContext.Provider>
+    </>
   );
-}
-
-export function useEmployeeTable() {
-  const context = useContext(EmployeeTableContext);
-  if (context === undefined) {
-    throw new Error(
-      "useEmployeeTable must be used within a EmployeeTableContext"
-    );
-  }
-  return context;
 }
 
 export default EmployeeTable;

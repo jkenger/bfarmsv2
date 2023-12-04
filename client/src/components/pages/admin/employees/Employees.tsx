@@ -15,8 +15,9 @@ import EmployeeTable from "./Table";
 import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
 import DataTableHistory from "@/components/ui/data-table-history";
-import { useEmployee } from "./providers/EmployeeProvider";
+
 import ActivityCard from "./ui/activity-card";
+import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 
 // import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
@@ -29,7 +30,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function Employees() {
   const { data: initialData } = useLoaderData() as { data: TEmployees };
   const { createdActivities, deletedActivities, editedActivities } =
-    useEmployee();
+    useEmployeeQuery();
 
   console.log(createdActivities);
   return (

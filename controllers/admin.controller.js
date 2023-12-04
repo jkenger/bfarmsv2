@@ -146,6 +146,21 @@ export const getEmployees = asyncHandler(async (req, res) => {
         },
       ],
     };
+    if (toSort === "fullName") {
+      sort = {
+        orderBy: [
+          {
+            lastName: sortOrder,
+          },
+          {
+            firstName: sortOrder,
+          },
+          {
+            middleName: sortOrder,
+          },
+        ],
+      };
+    }
 
     if (toSort === "payrollGroup") {
       sort = {

@@ -4,8 +4,8 @@ import { useForm } from "react-hook-form";
 
 import { useLayoutEffect, useRef } from "react";
 
-import { useEmployee } from "../providers/EmployeeProvider";
 import FormSubmit from "./form-submit";
+import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 type Props = {
   toEditItem?: TAdminForms;
 };
@@ -19,7 +19,7 @@ function AddEmployee({ toEditItem }: Props) {
       age: toEditItem ? toEditItem.age : "",
     },
   });
-  const { createMutation } = useEmployee();
+  const { createMutation } = useEmployeeQuery();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
