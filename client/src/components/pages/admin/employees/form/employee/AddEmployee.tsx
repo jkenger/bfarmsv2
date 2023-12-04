@@ -4,14 +4,14 @@ import { useForm } from "react-hook-form";
 
 import { useLayoutEffect, useRef } from "react";
 
-import FormSubmit from "./form-submit";
-import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
+import FormSubmit from "../form-submit";
+import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 type Props = {
-  toEditItem?: TAdminForms;
+  toEditItem?: TDataFields;
 };
 
 function AddEmployee({ toEditItem }: Props) {
-  const form = useForm<TAdminForms>({
+  const form = useForm<TDataFields>({
     defaultValues: {
       employeeId: toEditItem ? toEditItem.employeeId : "",
       firstName: toEditItem ? toEditItem.firstName : "",
@@ -27,7 +27,7 @@ function AddEmployee({ toEditItem }: Props) {
   }, []);
   return (
     <Form {...form}>
-      <FormSubmit<TAdminForms> form={form} mutation={createMutation} />
+      <FormSubmit<TDataFields> form={form} mutation={createMutation} />
     </Form>
   );
 }

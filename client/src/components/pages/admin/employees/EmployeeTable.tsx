@@ -6,8 +6,8 @@ import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { Button } from "@/components/ui/button";
-import EditEmployee from "./form/EditEmployee";
-import AddEmployee from "./form/AddEmployee";
+import EditEmployee from "./form/employee/EditEmployee";
+import AddEmployee from "./form/employee/AddEmployee";
 import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";

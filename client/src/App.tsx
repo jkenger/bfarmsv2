@@ -21,6 +21,7 @@ import AdminDeductions from "./components/pages/admin/Deductions";
 import AdminLeaves from "./components/pages/admin/leaves/Leaves";
 import AdminDashboard from "./components/pages/admin/Dashboard";
 import { loader as employeesLoader } from "./components/pages/admin/employees/Employees";
+import { loader as designationsLoader } from "./components/pages/admin/employees/Designations";
 import Designations from "./components/pages/admin/employees/Designations";
 import Groups from "./components/pages/admin/payroll/Groups";
 import LeaveTypes from "./components/pages/admin/leaves/Types";
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
               },
               {
                 path: "designations",
+                loader: designationsLoader(queryClient),
                 element: <Designations />,
               },
             ],

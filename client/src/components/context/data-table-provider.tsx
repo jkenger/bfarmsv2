@@ -8,9 +8,9 @@ export interface DataTableProps<TData, TValue> {
   numOfPages?: number;
   dataReloader?: () => void;
   mutations?: {
-    create: UseMutationResult<void, Error, TAdminForms, unknown>;
-    delete: UseMutationResult<void, Error, TAdminForms, unknown>;
-    edit: UseMutationResult<void, Error, TAdminForms, unknown>;
+    create: UseMutationResult<void, Error, TDataFields, unknown>;
+    delete: UseMutationResult<void, Error, TDataFields, unknown>;
+    edit: UseMutationResult<void, Error, TDataFields, unknown>;
   };
   onEditErrorAction?: React.ReactElement;
   onCreateErrorAction?: React.ReactElement;

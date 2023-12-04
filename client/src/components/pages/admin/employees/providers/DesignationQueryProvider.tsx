@@ -17,7 +17,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-type TEmployeeQueryContext = {
+type TDesignationQueryContext = {
   createMutation: UseMutationResult<void, Error, TDataFields, unknown>;
 
   editMutation: UseMutationResult<void, Error, TDataFields, unknown>;
@@ -29,11 +29,11 @@ type TEmployeeQueryContext = {
   createdActivities: TDataFields[];
 };
 
-const EmployeeQueryContext = React.createContext<TEmployeeQueryContext>(
-  {} as TEmployeeQueryContext
+const DesignationQueryContext = React.createContext<TDesignationQueryContext>(
+  {} as TDesignationQueryContext
 );
 
-function EmployeeQueryProvider({ children }: Props) {
+function DesignationQueryProvider({ children }: Props) {
   const queryClient = useQueryClient();
   const createMutation = useMutation(createEmployee({ queryClient }));
   const editMutation = useMutation(editEmployee({ queryClient }));
@@ -70,20 +70,22 @@ function EmployeeQueryProvider({ children }: Props) {
   };
 
   return (
-    <EmployeeQueryContext.Provider value={value}>
+    <DesignationQueryContext.Provider value={value}>
       {children}
-    </EmployeeQueryContext.Provider>
+    </DesignationQueryContext.Provider>
   );
 }
 
-export function useEmployeeQuery(): TEmployeeQueryContext {
-  const context = React.useContext<TEmployeeQueryContext>(EmployeeQueryContext);
+export function useDesignationQuery(): TDesignationQueryContext {
+  const context = React.useContext<TDesignationQueryContext>(
+    DesignationQueryContext
+  );
   if (context === undefined) {
     throw new Error(
-      "useEmployeeQuery must be used within a EmployeeQueryProvider"
+      "useDesignationQuery must be used within a DesignationQueryProvider"
     );
   }
   return context;
 }
 
-export default EmployeeQueryProvider;
+export default DesignationQueryProvider;

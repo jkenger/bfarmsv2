@@ -32,7 +32,7 @@ function DataTableColumnStatusAddingFails({
   mutation,
   action,
 }: {
-  mutation?: UseMutationResult<void, Error, TAdminForms, unknown>;
+  mutation?: UseMutationResult<void, Error, TDataFields, unknown>;
   action?: React.ReactNode;
 }) {
   const error = mutation?.error as AxiosError;
@@ -52,7 +52,7 @@ function DataTableColumnStatusAddingFails({
     </DataTableColumnStatus>
   );
 }
-function DataTableColumnStatusEdit({ variables }: { variables: TAdminForms }) {
+function DataTableColumnStatusEdit({ variables }: { variables: TDataFields }) {
   return (
     <DataTableColumnStatus>
       <Badge className="hover:cursor-default space-x-2">
@@ -71,7 +71,7 @@ function DataTableColumnStatusEditFails({
   mutation,
   action,
 }: {
-  mutation?: UseMutationResult<void, Error, TAdminForms, unknown>;
+  mutation?: UseMutationResult<void, Error, TDataFields, unknown>;
   action?: React.ReactNode;
 }) {
   const error = mutation?.error as AxiosError;
@@ -95,7 +95,7 @@ function DataTableColumnStatusEditFails({
 function DataTableColumnStatusDelete({
   variables,
 }: {
-  variables: TAdminForms;
+  variables: TDataFields;
 }) {
   return (
     <DataTableColumnStatus>
@@ -115,7 +115,7 @@ function DataTableColumnStatusDelete({
 function DataTableColumnStatusDeleteFails({
   mutation,
 }: {
-  mutation: UseMutationResult<void, Error, TAdminForms, unknown>;
+  mutation: UseMutationResult<void, Error, TDataFields, unknown>;
 }) {
   const error = mutation.error as AxiosError;
   return (

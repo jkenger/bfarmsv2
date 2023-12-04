@@ -6,12 +6,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
-import AddEmployee from "./form/AddEmployee";
+import AddEmployee from "./form/employee/AddEmployee";
 import { QueryClient } from "@tanstack/react-query";
 import { Suspense } from "react";
 import Error from "../../Error";
 import { getEmployees } from "./api/employee.api";
-import EmployeeTable from "./Table";
+import EmployeeTable from "./EmployeeTable";
 import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
 import DataTableHistory from "@/components/ui/data-table-history";
@@ -28,7 +28,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 };
 
 function Employees() {
-  const { data: initialData } = useLoaderData() as { data: TEmployees };
+  const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
     useEmployeeQuery();
 

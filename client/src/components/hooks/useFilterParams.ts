@@ -104,7 +104,7 @@ export const getSearchParams = () => {
   const group = new URLSearchParams(url.search).get("group") || "";
   const designation = new URLSearchParams(url.search).get("designation") || "";
 
-  const employeeSearchParams = {
+  const searchParams = {
     page,
     limit,
     search,
@@ -118,7 +118,7 @@ export const getSearchParams = () => {
     limit,
     search,
     sp,
-    employeeSearchParams,
+    searchParams,
   };
 };
 

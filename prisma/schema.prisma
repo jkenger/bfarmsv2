@@ -36,6 +36,18 @@ model User {
   // houseBuild House[]  @relation("HouseBuilder")
 }
 
+model Designation {
+  id         String   @id @default(uuid())
+  name       String
+  description String?
+  users      User[]
+  salary     Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
+
 
 model PayrollGroup{
   id         String   @id @default(uuid())
@@ -51,17 +63,6 @@ model PayrollGroup{
 }
 
 
-model Designation {
-  id         String   @id @default(uuid())
-  name       String
-  description String?
-  user       User?
-  salary     Float
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")
-}
 
 // model House {
 //   id           String   @id @default(uuid())

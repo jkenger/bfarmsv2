@@ -4,21 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "../form/employee/DeleteEmployee";
 import EditEmployee from "../form/employee/EditEmployee";
 
-export type TGlobalEmployees = TEmployees;
-
-export const employeeColumns: ColumnDef<TDataFields>[] = [
+export const designationColumns: ColumnDef<TDataFields>[] = [
   {
-    accessorKey: "employeeId",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Code</span>
-        </DataTableHeader>
-      );
-    },
-  },
-  {
-    accessorKey: "fullName",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
@@ -26,55 +14,24 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
-    cell: ({ row }) => {
-      const firstName = row.original.firstName || "";
-      const middleName = row.original.middleName || "";
-      const lastName = row.original.lastName || "";
+  },
+  {
+    accessorKey: "description",
+    header: ({ column }) => {
       return (
-        <span>
-          {lastName}, {firstName}{" "}
-          {middleName !== "" ? middleName.charAt(0) + "." : ""}{" "}
-        </span>
+        <DataTableHeader column={column}>
+          <span>Description</span>
+        </DataTableHeader>
       );
     },
   },
 
   {
-    accessorKey: "age",
+    accessorKey: "users",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Age</span>
-        </DataTableHeader>
-      );
-    },
-  },
-  {
-    accessorKey: "avatar",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Avatar</span>
-        </DataTableHeader>
-      );
-    },
-  },
-  {
-    accessorKey: "payrollGroup",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Payroll Group</span>
-        </DataTableHeader>
-      );
-    },
-  },
-  {
-    accessorKey: "designation",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Designation</span>
+          <span>Users</span>
         </DataTableHeader>
       );
     },
@@ -94,7 +51,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Joined</span>
+          <span>Created</span>
         </DataTableHeader>
       );
     },

@@ -32,6 +32,10 @@ router
   .route("/employees/:id")
   .put(validateEmployee, updateEmployee)
   .delete(validateIdEmployee, deleteEmployee);
+
+// @Desc    : Read and Create Designations
+// @Method  : GET / POST
+// @Access  : Private (Admin)
 router
   .route("/employees/designations")
   .get(getDesignations)

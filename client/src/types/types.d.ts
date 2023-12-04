@@ -4,14 +4,14 @@ type TEmployees = {
   firstName: string;
   middleName?: string;
   lastName: string;
-  age: number;
+  age: number | string;
   avatar?: string;
   payrollGroupId?: string;
   designationId?: string;
   createdAt: string;
 };
 
-type TAdminForms = TEmployeeForms;
+type TAdminForms = TEmployeeForms & TDesignationForms;
 
 type TEmployeeForms = {
   id: string;
@@ -20,6 +20,14 @@ type TEmployeeForms = {
   middleName?: string;
   lastName: string;
   age: string | number;
+};
+
+type TDesignationForms = {
+  id: string;
+  name: string;
+  description: string;
+  users: string[];
+  salary: number;
 };
 
 type TDesignation = {

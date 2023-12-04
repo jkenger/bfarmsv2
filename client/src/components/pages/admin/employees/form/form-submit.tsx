@@ -22,10 +22,10 @@ import Group from "./group";
 
 type Props<T> = {
   form: UseFormReturn<T & FieldValues, unknown, undefined>;
-  mutation?: UseMutationResult<void, Error, TEmployeeForms, unknown>;
+  mutation?: UseMutationResult<void, Error, TDataFields, unknown>;
 };
 
-function FormSubmit<T extends TAdminForms>({ form, mutation }: Props<T>) {
+function FormSubmit<T extends TDataFields>({ form, mutation }: Props<T>) {
   const onSubmit: SubmitHandler<T> = (data) => {
     const closeSheet = document.getElementById("sheetCloseBtn");
     mutation?.mutate({

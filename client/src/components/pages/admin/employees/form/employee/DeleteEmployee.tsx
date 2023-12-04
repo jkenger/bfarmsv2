@@ -1,10 +1,10 @@
 import React from "react";
 
 import DeleteDialog from "@/components/ui/delete-dialog";
-import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
+import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 
 type Props = {
-  data: TAdminForms;
+  data: TDataFields;
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   trigger?: boolean;

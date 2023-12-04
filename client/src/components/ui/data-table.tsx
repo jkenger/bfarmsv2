@@ -195,25 +195,29 @@ export function DataTable<TData extends TDataFields, TValue>() {
           </TableHeader>
           <TableBody>
             {/* Render every activity on query states */}
-            {mutations?.create.isPending && (
-              <TableRow
-                key={mutations?.create.submittedAt}
-                className="h-12 max-h12 relative"
-              >
-                <DataTableColumnStatusAdding />
-              </TableRow>
-            )}
+            {mutations?.create && (
+              <>
+                {mutations?.create.isPending && (
+                  <TableRow
+                    key={mutations?.create.submittedAt}
+                    className="h-12 max-h12 relative"
+                  >
+                    <DataTableColumnStatusAdding />
+                  </TableRow>
+                )}
 
-            {mutations?.create.isError && (
-              <TableRow
-                key={mutations?.create.submittedAt}
-                className="h-12 max-h12 relative"
-              >
-                <DataTableColumnStatusAddingFails
-                  mutation={mutations.create}
-                  action={onCreateErrorAction}
-                />
-              </TableRow>
+                {mutations?.create.isError && (
+                  <TableRow
+                    key={mutations?.create.submittedAt}
+                    className="h-12 max-h12 relative"
+                  >
+                    <DataTableColumnStatusAddingFails
+                      mutation={mutations.create}
+                      action={onCreateErrorAction}
+                    />
+                  </TableRow>
+                )}
+              </>
             )}
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -234,35 +238,41 @@ export function DataTable<TData extends TDataFields, TValue>() {
                     </>
                   ))}
 
-                  {mutations?.edit.isPending &&
-                    mutations.edit.variables.id === row.original.id && (
-                      <DataTableColumnStatusEdit
-                        variables={mutations.edit.variables}
-                      />
-                    )}
-                  {mutations?.edit.isError &&
-                    mutations.edit.variables.id === row.original.id && (
-                      <DataTableColumnStatusEditFails
-                        mutation={mutations.edit}
-                        action={onEditErrorAction}
-                      />
-                    )}
+                  {mutations?.edit && mutations?.delete && (
+                    <>
+                      {mutations?.edit.isPending &&
+                        mutations.edit.variables.id === row.original.id && (
+                          <DataTableColumnStatusEdit
+                            variables={mutations.edit.variables}
+                          />
+                        )}
+                      {mutations?.edit.isError &&
+                        mutations.edit.variables.id === row.original.id && (
+                          <DataTableColumnStatusEditFails
+                            mutation={mutations.edit}
+                            action={onEditErrorAction}
+                          />
+                        )}
 
-                  {mutations?.delete.isPending && (
-                    <>
-                      {mutations?.delete.variables.id === row.original.id && (
-                        <DataTableColumnStatusDelete
-                          variables={mutations?.delete.variables}
-                        />
+                      {mutations?.delete.isPending && (
+                        <>
+                          {mutations?.delete.variables.id ===
+                            row.original.id && (
+                            <DataTableColumnStatusDelete
+                              variables={mutations?.delete.variables}
+                            />
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
-                  {mutations?.delete.isError && (
-                    <>
-                      {mutations?.delete.variables.id === row.original.id && (
-                        <DataTableColumnStatusDeleteFails
-                          mutation={mutations.delete}
-                        />
+                      {mutations?.delete.isError && (
+                        <>
+                          {mutations?.delete.variables.id ===
+                            row.original.id && (
+                            <DataTableColumnStatusDeleteFails
+                              mutation={mutations.delete}
+                            />
+                          )}
+                        </>
                       )}
                     </>
                   )}
