@@ -4,16 +4,22 @@ import DeleteDialog from "@/components/ui/delete-dialog";
 import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 
 type Props = {
-  id?: string;
+  data: TAdminForms;
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   trigger?: boolean;
   children?: React.ReactNode;
 };
-function DeleteEmployee({ open, onOpen, id, trigger = true, children }: Props) {
+function DeleteEmployee({
+  open,
+  onOpen,
+  data,
+  trigger = true,
+  children,
+}: Props) {
   const { deleteMutation } = useEmployeeQuery();
   function handleDelete() {
-    deleteMutation.mutate(id as string);
+    deleteMutation.mutate(data);
   }
 
   return (

@@ -108,7 +108,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
           <DataTableActions
             key={row.original.id}
             deleteElement={
-              <DeleteEmployee id={row.original.id} trigger={false} />
+              <DeleteEmployee data={row.original} trigger={false} />
             }
             editElement={
               <EditEmployee toEditItem={row.original} from="tableAction" />

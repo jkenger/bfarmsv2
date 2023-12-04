@@ -9,7 +9,7 @@ export interface DataTableProps<TData, TValue> {
   dataReloader?: () => void;
   mutations?: {
     create: UseMutationResult<void, Error, TAdminForms, unknown>;
-    delete: UseMutationResult<string, Error, string, unknown>;
+    delete: UseMutationResult<void, Error, TAdminForms, unknown>;
     edit: UseMutationResult<void, Error, TAdminForms, unknown>;
   };
   onEditErrorAction?: React.ReactElement;

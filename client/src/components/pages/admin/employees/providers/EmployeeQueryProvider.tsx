@@ -18,11 +18,11 @@ type Props = {
 };
 
 type TEmployeeQueryContext = {
-  createMutation: UseMutationResult<void, Error, TEmployeeForms, unknown>;
+  createMutation: UseMutationResult<void, Error, TAdminForms, unknown>;
 
-  editMutation: UseMutationResult<void, Error, TEmployeeForms, unknown>;
+  editMutation: UseMutationResult<void, Error, TAdminForms, unknown>;
 
-  deleteMutation: UseMutationResult<string, Error, string, unknown>;
+  deleteMutation: UseMutationResult<void, Error, TAdminForms, unknown>;
 
   deletedActivities: TDataFields[];
   editedActivities: TDataFields[];

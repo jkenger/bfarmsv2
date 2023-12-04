@@ -92,7 +92,11 @@ function DataTableColumnStatusEditFails({
   );
 }
 
-function DataTableColumnStatusDelete({ variables }: { variables: string }) {
+function DataTableColumnStatusDelete({
+  variables,
+}: {
+  variables: TAdminForms;
+}) {
   return (
     <DataTableColumnStatus>
       <Badge variant="destructive" className="hover:cursor-default space-x-2">
@@ -102,7 +106,7 @@ function DataTableColumnStatusDelete({ variables }: { variables: string }) {
       </Badge>
       <MoveRight size="16" />
       <Badge variant="outline">
-        <span>{variables}</span>
+        <span>{variables.id}</span>
       </Badge>
     </DataTableColumnStatus>
   );
@@ -111,7 +115,7 @@ function DataTableColumnStatusDelete({ variables }: { variables: string }) {
 function DataTableColumnStatusDeleteFails({
   mutation,
 }: {
-  mutation: UseMutationResult<string, Error, string, unknown>;
+  mutation: UseMutationResult<void, Error, TAdminForms, unknown>;
 }) {
   const error = mutation.error as AxiosError;
   return (

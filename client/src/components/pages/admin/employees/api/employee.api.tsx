@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 type TEmployeeMutation = {
   queryClient: QueryClient;
-  form?: UseFormReturn<TEmployeeForms, unknown, undefined>;
+  form?: UseFormReturn<TAdminForms, unknown, undefined>;
 };
 
 export type getEmployeeResponse = {
@@ -58,7 +58,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
     mutationKey: [QueryKeys.EDIT_EMPLOYEE],
-    mutationFn: async (data: TEmployeeForms) => {
+    mutationFn: async (data: TAdminForms) => {
       await fetch.put(`/admin/employees/${data.id}`, {
         ...data,
       });
@@ -84,9 +84,8 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
 export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_EMPLOYEE],
-    mutationFn: async (id: string) => {
-      await fetch.delete(`/admin/employees/${id}`);
-      return id;
+    mutationFn: async (data: TAdminForms) => {
+      await fetch.delete(`/admin/employees/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Employee Deleted`, {

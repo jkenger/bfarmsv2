@@ -250,7 +250,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
 
                   {mutations?.delete.isPending && (
                     <>
-                      {mutations?.delete.variables === row.original.id && (
+                      {mutations?.delete.variables.id === row.original.id && (
                         <DataTableColumnStatusDelete
                           variables={mutations?.delete.variables}
                         />
@@ -259,7 +259,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                   )}
                   {mutations?.delete.isError && (
                     <>
-                      {mutations?.delete.variables === row.original.id && (
+                      {mutations?.delete.variables.id === row.original.id && (
                         <DataTableColumnStatusDeleteFails
                           mutation={mutations.delete}
                         />
