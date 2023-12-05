@@ -1,22 +1,22 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { useQuery } from "@tanstack/react-query";
-import { getEmployees } from "./api/employee.api";
+
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { Button } from "@/components/ui/button";
-import EditEmployee from "./form/employee/EditEmployee";
-import AddEmployee from "./form/employee/AddEmployee";
-import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
+import { getDesignations } from "../api/designation.api";
+import { useDesignationQuery } from "../providers/DesignationQueryProvider";
+import AddDesignation from "../form/designation/AddDesignation";
+import EditDesignation from "../form/designation/EditDesignation";
 type Props = {
-  employeeColumns: ColumnDef<TDataFields>[];
-  initialData: TEmployees[];
+  columns: ColumnDef<TDataFields>[];
 };
 
-function EmployeeTable({ employeeColumns }: Props) {
+function DesignationTable({ columns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
@@ -24,12 +24,14 @@ function EmployeeTable({ employeeColumns }: Props) {
     isSuccess,
     error,
     refetch,
-  } = useQuery(getEmployees());
-  const data = res ? res.data.data : [];
-  const numOfPages = res ? res.data.numOfPages : 0;
+  } = useQuery(getDesignations());
+
+  const data = res?.data.data ? res.data.data : [];
+  const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
-  const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
+  const { createMutation, deleteMutation, editMutation } =
+    useDesignationQuery();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (
@@ -37,7 +39,7 @@ function EmployeeTable({ employeeColumns }: Props) {
       {isSuccess && (
         <DataTableProvider<TDataFields, string>
           value={{
-            columns: employeeColumns,
+            columns: columns,
             data,
             numOfPages,
             dataReloader: refetch,
@@ -58,10 +60,10 @@ function EmployeeTable({ employeeColumns }: Props) {
                   </Button>
                 }
                 title="Update data in"
-                table="Employees"
+                table="Designations"
                 error={editMutationError?.response?.data as string}
               >
-                <EditEmployee toEditItem={editMutation.variables} />
+                <EditDesignation toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -76,10 +78,10 @@ function EmployeeTable({ employeeColumns }: Props) {
                   </Button>
                 }
                 title="Update data in"
-                table="Employees"
+                table="Designations"
                 error={createMutationError?.response?.data as string}
               >
-                <AddEmployee toEditItem={createMutation.variables} />
+                <AddDesignation toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
           }}
@@ -92,4 +94,4 @@ function EmployeeTable({ employeeColumns }: Props) {
   );
 }
 
-export default EmployeeTable;
+export default DesignationTable;

@@ -71,5 +71,5 @@
 }
 
 .active {
-  @apply text-primary;
+  @apply text-primary transition-all duration-300;
 }

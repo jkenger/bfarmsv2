@@ -27,12 +27,14 @@ type TDesignationForms = {
   name: string;
   description: string;
   users: string[];
-  salary: number;
+  salary: number | string;
 };
 
 type TDesignation = {
   id: string;
-  designation: string;
+  name: string;
+  description: string;
+  salary: number | string;
 };
 
 type TTableValues = {

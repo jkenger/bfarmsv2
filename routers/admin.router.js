@@ -9,10 +9,13 @@ import {
   createDesignation,
   deleteEmployee,
   updateEmployee,
+  deleteDesignation,
+  updateDesignation,
 } from "../controllers/admin.controller.js";
 import {
+  validateDesignation,
   validateEmployee,
-  validateIdEmployee,
+  validateId,
 } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
@@ -31,7 +34,7 @@ router
 router
   .route("/employees/:id")
   .put(validateEmployee, updateEmployee)
-  .delete(validateIdEmployee, deleteEmployee);
+  .delete(validateId, deleteEmployee);
 
 // @Desc    : Read and Create Designations
 // @Method  : GET / POST
@@ -39,7 +42,15 @@ router
 router
   .route("/employees/designations")
   .get(getDesignations)
-  .post(createDesignation);
+  .post(validateDesignation, createDesignation);
+
+// @Desc   : Delete and Update Designations
+// @Method : DELETE / PUT /
+// @Access : Private (Admin)
+router
+  .route("/employees/designations/:id")
+  .put(validateDesignation, updateDesignation)
+  .delete(validateId, deleteDesignation);
 
 // @Desc    : Read and Create Payroll Groups
 // @Method  : GET / POST

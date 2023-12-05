@@ -36,6 +36,16 @@ export const validateEmployee = withValidationErrors([
     .withMessage("Age must be a number"),
 ]);
 
-export const validateIdEmployee = withValidationErrors([
-  param("id").notEmpty().withMessage("Employee ID must not be empty"),
+export const validateDesignation = withValidationErrors([
+  body().toArray(),
+  body("*.name").notEmpty().withMessage("Name must not be empty"),
+  body("*.salary")
+    .notEmpty()
+    .withMessage("Salary must not be empty")
+    .isNumeric()
+    .withMessage("Salary must be a number"),
+]);
+
+export const validateId = withValidationErrors([
+  param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

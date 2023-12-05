@@ -15,10 +15,10 @@ function SubLink({
   end?: boolean;
 }) {
   return (
-    <div className="ml-4 mt-3.5 flex flex-col">
+    <div className="ml-4 mt-3.5 flex flex-col items-start">
       <NavLink
         to={to}
-        className="flex items-center gap-2 rounded-md p-2 text-muted-foreground"
+        className="flex items-center gap-2 rounded-md p-2 text-muted-foreground  "
         end={end}
       >
         <span>{icon}</span>

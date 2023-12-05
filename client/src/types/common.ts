@@ -39,10 +39,34 @@ export enum QueryKeys {
   CREATE_EMPLOYEE = "createEmployee",
   DELETE_EMPLOYEE = "deleteEmployee",
   EDIT_EMPLOYEE = "editEmployee",
+
   DESIGNATIONS = "designations",
+  DELETE_DESIGNATION = "deleteDesignation",
+  CREATE_DESIGNATION = "createDesignation",
+  EDIT_DESIGNATION = "editDesignation",
 }
 
 export enum SortType {
   ASC = "asc",
   DESC = "desc",
+}
+
+export enum Tables {
+  EMPLOYEES = "employees",
+  DESIGNATIONS = "designations",
+  DAILY_TIME_RECORDS = "dailyTimeRecords",
+  PAYROLL_GROUPS = "payrollGroups",
+  HOLIDAYS = "holidays",
+  TRAVELPASS = "travelpass",
+  DEDUCTIONS = "deductions",
+  LEAVE_TYPES = "leaveTypes",
+  LEAVES = "leaves",
+}
+
+export enum MutationType {
+  CREATE = "create",
+  UPDATE = "update",
+  DELETE = "delete",
+  DELETE_MANY = "deleteMany",
+  UPDATE_MANY = "updateMany",
 }

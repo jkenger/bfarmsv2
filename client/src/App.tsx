@@ -31,6 +31,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
 import { Roles } from "./types/common";
 import EmployeeQueryProvider from "./components/pages/admin/employees/providers/EmployeeQueryProvider";
+import DesignationQueryProvider from "./components/pages/admin/employees/providers/DesignationQueryProvider";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -81,7 +82,11 @@ const router = createBrowserRouter([
               {
                 path: "designations",
                 loader: designationsLoader(queryClient),
-                element: <Designations />,
+                element: (
+                  <DesignationQueryProvider>
+                    <Designations />
+                  </DesignationQueryProvider>
+                ),
               },
             ],
           },

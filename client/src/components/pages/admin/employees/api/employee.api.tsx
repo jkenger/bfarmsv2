@@ -1,4 +1,4 @@
-import fetch from "@/lib/utils";
+import { fetch } from "@/lib/utils";
 import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 
@@ -67,7 +67,6 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       toast.success(`Employee Updated`, {
         description: "Changes to the employee details have been saved.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       sheetCloseBtn?.click();
       form?.reset();

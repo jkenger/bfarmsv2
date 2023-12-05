@@ -5,23 +5,22 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import FormSubmit from "../form-submit";
-import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
+import DesignationFormFields from "./DesignationFormFields";
 import { MutationType, Tables } from "@/types/common";
-import EmployeeFormFields from "../designation/DesignationFormFields";
+import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
 type Props = {
   toEditItem?: TDataFields;
 };
 
-function AddEmployee({ toEditItem }: Props) {
+function AddDesignation({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
     defaultValues: {
-      employeeId: toEditItem ? toEditItem.employeeId : "",
-      firstName: toEditItem ? toEditItem.firstName : "",
-      lastName: toEditItem ? toEditItem.lastName : "",
-      age: toEditItem ? toEditItem.age : "",
+      name: toEditItem ? toEditItem.name : "",
+      description: toEditItem ? toEditItem.description : "",
+      salary: toEditItem ? toEditItem.salary : "",
     },
   });
-  const { createMutation } = useEmployeeQuery();
+  const { createMutation } = useDesignationQuery();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
@@ -32,9 +31,9 @@ function AddEmployee({ toEditItem }: Props) {
       <FormSubmit<TDataFields>
         form={form}
         mutation={createMutation}
-        from={Tables.EMPLOYEES}
+        from={Tables.DESIGNATIONS}
       >
-        <EmployeeFormFields<TDataFields>
+        <DesignationFormFields<TDataFields>
           form={form}
           mutationType={MutationType.CREATE}
         />
@@ -43,4 +42,4 @@ function AddEmployee({ toEditItem }: Props) {
   );
 }
 
-export default AddEmployee;
+export default AddDesignation;

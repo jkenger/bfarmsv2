@@ -11,7 +11,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { Suspense } from "react";
 import Error from "../../Error";
 import { getEmployees } from "./api/employee.api";
-import EmployeeTable from "./EmployeeTable";
+import EmployeeTable from "./tables/EmployeeTable";
 import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
 import DataTableHistory from "@/components/ui/data-table-history";

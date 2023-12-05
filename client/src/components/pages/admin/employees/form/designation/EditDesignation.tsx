@@ -3,9 +3,9 @@ import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
 import FormSubmit from "../form-submit";
-import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 import { MutationType, Tables } from "@/types/common";
-import EmployeeFormFields from "../designation/DesignationFormFields";
+import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
+import DesignationFormFields from "../designation/DesignationFormFields";
 
 type Props<T> = {
   toEditItem?: T;
@@ -14,7 +14,7 @@ type Props<T> = {
   from?: "tableAction" | string;
 };
 
-function EditEmployee<T extends TDataFields>({
+function EditDesignation<T extends TDataFields>({
   open,
   onOpen,
   toEditItem,
@@ -23,25 +23,23 @@ function EditEmployee<T extends TDataFields>({
   const form = useForm<TDataFields>({
     values: {
       id: toEditItem?.id || "",
-      employeeId: toEditItem?.employeeId || "",
-      firstName: toEditItem?.firstName || "",
-      lastName: toEditItem?.lastName || "",
-      middleName: toEditItem?.middleName || "",
-      age: toEditItem?.age || "",
+      name: toEditItem?.name || "",
+      description: toEditItem?.description || "",
+      salary: toEditItem?.salary || "",
     } as TDataFields,
   });
 
-  const { editMutation } = useEmployeeQuery();
+  const { editMutation } = useDesignationQuery();
 
   return from === "tableAction" ? (
-    <DropDownEditSheet table={Tables.EMPLOYEES} open={open} onOpen={onOpen}>
+    <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>
       <Form {...form}>
         <FormSubmit<TDataFields>
           mutation={editMutation}
           form={form}
-          from={Tables.EMPLOYEES}
+          from={Tables.DESIGNATIONS}
         >
-          <EmployeeFormFields<TDataFields>
+          <DesignationFormFields<TDataFields>
             form={form}
             mutationType={MutationType.UPDATE}
           />
@@ -53,9 +51,9 @@ function EditEmployee<T extends TDataFields>({
       <FormSubmit<TDataFields>
         mutation={editMutation}
         form={form}
-        from={Tables.EMPLOYEES}
+        from={Tables.DESIGNATIONS}
       >
-        <EmployeeFormFields<TDataFields>
+        <DesignationFormFields<TDataFields>
           form={form}
           mutationType={MutationType.UPDATE}
         />
@@ -64,4 +62,4 @@ function EditEmployee<T extends TDataFields>({
   );
 }
 
-export default EditEmployee;
+export default EditDesignation;

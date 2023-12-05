@@ -1,22 +1,22 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { useQuery } from "@tanstack/react-query";
-
+import { getEmployees } from "../api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { Button } from "@/components/ui/button";
-import EditEmployee from "./form/employee/EditEmployee";
-import AddEmployee from "./form/employee/AddEmployee";
-import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
+import EditEmployee from "../form/employee/EditEmployee";
+import AddEmployee from "../form/employee/AddEmployee";
+import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
-import { getDesignations } from "./api/designation.api";
 type Props = {
-  columns: ColumnDef<TDataFields>[];
+  employeeColumns: ColumnDef<TDataFields>[];
+  initialData: TEmployees[];
 };
 
-function DesignationTable({ columns }: Props) {
+function EmployeeTable({ employeeColumns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
@@ -24,12 +24,11 @@ function DesignationTable({ columns }: Props) {
     isSuccess,
     error,
     refetch,
-  } = useQuery(getDesignations());
-
-  const data = res?.data.data ? res.data.data : [];
-  const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
+  } = useQuery(getEmployees());
+  const data = res ? res.data.data : [];
+  const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
-  console.log(data);
+
   const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
@@ -38,7 +37,7 @@ function DesignationTable({ columns }: Props) {
       {isSuccess && (
         <DataTableProvider<TDataFields, string>
           value={{
-            columns: columns,
+            columns: employeeColumns,
             data,
             numOfPages,
             dataReloader: refetch,
@@ -62,7 +61,7 @@ function DesignationTable({ columns }: Props) {
                 table="Employees"
                 error={editMutationError?.response?.data as string}
               >
-                <EditEmployee toEditItem={editMutation?.variables} />
+                <EditEmployee toEditItem={editMutation.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -80,7 +79,7 @@ function DesignationTable({ columns }: Props) {
                 table="Employees"
                 error={createMutationError?.response?.data as string}
               >
-                <AddEmployee toEditItem={createMutation?.variables} />
+                <AddEmployee toEditItem={createMutation.variables} />
               </MutationSheet>
             ),
           }}
@@ -93,4 +92,4 @@ function DesignationTable({ columns }: Props) {
   );
 }
 
-export default DesignationTable;
+export default EmployeeTable;

@@ -7,11 +7,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "./sheet";
+import { Tables } from "@/types/common";
 
 type Props = {
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  table?: string;
+  table?: Tables;
   description?: string;
   children?: React.ReactNode;
 };

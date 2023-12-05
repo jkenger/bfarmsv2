@@ -61,7 +61,7 @@ export const getEmployees = asyncHandler(async (req, res) => {
     });
   }
 
-  res.status(StatusCodes.OK).json({
+  return res.status(StatusCodes.OK).json({
     data,
     numOfPages,
   });
@@ -133,7 +133,7 @@ export const getDesignations = asyncHandler(async (req, res) => {
       numOfPages: 0,
     });
   }
-  res.status(StatusCodes.OK).json({
+  return res.status(StatusCodes.OK).json({
     data,
     numOfPages,
   });
@@ -159,6 +159,33 @@ export const createDesignation = asyncHandler(async (req, res) => {
   });
   res.status(StatusCodes.OK).json({
     message: designationAdded,
+  });
+});
+
+export const deleteDesignation = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const designationDeleted = await prisma.designation.delete({
+    where: {
+      id: id,
+    },
+  });
+  res.status(StatusCodes.OK).json({
+    data: designationDeleted,
+  });
+});
+
+export const updateDesignation = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const designationUpdated = await prisma.designation.update({
+    where: {
+      id: id,
+    },
+    data: data[0],
+  });
+  res.status(StatusCodes.OK).json({
+    message: designationUpdated,
   });
 });
 

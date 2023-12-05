@@ -1,4 +1,4 @@
-import fetch from "@/lib/utils";
+import { fetch } from "@/lib/utils";
 import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 
@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 type TMutation = {
   queryClient: QueryClient;
-  form?: UseFormReturn<TAdminForms, unknown, undefined>;
+  form?: UseFormReturn<TDataFields, unknown, undefined>;
 };
 
 export type getResponse = {
@@ -32,74 +32,73 @@ export const getDesignations = () => {
   };
 };
 
-export const createEmployee = ({ queryClient, form }: TMutation) => {
+export const createDesignation = ({ queryClient, form }: TMutation) => {
   return {
-    mutationKey: [QueryKeys.CREATE_EMPLOYEE],
-    mutationFn: async (data: TAdminForms) => {
-      await fetch.post("/admin/employees", {
+    mutationKey: [QueryKeys.CREATE_DESIGNATION],
+    mutationFn: async (data: TDataFields) => {
+      await fetch.post("/admin/employees/designations", {
         ...data,
       });
     },
     onSuccess: async () => {
-      toast.success(`Employee Created`, {
-        description: "A new employee has been successfully addded.",
+      toast.success(`Designation Created`, {
+        description: "A new designation has been successfully addded.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Delete Employee`, {
+      toast.error(`Failed to Delete Designation`, {
         description:
-          "The employee could not be removed due to an issue. Please try again.",
+          "The designation could not be removed due to an issue. Please try again.",
       });
     },
   };
 };
 
-export const editEmployee = ({ queryClient, form }: TMutation) => {
+export const editDesignation = ({ queryClient, form }: TMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
-    mutationKey: [QueryKeys.EDIT_EMPLOYEE],
-    mutationFn: async (data: TAdminForms) => {
-      await fetch.put(`/admin/employees/${data.id}`, {
+    mutationKey: [QueryKeys.EDIT_DESIGNATION],
+    mutationFn: async (data: TDataFields) => {
+      await fetch.put(`/admin/employees/designations/${data.id}`, {
         ...data,
       });
     },
     onSuccess: async () => {
-      toast.success(`Employee Updated`, {
-        description: "Changes to the employee details have been saved.",
+      toast.success(`Designation Updated`, {
+        description: "Changes to the designation details have been saved.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
       sheetCloseBtn?.click();
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Update Employee`, {
+      toast.error(`Failed to Update Designation`, {
         description:
-          "Changes to the employee details could not be saved. Please retry.",
+          "Changes to the designation details could not be saved. Please retry.",
       });
     },
   };
 };
 
-export const deleteEmployee = ({ queryClient }: TMutation) => {
+export const deleteDesignation = ({ queryClient }: TMutation) => {
   return {
-    mutationKey: [QueryKeys.DELETE_EMPLOYEE],
-    mutationFn: async (data: TAdminForms) => {
-      await fetch.delete(`/admin/employees/${data.id}`);
+    mutationKey: [QueryKeys.DELETE_DESIGNATION],
+    mutationFn: async (data: TDataFields) => {
+      await fetch.delete(`/admin/employees/designations/${data.id}`);
     },
     onSuccess: async () => {
-      toast.warning(`Employee Deleted`, {
+      toast.warning(`Designation Deleted`, {
         className: "bg-primary",
-        description: "The employee has been removed from the records.",
+        description: "Designation selected has been removed from the records.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
     },
     onError: async () => {
-      toast.error("Failed to Delete Employee", {
+      toast.error("Failed to Delete Designation", {
         description:
-          "The employee could not be removed due to an issue. Please try again.",
+          "Designation selected could not be removed due to an issue. Please try again.",
       });
     },
   };

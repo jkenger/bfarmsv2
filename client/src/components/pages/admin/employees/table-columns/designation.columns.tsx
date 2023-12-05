@@ -1,8 +1,8 @@
 import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
-import DeleteEmployee from "../form/employee/DeleteEmployee";
-import EditEmployee from "../form/employee/EditEmployee";
+import DeleteDesignation from "../form/designation/DeleteDesignation";
+import EditDesignation from "../form/designation/EditDesignation";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [
   {
@@ -65,10 +65,10 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
           <DataTableActions
             key={row.original.id}
             deleteElement={
-              <DeleteEmployee data={row.original} trigger={false} />
+              <DeleteDesignation data={row.original} trigger={false} />
             }
             editElement={
-              <EditEmployee toEditItem={row.original} from="tableAction" />
+              <EditDesignation toEditItem={row.original} from="tableAction" />
             }
           />
         </>

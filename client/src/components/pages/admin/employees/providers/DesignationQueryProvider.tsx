@@ -5,13 +5,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import React from "react";
-import {
-  createEmployee,
-  deleteEmployee,
-  editEmployee,
-} from "../api/employee.api";
 
 import { QueryKeys } from "@/types/common";
+import {
+  createDesignation,
+  deleteDesignation,
+  editDesignation,
+} from "../api/designation.api";
 
 type Props = {
   children: React.ReactNode;
@@ -35,9 +35,9 @@ const DesignationQueryContext = React.createContext<TDesignationQueryContext>(
 
 function DesignationQueryProvider({ children }: Props) {
   const queryClient = useQueryClient();
-  const createMutation = useMutation(createEmployee({ queryClient }));
-  const editMutation = useMutation(editEmployee({ queryClient }));
-  const deleteMutation = useMutation(deleteEmployee({ queryClient }));
+  const createMutation = useMutation(createDesignation({ queryClient }));
+  const editMutation = useMutation(editDesignation({ queryClient }));
+  const deleteMutation = useMutation(deleteDesignation({ queryClient }));
   const deletedActivities = useMutationState({
     filters: {
       mutationKey: [QueryKeys.DELETE_EMPLOYEE],
