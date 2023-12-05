@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import FormSubmit from "../form-submit";
 import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 import { MutationType, Tables } from "@/types/common";
-import EmployeeFormFields from "../designation/DesignationFormFields";
+import EmployeeFormFields from "./EmployeeFormFields";
 
 type Props<T> = {
   toEditItem?: T;
