@@ -20,7 +20,7 @@ type Props = {
 function DropDownEditSheet({
   open,
   onOpen,
-  table = "unknown",
+  table,
   description,
   children,
 }: Props) {
