@@ -19,7 +19,7 @@ type Props<T> = {
   mutationType: MutationType;
 };
 
-function EmployeeFormField<T extends TDataFields>({
+function EmployeeFormFields<T extends TDataFields>({
   form,
   mutationType = MutationType.CREATE,
 }: Props<T>) {
@@ -227,4 +227,4 @@ function EmployeeFormField<T extends TDataFields>({
   );
 }
 
-export default EmployeeFormField;
+export default EmployeeFormFields;

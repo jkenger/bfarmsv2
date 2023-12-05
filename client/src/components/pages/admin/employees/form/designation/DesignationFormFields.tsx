@@ -81,7 +81,7 @@ function DesignationFormFields<T extends TDataFields>({
               <Textarea
                 {...field}
                 placeholder="Type your description here."
-                className="h-24"
+                className="h-24 text-xs"
               />
             </FormControl>
             <FormMessage />

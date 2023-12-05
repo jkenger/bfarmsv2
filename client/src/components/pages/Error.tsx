@@ -36,7 +36,7 @@ function Error() {
       <div className="text-center">
         <h1 className="font-black text-red-500 text-9xl">500</h1>
 
-        <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        <p className="text-2xl font-bold tracking-tight text-foreground sm:text-4xl">
           Uh-oh!
         </p>
 

@@ -45,6 +45,16 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      return (
+        <span>
+          ₱
+          {new Intl.NumberFormat()
+            .format(Number(row.original.salary))
+            .toString()}{" "}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
