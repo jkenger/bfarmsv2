@@ -36,11 +36,7 @@ function EditEmployee<T extends TDataFields>({
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.EMPLOYEES} open={open} onOpen={onOpen}>
       <Form {...form}>
-        <FormSubmit<TDataFields>
-          mutation={editMutation}
-          form={form}
-          from={Tables.EMPLOYEES}
-        >
+        <FormSubmit<TDataFields> mutation={editMutation} form={form}>
           <EmployeeFormFields<TDataFields>
             form={form}
             mutationType={MutationType.UPDATE}
@@ -50,11 +46,7 @@ function EditEmployee<T extends TDataFields>({
     </DropDownEditSheet>
   ) : (
     <Form {...form}>
-      <FormSubmit<TDataFields>
-        mutation={editMutation}
-        form={form}
-        from={Tables.EMPLOYEES}
-      >
+      <FormSubmit<TDataFields> mutation={editMutation} form={form}>
         <EmployeeFormFields<TDataFields>
           form={form}
           mutationType={MutationType.UPDATE}

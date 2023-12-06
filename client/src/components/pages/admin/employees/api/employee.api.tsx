@@ -36,6 +36,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
     mutationFn: async (data: TDataFields) => {
       await fetch.post("/admin/employees", {
         ...data,
+        age: Number(data.age),
       });
     },
     onSuccess: async () => {

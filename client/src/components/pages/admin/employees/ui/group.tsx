@@ -9,10 +9,7 @@ type Props = { children: React.ReactNode; assignTo: string };
 function Group({ children, assignTo }: Props) {
   return (
     <div className="flex items-start   gap-2 w-full max-w-md">
-      <Badge
-        variant="outline"
-        className="w-1/3 text-[.6rem] sm:text-xs text-muted-foreground"
-      >
+      <Badge variant="outline" className="w-1/3 text-[.6rem] sm:text-xs">
         {assignTo}
       </Badge>
       <div className="mt-1">
@@ -23,7 +20,7 @@ function Group({ children, assignTo }: Props) {
       </div>
       <Badge
         variant="outline"
-        className="ml-2 md:ml-0 text-[.6rem] sm:text-xs w-2/3 text-muted-foreground "
+        className="ml-2 md:ml-0 text-[.6rem] sm:text-xs w-2/3  "
       >
         {children}
       </Badge>

@@ -5,12 +5,13 @@ import { getEmployees } from "../api/employee.api";
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import EditEmployee from "../form/employee/EditEmployee";
 import AddEmployee from "../form/employee/AddEmployee";
 import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
+import { SheetTrigger } from "@/components/ui/sheet";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
   initialData: TEmployees[];
@@ -49,13 +50,16 @@ function EmployeeTable({ employeeColumns }: Props) {
             onEditErrorAction: (
               <MutationSheet
                 triggerElement={
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    className="font-semibold my-1 ml-2"
+                  <SheetTrigger
+                    className={
+                      buttonVariants({
+                        variant: "outline",
+                        size: "xs",
+                      }) + " font-semibold my-1 ml-2"
+                    }
                   >
                     Retry
-                  </Button>
+                  </SheetTrigger>
                 }
                 title="Update data in"
                 table="Employees"
@@ -67,13 +71,16 @@ function EmployeeTable({ employeeColumns }: Props) {
             onCreateErrorAction: (
               <MutationSheet
                 triggerElement={
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    className="font-semibold my-1 ml-2"
+                  <SheetTrigger
+                    className={
+                      buttonVariants({
+                        variant: "outline",
+                        size: "xs",
+                      }) + " font-semibold my-1 ml-2"
+                    }
                   >
                     Retry
-                  </Button>
+                  </SheetTrigger>
                 }
                 title="Update data in"
                 table="Employees"

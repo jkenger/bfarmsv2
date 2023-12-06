@@ -2,10 +2,9 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import axios from "axios";
-import { Tables } from "@/types/common";
 
-// const localUrl = "http://localhost:3000/api/v1";
-const localUrl = "/api/v1";
+const localUrl = "http://localhost:3000/api/v1";
+// const localUrl = "/api/v1";
 // const prodUrl = process.env.REACT_APP_API_URL;
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -21,14 +20,13 @@ export const fetch = axios.create({
   },
 });
 
-export const identifyMutation = (
-  from: Tables,
-  data: TDataFields
-): TDataFields => {
-  if (from && data) {
-    if (from === "employees") return { ...data, age: Number(data.age) };
-    if (from === "designations")
-      return { ...data, salary: Number(data.salary) };
-  }
-  return data;
+export const areObjectsEqual = (
+  obj1: TDataFields,
+  obj2: TDataFields
+): boolean => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+};
+
+export const getMiddleInitial = (value?: string): string => {
+  return value?.charAt(0) + ".";
 };

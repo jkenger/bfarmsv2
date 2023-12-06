@@ -152,7 +152,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <RouterProvider router={router} />
-        <Toaster duration={5000} richColors />
+        <Toaster duration={5000} richColors position="bottom-left" />
       </QueryClientProvider>
     </ThemeProvider>
   );

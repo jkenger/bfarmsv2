@@ -5,13 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { getDesignations } from "../api/designation.api";
 import { useDesignationQuery } from "../providers/DesignationQueryProvider";
 import AddDesignation from "../form/designation/AddDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
+import { SheetTrigger } from "@/components/ui/sheet";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -51,13 +52,16 @@ function DesignationTable({ columns }: Props) {
             onEditErrorAction: (
               <MutationSheet
                 triggerElement={
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    className="font-semibold my-1 ml-2"
+                  <SheetTrigger
+                    className={
+                      buttonVariants({
+                        variant: "outline",
+                        size: "xs",
+                      }) + " font-semibold my-1 ml-2"
+                    }
                   >
                     Retry
-                  </Button>
+                  </SheetTrigger>
                 }
                 title="Update data in"
                 table="Designations"
@@ -69,13 +73,16 @@ function DesignationTable({ columns }: Props) {
             onCreateErrorAction: (
               <MutationSheet
                 triggerElement={
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    className="font-semibold my-1 ml-2"
+                  <SheetTrigger
+                    className={
+                      buttonVariants({
+                        variant: "outline",
+                        size: "xs",
+                      }) + " font-semibold my-1 ml-2"
+                    }
                   >
                     Retry
-                  </Button>
+                  </SheetTrigger>
                 }
                 title="Update data in"
                 table="Designations"

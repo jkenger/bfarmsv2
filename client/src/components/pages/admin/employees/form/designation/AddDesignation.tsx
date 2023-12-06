@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef } from "react";
 
 import FormSubmit from "../form-submit";
 import DesignationFormFields from "./DesignationFormFields";
-import { MutationType, Tables } from "@/types/common";
+import { MutationType } from "@/types/common";
 import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
 type Props = {
   toEditItem?: TDataFields;
@@ -28,11 +28,7 @@ function AddDesignation({ toEditItem }: Props) {
   }, []);
   return (
     <Form {...form}>
-      <FormSubmit<TDataFields>
-        form={form}
-        mutation={createMutation}
-        from={Tables.DESIGNATIONS}
-      >
+      <FormSubmit<TDataFields> form={form} mutation={createMutation}>
         <DesignationFormFields<TDataFields>
           form={form}
           mutationType={MutationType.CREATE}

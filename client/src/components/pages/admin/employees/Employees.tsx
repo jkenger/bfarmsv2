@@ -18,12 +18,15 @@ import DataTableHistory from "@/components/ui/data-table-history";
 
 import ActivityCard from "./ui/activity-card";
 import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
+import { SheetTrigger } from "@/components/ui/sheet";
+import { getDesignations } from "./api/designation.api";
 
 // import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
     data: queryClient.ensureQueryData(getEmployees()),
+    designationData: queryClient.ensureQueryData(getDesignations()),
   });
 };
 
@@ -32,7 +35,6 @@ function Employees() {
   const { createdActivities, deletedActivities, editedActivities } =
     useEmployeeQuery();
 
-  console.log(createdActivities);
   return (
     <>
       <Main.Header>
@@ -45,20 +47,19 @@ function Employees() {
           mobileButton={
             <MutationSheet
               triggerElement={
-                <div
+                <SheetTrigger
                   className={
                     buttonVariants({
                       variant: "default",
                       size: "sm",
-                    }) + " self-start lg:flex gap-2 text-xs"
+                    }) + " self-start hidden lg:flex gap-2 text-xs"
                   }
                 >
-                  {" "}
                   <Plus
                     size={IconProperties.SIZE}
                     strokeWidth={IconProperties.STROKE_WIDTH}
                   />
-                </div>
+                </SheetTrigger>
               }
               title="Add new data to"
               table="Employees"
@@ -71,7 +72,7 @@ function Employees() {
 
           <MutationSheet
             triggerElement={
-              <div
+              <SheetTrigger
                 className={
                   buttonVariants({
                     variant: "default",
@@ -84,7 +85,7 @@ function Employees() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
                 <span>Create new</span>
-              </div>
+              </SheetTrigger>
             }
             title="Add new data to"
             table="Employees"

@@ -38,6 +38,7 @@ export const createDesignation = ({ queryClient, form }: TMutation) => {
     mutationFn: async (data: TDataFields) => {
       await fetch.post("/admin/employees/designations", {
         ...data,
+        salary: Number(data.salary),
       });
     },
     onSuccess: async () => {
@@ -63,6 +64,7 @@ export const editDesignation = ({ queryClient, form }: TMutation) => {
     mutationFn: async (data: TDataFields) => {
       await fetch.put(`/admin/employees/designations/${data.id}`, {
         ...data,
+        salary: Number(data.salary),
       });
     },
     onSuccess: async () => {

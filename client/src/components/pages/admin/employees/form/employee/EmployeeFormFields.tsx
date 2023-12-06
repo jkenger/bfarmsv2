@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -7,12 +7,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SheetClose, SheetFooter } from "@/components/ui/sheet";
+import { SheetClose, SheetFooter, SheetTrigger } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import Group from "../group";
+import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
+import MutationSheet from "@/components/ui/btn-add-sheet";
+import { getMiddleInitial } from "@/lib/utils";
+
+import AddEmployeeDesignationFormFields from "./AddEmployeeDesignationFormFields";
+import { getDesignations } from "../../api/designation.api";
+import { useQuery } from "@tanstack/react-query";
+import GroupContainer from "../../ui/group-container";
 
 type Props<T> = {
   form: UseFormReturn<T & FieldValues, unknown, undefined>;
@@ -27,6 +34,10 @@ function EmployeeFormFields<T extends TDataFields>({
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
+  const { data } = useQuery(getDesignations());
+  const designationData = data?.data.data ? data.data.data : [];
+  const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>();
+  console.log("selectedDes", selectedDesignation);
   return (
     <>
       <FormField
@@ -198,14 +209,51 @@ function EmployeeFormFields<T extends TDataFields>({
 
           <p>Optional</p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="xs"
-          className="self-start bg-background "
-        >
-          Add designation
-        </Button>
+        {selectedDesignation?.id ? (
+          <GroupContainer>
+            {Object.keys(selectedDesignation).map((key) => (
+              <Group assignTo={key} key={key}>
+                {selectedDesignation[key as keyof TDataFields] ? (
+                  selectedDesignation[key as keyof TDataFields]
+                ) : (
+                  <span className="text-muted-foreground">no data</span>
+                )}
+              </Group>
+            ))}
+          </GroupContainer>
+        ) : (
+          <MutationSheet
+            triggerElement={
+              <SheetTrigger
+                className={buttonVariants({
+                  variant: "outline",
+                  size: "xs",
+                  className: "self-start",
+                })}
+              >
+                Add designation
+              </SheetTrigger>
+            }
+            title="Add designation to"
+            table={
+              (form.getValues().firstName && form.getValues().lastName) ||
+              form.getValues().middleName
+                ? ` ${form.getValues().lastName}, ${
+                    form.getValues().firstName
+                  } ${
+                    form.getValues().middleName &&
+                    getMiddleInitial(form.getValues().middleName)
+                  }`
+                : "No employee"
+            }
+          >
+            <AddEmployeeDesignationFormFields
+              data={designationData}
+              onSelectDesignation={setSelectedDesignation}
+              mutationType={MutationType.CREATE}
+            />
+          </MutationSheet>
+        )}
       </div>
       <SheetFooter
         id="sheetFooter"

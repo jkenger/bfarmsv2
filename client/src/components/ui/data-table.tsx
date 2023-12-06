@@ -224,7 +224,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                 <TableRow
                   className={`h-12 max-h-12 relative $ext-card
                   `}
-                  key={row.id}
+                  key={row.original.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (

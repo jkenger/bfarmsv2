@@ -12,6 +12,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { IconProperties } from "@/types/common";
 import AddDesignation from "./form/designation/AddDesignation";
+import { SheetTrigger } from "@/components/ui/sheet";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -30,20 +31,19 @@ function Designations() {
           mobileButton={
             <MutationSheet
               triggerElement={
-                <div
+                <SheetTrigger
                   className={
                     buttonVariants({
                       variant: "default",
                       size: "sm",
-                    }) + " self-start lg:flex gap-2 text-xs"
+                    }) + " self-start hidden lg:flex gap-2 text-xs"
                   }
                 >
-                  {" "}
                   <Plus
                     size={IconProperties.SIZE}
                     strokeWidth={IconProperties.STROKE_WIDTH}
                   />
-                </div>
+                </SheetTrigger>
               }
               title="Add new data to"
               table="Designations"
@@ -54,7 +54,7 @@ function Designations() {
         >
           <MutationSheet
             triggerElement={
-              <div
+              <SheetTrigger
                 className={
                   buttonVariants({
                     variant: "default",
@@ -67,7 +67,7 @@ function Designations() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
                 <span>Create new</span>
-              </div>
+              </SheetTrigger>
             }
             title="Add new data to"
             table="Designations"

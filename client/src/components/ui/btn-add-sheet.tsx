@@ -4,7 +4,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 
@@ -27,7 +26,7 @@ function MutationSheet({
 }: Props) {
   return (
     <Sheet>
-      <SheetTrigger>{triggerElement}</SheetTrigger>
+      {triggerElement}
       <SheetContent side="mutationRight" className="bg-card px-0">
         <SheetHeader className="px-6">
           <SheetTitle className="flex items-center gap-3">

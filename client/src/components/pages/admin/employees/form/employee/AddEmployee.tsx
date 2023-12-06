@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef } from "react";
 
 import FormSubmit from "../form-submit";
 import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
-import { MutationType, Tables } from "@/types/common";
+import { MutationType } from "@/types/common";
 import EmployeeFormFields from "./EmployeeFormFields";
 type Props = {
   toEditItem?: TDataFields;
@@ -29,11 +29,7 @@ function AddEmployee({ toEditItem }: Props) {
   }, []);
   return (
     <Form {...form}>
-      <FormSubmit<TDataFields>
-        form={form}
-        mutation={createMutation}
-        from={Tables.EMPLOYEES}
-      >
+      <FormSubmit<TDataFields> form={form} mutation={createMutation}>
         <EmployeeFormFields<TDataFields>
           form={form}
           mutationType={MutationType.CREATE}
