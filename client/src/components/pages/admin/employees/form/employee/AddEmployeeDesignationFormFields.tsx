@@ -45,9 +45,9 @@ function AddEmployeeDesignationFormFields({
       toast.error("Please select a designation");
       return;
     }
+    sheetCloseBtn?.click();
 
     onSelectDesignation(selectedDesignation);
-    sheetCloseBtn?.click();
     toast.success(`Designation Selected`, {
       description: "A designation has been successfully selected.",
     });

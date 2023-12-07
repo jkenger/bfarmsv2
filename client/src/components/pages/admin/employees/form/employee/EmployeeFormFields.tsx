@@ -7,22 +7,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SheetClose, SheetFooter, SheetTrigger } from "@/components/ui/sheet";
+import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
 import { useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
-import MutationSheet from "@/components/ui/btn-add-sheet";
-import { getMiddleInitial } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import AddEmployeeDesignationFormFields from "./AddEmployeeDesignationFormFields";
 import { getDesignations } from "../../api/designation.api";
 import { useQuery } from "@tanstack/react-query";
 import GroupContainer from "../../ui/group-container";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { CheckIcon } from "lucide-react";
 
 type Props<T> = {
-  form: UseFormReturn<T & FieldValues, unknown, undefined>;
+  form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
   mutationType: MutationType;
 };
 
@@ -209,7 +221,68 @@ function EmployeeFormFields<T extends TDataFields>({
 
           <p>Optional</p>
         </div>
-        {selectedDesignation?.id ? (
+        <div className="flex flex-col justify-between">
+          <div className="flex flex-col gap-2 mt-4">
+            <h1 className="text-xs">Designations</h1>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn(
+                    " justify-between text-xs ",
+                    !selectedDesignation?.name && "text-muted-foreground"
+                  )}
+                >
+                  {selectedDesignation?.name ? (
+                    designationData.find(
+                      (designation: TDataFields) =>
+                        designation.name === selectedDesignation?.name
+                    )?.name
+                  ) : (
+                    <span>Select designation</span>
+                  )}
+                  <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <Command>
+                  <CommandInput
+                    className="text-xs"
+                    placeholder="Search language..."
+                  />
+                  <CommandEmpty className="text-xs p-4 text-center">
+                    No designation found.
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {designationData.map((designation: TDataFields) => (
+                      <CommandItem
+                        value={designation.name}
+                        key={designation.id}
+                        className="text-xs"
+                        onSelect={() => {
+                          setSelectedDesignation(designation);
+                          form.setValue("designationId", designation.id);
+                        }}
+                      >
+                        <CheckIcon
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            designation.name === designationData.name
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {designation.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+        {selectedDesignation?.id && (
           <GroupContainer>
             {Object.keys(selectedDesignation).map((key) => (
               <Group assignTo={key} key={key}>
@@ -221,38 +294,6 @@ function EmployeeFormFields<T extends TDataFields>({
               </Group>
             ))}
           </GroupContainer>
-        ) : (
-          <MutationSheet
-            triggerElement={
-              <SheetTrigger
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "xs",
-                  className: "self-start",
-                })}
-              >
-                Add designation
-              </SheetTrigger>
-            }
-            title="Add designation to"
-            table={
-              (form.getValues().firstName && form.getValues().lastName) ||
-              form.getValues().middleName
-                ? ` ${form.getValues().lastName}, ${
-                    form.getValues().firstName
-                  } ${
-                    form.getValues().middleName &&
-                    getMiddleInitial(form.getValues().middleName)
-                  }`
-                : "No employee"
-            }
-          >
-            <AddEmployeeDesignationFormFields
-              data={designationData}
-              onSelectDesignation={setSelectedDesignation}
-              mutationType={MutationType.CREATE}
-            />
-          </MutationSheet>
         )}
       </div>
       <SheetFooter

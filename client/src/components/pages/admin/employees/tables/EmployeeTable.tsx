@@ -29,7 +29,7 @@ function EmployeeTable({ employeeColumns }: Props) {
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
-
+  console.log(data);
   const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;

@@ -16,14 +16,7 @@ function FormSubmit<T extends TDataFields>({
   // const formValues = form.getValues();
   const onSubmit: SubmitHandler<T> = (data) => {
     const closeSheet = document.getElementById("sheetCloseBtn");
-    // const submittedData = data;
-
-    // if (areObjectsEqual(formValues, submittedData)) {
-    //   toast.warning(`No Changes Detected`, {
-    //     description: "No changes were detected to be saved.",
-    //   });
-    //   return;
-    // }
+    console.log(data);
     mutation?.mutate(data as TDataFields);
     closeSheet?.click();
   };

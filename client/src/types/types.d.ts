@@ -1,16 +1,3 @@
-type TEmployees = {
-  id: string;
-  employeeId: string;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  age: number | string;
-  avatar?: string;
-  payrollGroupId?: string;
-  designationId?: string;
-  createdAt: string;
-};
-
 type TAdminForms = TEmployeeForms & TDesignationForms;
 
 type TEmployeeForms = {
@@ -28,6 +15,20 @@ type TDesignationForms = {
   description: string;
   users: string[];
   salary: number | string;
+};
+
+type TEmployees = {
+  id: string;
+  employeeId: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  age: number | string;
+  avatar?: string;
+  payrollGroupId?: string;
+  designationId?: string;
+  designation?: TDesignation;
+  createdAt: string;
 };
 
 type TDesignation = {

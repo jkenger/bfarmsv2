@@ -3,6 +3,7 @@ import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "../form/employee/DeleteEmployee";
 import EditEmployee from "../form/employee/EditEmployee";
+import { Badge } from "@/components/ui/badge";
 
 export type TGlobalEmployees = TEmployees;
 
@@ -76,6 +77,19 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         <DataTableHeader column={column}>
           <span>Designation</span>
         </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.designation ? (
+            row.original.designation?.name
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground">
+              No designation
+            </Badge>
+          )}
+        </span>
       );
     },
   },
