@@ -49,7 +49,7 @@ function EmployeeFormFields<T extends TDataFields>({
   const { data } = useQuery(getDesignations());
   const designationData = data?.data.data ? data.data.data : [];
   const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>();
-  console.log("selectedDes", selectedDesignation);
+
   return (
     <>
       <FormField
@@ -287,9 +287,9 @@ function EmployeeFormFields<T extends TDataFields>({
             {Object.keys(selectedDesignation).map((key) => (
               <Group assignTo={key} key={key}>
                 {selectedDesignation[key as keyof TDataFields] ? (
-                  selectedDesignation[key as keyof TDataFields]
+                  <span>{selectedDesignation[key as keyof TDesignation]}</span>
                 ) : (
-                  <span className="text-muted-foreground">no data</span>
+                  <span className="text-muted-foreground">No data</span>
                 )}
               </Group>
             ))}

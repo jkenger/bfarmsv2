@@ -24,7 +24,7 @@ model User {
   age        Int
   avatar     String?
   
-  payrollGroup PayrollGroup? @relation(fields: [payrollGroupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  payrollGroup PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
   payrollGroupId String? @unique
 
   designation Designation? @relation(fields: [designationId], references: [id])
