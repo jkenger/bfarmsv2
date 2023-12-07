@@ -34,7 +34,11 @@ function EditDesignation<T extends TDataFields>({
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>
       <Form {...form}>
-        <FormSubmit<TDataFields> mutation={editMutation} form={form}>
+        <FormSubmit<TDataFields>
+          mutation={editMutation}
+          form={form}
+          mutationType={MutationType.UPDATE}
+        >
           <DesignationFormFields<TDataFields>
             form={form}
             mutationType={MutationType.UPDATE}
@@ -44,7 +48,11 @@ function EditDesignation<T extends TDataFields>({
     </DropDownEditSheet>
   ) : (
     <Form {...form}>
-      <FormSubmit<TDataFields> mutation={editMutation} form={form}>
+      <FormSubmit<TDataFields>
+        mutation={editMutation}
+        form={form}
+        mutationType={MutationType.UPDATE}
+      >
         <DesignationFormFields<TDataFields>
           form={form}
           mutationType={MutationType.UPDATE}

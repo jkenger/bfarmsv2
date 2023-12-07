@@ -76,6 +76,9 @@ export const editDesignation = ({ queryClient, form }: TMutation) => {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.DESIGNATIONS],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.EMPLOYEES],
+      });
       sheetCloseBtn?.click();
       form?.reset();
     },

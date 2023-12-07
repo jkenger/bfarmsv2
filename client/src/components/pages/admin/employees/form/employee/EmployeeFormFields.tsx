@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
@@ -48,7 +48,22 @@ function EmployeeFormFields<T extends TDataFields>({
   }, []);
   const { data } = useQuery(getDesignations());
   const designationData = data?.data.data ? data.data.data : [];
-  const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>();
+
+  const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>(
+    designationData.find(
+      (designation: TDataFields) =>
+        designation.id === form.getValues("designationId")
+    ) || {}
+  );
+  const designationDetailsSelect = useRef<HTMLSpanElement>(null);
+
+  const scrollToBottom = () => {
+    designationDetailsSelect.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [selectedDesignation]);
 
   return (
     <>
@@ -262,7 +277,9 @@ function EmployeeFormFields<T extends TDataFields>({
                         className="text-xs"
                         onSelect={() => {
                           setSelectedDesignation(designation);
-                          form.setValue("designationId", designation.id);
+                          form.setValue("designationId", designation.id, {
+                            shouldDirty: true,
+                          });
                         }}
                       >
                         <CheckIcon
@@ -287,7 +304,9 @@ function EmployeeFormFields<T extends TDataFields>({
             {Object.keys(selectedDesignation).map((key) => (
               <Group assignTo={key} key={key}>
                 {selectedDesignation[key as keyof TDataFields] ? (
-                  <span>{selectedDesignation[key as keyof TDesignation]}</span>
+                  <span ref={designationDetailsSelect}>
+                    {selectedDesignation[key as keyof TDesignation]}
+                  </span>
                 ) : (
                   <span className="text-muted-foreground">No data</span>
                 )}

@@ -14,6 +14,7 @@ export interface DataTableProps<TData, TValue> {
   };
   onEditErrorAction?: React.ReactElement;
   onCreateErrorAction?: React.ReactElement;
+  facetedFilterButtons?: React.ReactElement;
 }
 type Props<TData, TValue> = {
   children: React.ReactNode;

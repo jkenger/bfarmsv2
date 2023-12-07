@@ -37,6 +37,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       await fetch.post("/admin/employees", {
         ...data,
         age: Number(data.age),
+        designationId: data.designationId ? data.designationId : null,
       });
     },
     onSuccess: async () => {
@@ -62,6 +63,8 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
     mutationFn: async (data: TDataFields) => {
       await fetch.put(`/admin/employees/${data.id}`, {
         ...data,
+        age: Number(data.age),
+        designationId: data.designationId ? data.designationId : null,
       });
     },
     onSuccess: async () => {

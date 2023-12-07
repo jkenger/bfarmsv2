@@ -26,7 +26,6 @@ import { RotateCw, X } from "lucide-react";
 import { Button } from "./button";
 import { IconProperties } from "@/types/common";
 import debounce from "debounce";
-import FacetedFilterButton from "./data-table-faceted-filter";
 import DataTableSearch from "./data-table-search";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -53,8 +52,6 @@ export function DataTable<TData extends TDataFields, TValue>() {
   const {
     handleSearchChange,
     handlePageChange,
-    handleGroupChange,
-    handleDesignationChange,
     handleResetParams,
     handlePageLimit,
   } = useFilterParams();
@@ -68,6 +65,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
     mutations,
     onEditErrorAction,
     onCreateErrorAction,
+    facetedFilterButtons,
   } = useDataTable() as DataTableProps<TData, TValue>;
 
   const table = useReactTable<TData>({
@@ -116,20 +114,8 @@ export function DataTable<TData extends TDataFields, TValue>() {
             }, 500)}
           />
 
-          <FacetedFilterButton
-            onSelectedChange={handleGroupChange}
-            // filter={jobStatusfilter}
-            options={["sampel1", "sample2"]}
-          >
-            Payroll Group
-          </FacetedFilterButton>
-          <FacetedFilterButton
-            onSelectedChange={handleDesignationChange}
-            // filter={jobStatusfilter}
-            options={["groupOptions", "groupOptions2", "grpsda2"]}
-          >
-            Designations
-          </FacetedFilterButton>
+          {/* Faceted Filter Button */}
+          {facetedFilterButtons}
 
           {/* Reset */}
           {searchParams.size > 0 && (

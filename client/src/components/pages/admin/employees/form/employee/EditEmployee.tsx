@@ -22,12 +22,13 @@ function EditEmployee<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
-      id: toEditItem?.id || "",
-      employeeId: toEditItem?.employeeId || "",
-      firstName: toEditItem?.firstName || "",
-      lastName: toEditItem?.lastName || "",
-      middleName: toEditItem?.middleName || "",
-      age: toEditItem?.age || "",
+      id: toEditItem ? toEditItem.id : "",
+      employeeId: toEditItem ? toEditItem.employeeId : "",
+      firstName: toEditItem ? toEditItem.firstName : "",
+      middleName: toEditItem ? toEditItem.middleName : "",
+      lastName: toEditItem ? toEditItem.lastName : "",
+      age: toEditItem ? toEditItem.age : "",
+      designationId: toEditItem ? toEditItem.designationId : "",
     } as TDataFields,
   });
 
@@ -36,7 +37,11 @@ function EditEmployee<T extends TDataFields>({
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.EMPLOYEES} open={open} onOpen={onOpen}>
       <Form {...form}>
-        <FormSubmit<TDataFields> mutation={editMutation} form={form}>
+        <FormSubmit<TDataFields>
+          mutation={editMutation}
+          form={form}
+          mutationType={MutationType.UPDATE}
+        >
           <EmployeeFormFields<TDataFields>
             form={form}
             mutationType={MutationType.UPDATE}
@@ -46,7 +51,11 @@ function EditEmployee<T extends TDataFields>({
     </DropDownEditSheet>
   ) : (
     <Form {...form}>
-      <FormSubmit<TDataFields> mutation={editMutation} form={form}>
+      <FormSubmit<TDataFields>
+        mutation={editMutation}
+        form={form}
+        mutationType={MutationType.UPDATE}
+      >
         <EmployeeFormFields<TDataFields>
           form={form}
           mutationType={MutationType.UPDATE}

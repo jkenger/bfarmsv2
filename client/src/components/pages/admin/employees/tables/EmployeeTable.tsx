@@ -12,6 +12,9 @@ import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
+import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
+import useFilterParams from "@/components/hooks/useFilterParams";
+import { getDesignations } from "../api/designation.api";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
   initialData: TEmployees[];
@@ -28,9 +31,14 @@ function EmployeeTable({ employeeColumns }: Props) {
   } = useQuery(getEmployees());
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
+
+  const { data: desData } = useQuery(getDesignations());
+
+  const designationData = desData?.data.data ? desData.data.data : [];
+
   // reset page to 1 if data length is less than numOfPages
-  console.log(data);
   const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
+  const { handleDesignationChange, handleGroupChange } = useFilterParams();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (
@@ -88,6 +96,24 @@ function EmployeeTable({ employeeColumns }: Props) {
               >
                 <AddEmployee toEditItem={createMutation.variables} />
               </MutationSheet>
+            ),
+            facetedFilterButtons: (
+              <>
+                <FacetedFilterButton
+                  onSelectedChange={handleGroupChange}
+                  // filter={jobStatusfilter}
+                  options={["sampel1", "sample2"]}
+                >
+                  Payroll Group
+                </FacetedFilterButton>
+                <FacetedFilterButton
+                  onSelectedChange={handleDesignationChange}
+                  // filter={jobStatusfilter}
+                  options={designationData.map((des: TDataFields) => des.name)}
+                >
+                  Designations
+                </FacetedFilterButton>
+              </>
             ),
           }}
         >

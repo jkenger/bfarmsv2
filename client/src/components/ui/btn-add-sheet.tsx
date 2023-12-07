@@ -39,7 +39,9 @@ function MutationSheet({
             {description} {error ? error : ""}
           </SheetDescription>
         </SheetHeader>
-        <div className="h-[85vh] overflow-y-scroll px-6">{children}</div>
+        <div className="h-[85vh] overflow-y-scroll px-6 scroll-smooth">
+          {children}
+        </div>
       </SheetContent>
     </Sheet>
   );

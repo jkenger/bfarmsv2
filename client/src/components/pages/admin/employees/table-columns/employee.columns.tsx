@@ -95,12 +95,8 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
   },
   {
     accessorKey: "salary",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Salary</span>
-        </DataTableHeader>
-      );
+    header: () => {
+      return <span className="text-semibold">Salary</span>;
     },
     cell: ({ row }) => {
       return (
@@ -113,9 +109,11 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
                 .toString()}{" "}
             </>
           ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              No salary
-            </Badge>
+            <>
+              <Badge variant="outline" className="text-muted-foreground">
+                No salary
+              </Badge>
+            </>
           )}
         </span>
       );

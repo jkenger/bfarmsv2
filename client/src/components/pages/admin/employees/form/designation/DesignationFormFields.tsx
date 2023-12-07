@@ -26,6 +26,7 @@ function DesignationFormFields<T extends TDataFields>({
   mutationType = MutationType.CREATE,
 }: Props<T>) {
   const inputRef = useRef<HTMLInputElement>(null);
+  
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
