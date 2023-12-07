@@ -28,7 +28,11 @@ function AddDesignation({ toEditItem }: Props) {
   }, []);
   return (
     <Form {...form}>
-      <FormSubmit<TDataFields> form={form} mutation={createMutation}>
+      <FormSubmit<TDataFields>
+        form={form}
+        mutation={createMutation}
+        mutationType={MutationType.CREATE}
+      >
         <DesignationFormFields<TDataFields>
           form={form}
           mutationType={MutationType.CREATE}
