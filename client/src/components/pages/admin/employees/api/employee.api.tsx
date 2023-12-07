@@ -43,7 +43,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       toast.success(`Employee Created`, {
         description: "A new employee has been successfully addded.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       form?.reset();
     },
     onError: async () => {
@@ -68,7 +68,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       toast.success(`Employee Updated`, {
         description: "Changes to the employee details have been saved.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       sheetCloseBtn?.click();
       form?.reset();
     },
@@ -92,7 +92,7 @@ export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
         className: "bg-primary",
         description: "The employee has been removed from the records.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
     onError: async () => {
       toast.error("Failed to Delete Employee", {

@@ -45,7 +45,9 @@ export const createDesignation = ({ queryClient, form }: TMutation) => {
       toast.success(`Designation Created`, {
         description: "A new designation has been successfully addded.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
       form?.reset();
     },
     onError: async () => {
@@ -71,7 +73,9 @@ export const editDesignation = ({ queryClient, form }: TMutation) => {
       toast.success(`Designation Updated`, {
         description: "Changes to the designation details have been saved.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
       sheetCloseBtn?.click();
       form?.reset();
     },
@@ -95,7 +99,10 @@ export const deleteDesignation = ({ queryClient }: TMutation) => {
         className: "bg-primary",
         description: "Designation selected has been removed from the records.",
       });
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.DESIGNATIONS] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
     onError: async () => {
       toast.error("Failed to Delete Designation", {

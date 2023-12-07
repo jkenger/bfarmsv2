@@ -102,6 +102,24 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.designation ? (
+            <>
+              ₱
+              {new Intl.NumberFormat()
+                .format(Number(row.original.designation.salary))
+                .toString()}{" "}
+            </>
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground">
+              No salary
+            </Badge>
+          )}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "createdAt",

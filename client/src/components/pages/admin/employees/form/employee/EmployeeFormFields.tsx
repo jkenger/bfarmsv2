@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/command";
 import { CheckIcon } from "lucide-react";
 
-type Props<T> = {
+type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
   mutationType: MutationType;
 };
@@ -41,7 +41,7 @@ type Props<T> = {
 function EmployeeFormFields<T extends TDataFields>({
   form,
   mutationType = MutationType.CREATE,
-}: Props<T>) {
+}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
     inputRef.current?.focus();
