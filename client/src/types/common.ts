@@ -44,6 +44,16 @@ export enum QueryKeys {
   DELETE_DESIGNATION = "deleteDesignation",
   CREATE_DESIGNATION = "createDesignation",
   EDIT_DESIGNATION = "editDesignation",
+
+  PAYROLLS = "payrolls",
+  DELETE_PAYROLL = "deletePayroll",
+  CREATE_PAYROLL = "createPayroll",
+  EDIT_PAYROLL = "editPayroll",
+
+  PAYROLL_GROUPS = "payrollGroups",
+  DELETE_PAYROLL_GROUP = "deletePayrollGroup",
+  CREATE_PAYROLL_GROUP = "createPayrollGroup",
+  EDIT_PAYROLL_GROUP = "editPayrollGroup",
 }
 
 export enum SortType {

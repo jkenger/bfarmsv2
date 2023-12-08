@@ -5,7 +5,12 @@ import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
 
 import { PrismaClient } from "@prisma/client";
-import { createQueryObject, designation, employee } from "../lib/utils.js";
+import {
+  createQueryObject,
+  designation,
+  employee,
+  payrollGroups,
+} from "../lib/utils.js";
 
 const prisma = new PrismaClient().$extends({
   query: {
@@ -163,8 +168,8 @@ export const createDesignation = asyncHandler(async (req, res) => {
   const designationAdded = await prisma.designation.create({
     data: data[0],
   });
-  res.status(StatusCodes.OK).json({
-    message: designationAdded,
+  return res.status(StatusCodes.OK).json({
+    data: designationAdded,
   });
 });
 
@@ -176,7 +181,7 @@ export const deleteDesignation = asyncHandler(async (req, res) => {
       id: id,
     },
   });
-  res.status(StatusCodes.OK).json({
+  return res.status(StatusCodes.OK).json({
     data: designationDeleted,
   });
 });
@@ -195,18 +200,84 @@ export const updateDesignation = asyncHandler(async (req, res) => {
   });
 });
 
-export const createPayrollGroup = asyncHandler(async (req, res) => {
-  const payrollGroupAdded = await prisma.payrollGroup.create({
-    data: req.body,
-  });
-  res.status(StatusCodes.OK).json({
-    message: payrollGroupAdded,
+// Payroll Groups
+export const getAllPayrollGroups = asyncHandler(async (req, res) => {
+  const data = await prisma.payrollGroup.findMany();
+  if (!data || !data.length) {
+    return res.status(StatusCodes.OK).json({
+      data: [],
+    });
+  }
+  return res.status(StatusCodes.OK).json({
+    data,
   });
 });
 
-export const getPayrollGroups = asyncHandler(async (req, res) => {
-  const allPayrollGroups = await prisma.payrollGroup.findMany();
+export const getPaginatedPayrollGroups = asyncHandler(async (req, res) => {
+  const { queryObject, filter, limit } = createQueryObject(req, payrollGroups);
+  const data = await prisma.payrollGroup.findMany(queryObject);
+
+  const dataCount = await prisma.payrollGroup.count(filter);
+  const numOfPages = Math.ceil(dataCount / limit);
+  if (!data || !data.length) {
+    return res.status(StatusCodes.OK).json({
+      data: [],
+      numOfPages: 0,
+    });
+  }
+  return res.status(StatusCodes.OK).json({
+    data,
+    numOfPages,
+  });
+});
+
+export const createPayrollGroup = asyncHandler(async (req, res) => {
+  const data = req.body;
+  if (Array.isArray(data)) {
+    if (data?.length > 1) {
+      console.log("Multiple payroll adding");
+      const payrollGroupAdded = await prisma.payrollGroup.createMany({
+        data: data,
+        skipDuplicates: true,
+      });
+      console.log("payroll group added");
+      return res.status(StatusCodes.OK).json({
+        message: payrollGroupAdded,
+      });
+    }
+  }
+
+  const payrollGroupAdded = await prisma.payrollGroup.create({
+    data: data[0],
+  });
+  return res.status(StatusCodes.OK).json({
+    data: payrollGroupAdded,
+  });
+});
+
+export const deletePayrollGroup = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const payrollGroupDeleted = await prisma.payrollGroup.delete({
+    where: {
+      id: id,
+    },
+  });
+  return res.status(StatusCodes.OK).json({
+    data: payrollGroupDeleted,
+  });
+});
+
+export const updatePayrollGroup = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const payrollGroupUpdated = await prisma.payrollGroup.update({
+    where: {
+      id: id,
+    },
+    data: data[0],
+  });
   res.status(StatusCodes.OK).json({
-    message: allPayrollGroups,
+    message: payrollGroupUpdated,
   });
 });

@@ -29,6 +29,7 @@ type TEmployees = {
   designationId?: string;
   designation?: TDesignation;
   createdAt: string;
+  updatedAt: string;
 };
 
 type TDesignation = {
@@ -37,10 +38,22 @@ type TDesignation = {
   description: string;
   salary: number | string;
   users: TEmployees[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+type TPayrollGroups = {
+  id: string;
+  name: string;
+  fundCluster: string;
+  programName: string;
+  users: TEmployees[];
+  createdAt: string;
+  updatedAt: string;
 };
 
 type TTableValues = {
   id: string;
 };
 
-type TDataFields = TEmployees & TDesignation;
+type TDataFields = TEmployees & TDesignation & TPayrollGroups;

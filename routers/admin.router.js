@@ -12,11 +12,16 @@ import {
   updateDesignation,
   getPaginatedDesignations,
   getAllDesignations,
+  getPaginatedPayrollGroups,
+  getAllPayrollGroups,
+  updatePayrollGroup,
+  deletePayrollGroup,
 } from "../controllers/admin.controller.js";
 import {
   validateDesignation,
   validateEmployee,
   validateId,
+  validatePayrollGroup,
 } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
@@ -62,10 +67,18 @@ router
 // @Method  : GET / POST
 // @Access  : Private (Admin)
 router
-  .route("/payroll/groups")
-  .get((req, res) => {
-    res.send("Payroll groups");
-  })
-  .post(createPayrollGroup);
+  .route("/payrolls/groups")
+  .get(getPaginatedPayrollGroups)
+  .post(validatePayrollGroup, createPayrollGroup);
+
+// @Desc    : Delete and Update Payroll Groups
+// @Method  : DELETE / PUT /
+// @Access  : Private (Admin)
+router
+  .route("/payrolls/groups/:id")
+  .put(validatePayrollGroup, updatePayrollGroup)
+  .delete(validateId, deletePayrollGroup);
+
+router.route("/payrolls/groups/all").get(getAllPayrollGroups);
 
 export default router;

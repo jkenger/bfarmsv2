@@ -4,8 +4,8 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
-import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
-import DesignationFormFields from "../designation/DesignationFormFields";
+import { usePayrollGroupQuery } from "../../providers/PayrollGroupProvider";
+import PayrollGroupsFields from "./PayrollGroupsFields";
 
 type Props<T> = {
   toEditItem?: T;
@@ -14,7 +14,7 @@ type Props<T> = {
   from?: "tableAction" | string;
 };
 
-function EditDesignation<T extends TDataFields>({
+function EditPayrollGroup<T extends TDataFields>({
   open,
   onOpen,
   toEditItem,
@@ -24,12 +24,12 @@ function EditDesignation<T extends TDataFields>({
     values: {
       id: toEditItem?.id || "",
       name: toEditItem?.name || "",
-      description: toEditItem?.description || "",
-      salary: toEditItem?.salary || "",
+      fundCluster: toEditItem?.fundCluster || "",
+      programName: toEditItem?.programName || "",
     } as TDataFields,
   });
 
-  const { editMutation } = useDesignationQuery();
+  const { editMutation } = usePayrollGroupQuery();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>
@@ -39,7 +39,7 @@ function EditDesignation<T extends TDataFields>({
           form={form}
           mutationType={MutationType.UPDATE}
         >
-          <DesignationFormFields<TDataFields>
+          <PayrollGroupsFields<TDataFields>
             form={form}
             mutationType={MutationType.UPDATE}
           />
@@ -53,7 +53,7 @@ function EditDesignation<T extends TDataFields>({
         form={form}
         mutationType={MutationType.UPDATE}
       >
-        <DesignationFormFields<TDataFields>
+        <PayrollGroupsFields<TDataFields>
           form={form}
           mutationType={MutationType.UPDATE}
         />
@@ -62,4 +62,4 @@ function EditDesignation<T extends TDataFields>({
   );
 }
 
-export default EditDesignation;
+export default EditPayrollGroup;

@@ -46,6 +46,14 @@ export const validateDesignation = withValidationErrors([
     .withMessage("Salary must be a number"),
 ]);
 
+export const validatePayrollGroup = withValidationErrors([
+  body().toArray(),
+  body("*.name").notEmpty().withMessage("Name must not be empty"),
+  body("*.fundCluster")
+    .notEmpty()
+    .withMessage("Fund Cluster must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

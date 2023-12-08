@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
@@ -322,7 +322,11 @@ function EmployeeFormFields<T extends TDataFields>({
               <Group assignTo={key} key={key}>
                 {selectedDesignation[key as keyof TDataFields] ? (
                   <span ref={designationDetailsSelect}>
-                    {selectedDesignation[key as keyof TDesignation]}
+                    {
+                      selectedDesignation[
+                        key as keyof TDataFields
+                      ] as React.ReactNode
+                    }
                   </span>
                 ) : (
                   <span className="text-muted-foreground">No data</span>

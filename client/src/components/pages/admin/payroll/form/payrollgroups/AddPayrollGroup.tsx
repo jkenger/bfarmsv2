@@ -4,23 +4,23 @@ import { useForm } from "react-hook-form";
 
 import { useLayoutEffect, useRef } from "react";
 
-import FormSubmit from "../../../shareable/form-submit";
-import DesignationFormFields from "./DesignationFormFields";
 import { MutationType } from "@/types/common";
-import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
+import { usePayrollGroupQuery } from "../../providers/PayrollGroupProvider";
+import PayrollGroupsFields from "./PayrollGroupsFields";
+import FormSubmit from "../../../shareable/form-submit";
 type Props = {
   toEditItem?: TDataFields;
 };
 
-function AddDesignation({ toEditItem }: Props) {
+function AddPayrollGroups({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
     defaultValues: {
       name: toEditItem ? toEditItem.name : "",
-      description: toEditItem ? toEditItem.description : "",
-      salary: toEditItem ? toEditItem.salary : "",
+      fundCluster: toEditItem ? toEditItem.fundCluster : "",
+      programName: toEditItem ? toEditItem.programName : "",
     },
   });
-  const { createMutation } = useDesignationQuery();
+  const { createMutation } = usePayrollGroupQuery();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
@@ -33,7 +33,7 @@ function AddDesignation({ toEditItem }: Props) {
         mutation={createMutation}
         mutationType={MutationType.CREATE}
       >
-        <DesignationFormFields<TDataFields>
+        <PayrollGroupsFields<TDataFields>
           form={form}
           mutationType={MutationType.CREATE}
         />
@@ -42,4 +42,4 @@ function AddDesignation({ toEditItem }: Props) {
   );
 }
 
-export default AddDesignation;
+export default AddPayrollGroups;
