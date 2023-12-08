@@ -36,6 +36,7 @@ type TDesignation = {
   name: string;
   description: string;
   salary: number | string;
+  users: TEmployees[];
 };
 
 type TTableValues = {

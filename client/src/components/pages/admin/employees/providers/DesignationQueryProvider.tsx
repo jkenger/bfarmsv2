@@ -41,21 +41,21 @@ function DesignationQueryProvider({ children }: Props) {
   const deleteMutation = useMutation(deleteDesignation({ queryClient }));
   const deletedActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.DELETE_EMPLOYEE],
+      mutationKey: [QueryKeys.DELETE_DESIGNATION],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,
   }) as TDataFields[];
   const editedActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.EDIT_EMPLOYEE],
+      mutationKey: [QueryKeys.EDIT_DESIGNATION],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,
   }) as TDataFields[];
   const createdActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.CREATE_EMPLOYEE],
+      mutationKey: [QueryKeys.CREATE_DESIGNATION],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,

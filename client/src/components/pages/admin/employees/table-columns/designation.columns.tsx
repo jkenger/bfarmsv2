@@ -3,6 +3,7 @@ import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteDesignation from "../form/designation/DeleteDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
+import { Badge } from "@/components/ui/badge";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [
   {
@@ -33,6 +34,13 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
         <DataTableHeader column={column}>
           <span>Users</span>
         </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return row.original.users.length > 0 ? (
+        <span> {row.original.users.length} Employees </span>
+      ) : (
+        <Badge variant="outline">No employee</Badge>
       );
     },
   },

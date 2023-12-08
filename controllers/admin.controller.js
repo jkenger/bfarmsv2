@@ -3,13 +3,9 @@
 // Dependencies
 import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
-import fs from "fs";
-import { Prisma, PrismaClient } from "@prisma/client";
-import {
-  createQueryObject,
-  designationSearch,
-  employeeSearch,
-} from "../lib/utils.js";
+
+import { PrismaClient } from "@prisma/client";
+import { createQueryObject, designation, employee } from "../lib/utils.js";
 
 const prisma = new PrismaClient().$extends({
   query: {
@@ -46,7 +42,7 @@ const prisma = new PrismaClient().$extends({
 export const getEmployees = asyncHandler(async (req, res) => {
   // await prisma.user.deleteAllUsers();
 
-  const { queryObject, filter, limit } = createQueryObject(req, employeeSearch);
+  const { queryObject, filter, limit } = createQueryObject(req, employee);
 
   const data = await prisma.user.findMany(queryObject);
   // console.log(data);
@@ -132,10 +128,7 @@ export const getAllDesignations = asyncHandler(async (req, res) => {
 });
 
 export const getPaginatedDesignations = asyncHandler(async (req, res) => {
-  const { queryObject, filter, limit } = createQueryObject(
-    req,
-    designationSearch
-  );
+  const { queryObject, filter, limit } = createQueryObject(req, designation);
   const data = await prisma.designation.findMany(queryObject);
 
   const dataCount = await prisma.designation.count(filter);

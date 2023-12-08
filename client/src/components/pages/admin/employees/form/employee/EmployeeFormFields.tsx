@@ -13,25 +13,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
-import { cn } from "@/lib/utils";
 
 import { getDesignations } from "../../api/designation.api";
 import { useQuery } from "@tanstack/react-query";
 import GroupContainer from "../../ui/group-container";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import { CheckIcon } from "lucide-react";
+
+import PopoverCommand from "@/components/ui/popover-command";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -238,7 +225,7 @@ function EmployeeFormFields<T extends TDataFields>({
         </div>
         <div className="flex flex-col justify-between">
           <div className="flex flex-col gap-2 mt-4">
-            <Popover>
+            {/* <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -286,7 +273,7 @@ function EmployeeFormFields<T extends TDataFields>({
                         <CheckIcon
                           className={cn(
                             "mr-2 h-4 w-4",
-                            designation.name === designationData.name
+                            designation.name === selectedDesignation.name
                               ? "opacity-100"
                               : "opacity-0"
                           )}
@@ -297,11 +284,40 @@ function EmployeeFormFields<T extends TDataFields>({
                   </CommandGroup>
                 </Command>
               </PopoverContent>
-            </Popover>
+            </Popover> */}
+            <PopoverCommand
+              data={designationData}
+              selectedItem={selectedDesignation}
+              onSelect={(d) => {
+                setSelectedDesignation(d);
+                form.setValue("designationId", d.id, {
+                  shouldDirty: true,
+                });
+              }}
+            />
           </div>
         </div>
         {selectedDesignation?.id && (
-          <GroupContainer>
+          <GroupContainer
+            groupActions={
+              <>
+                <Button variant="outline" size="sm" type="button">
+                  Edit Group
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  type="button"
+                  onClick={() => {
+                    setSelectedDesignation({} as TDataFields);
+                    form.setValue("designationId", "");
+                  }}
+                >
+                  Remove
+                </Button>
+              </>
+            }
+          >
             {Object.keys(selectedDesignation).map((key) => (
               <Group assignTo={key} key={key}>
                 {selectedDesignation[key as keyof TDataFields] ? (

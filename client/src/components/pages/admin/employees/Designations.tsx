@@ -13,6 +13,9 @@ import { Plus } from "lucide-react";
 import { IconProperties } from "@/types/common";
 import AddDesignation from "./form/designation/AddDesignation";
 import { SheetTrigger } from "@/components/ui/sheet";
+import DataTableHistory from "@/components/ui/data-table-history";
+import { useDesignationQuery } from "./providers/DesignationQueryProvider";
+import ActivityCard from "./ui/activity-card";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -22,6 +25,8 @@ export const loader = (queryClient: QueryClient) => async () => {
 
 function Designations() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
+  const { createdActivities, deletedActivities, editedActivities } =
+    useDesignationQuery();
   return (
     <>
       <Main.Header>
@@ -74,6 +79,50 @@ function Designations() {
           >
             <AddDesignation />
           </MutationSheet>
+          <DataTableHistory
+            render={{
+              edited: editedActivities.length ? (
+                editedActivities?.map((activity) => (
+                  <ActivityCard
+                    key={activity.id}
+                    type="edited"
+                    activity={activity}
+                  />
+                ))
+              ) : (
+                <div className="text-sm text-muted- my-2 p-4 flex items-center justify-center text-muted-foreground border border-dashed">
+                  No recent activities
+                </div>
+              ),
+
+              deleted: deletedActivities.length ? (
+                deletedActivities?.map((activity) => (
+                  <ActivityCard
+                    key={activity.id}
+                    type="deleted"
+                    activity={activity}
+                  />
+                ))
+              ) : (
+                <div className="text-sm text-muted- my-2 p-4 flex items-center justify-center text-muted-foreground border border-dashed">
+                  No recent activities
+                </div>
+              ),
+              created: createdActivities.length ? (
+                createdActivities?.map((activity) => (
+                  <ActivityCard
+                    key={activity.id}
+                    type="created"
+                    activity={activity}
+                  />
+                ))
+              ) : (
+                <div className="text-sm text-muted- my-2 p-4 flex items-center justify-center text-muted-foreground border border-dashed">
+                  No recent activities
+                </div>
+              ),
+            }}
+          />
         </Main.Heading>
       </Main.Header>
       <Main.Content>

@@ -54,7 +54,6 @@ model PayrollGroup{
   name       String 
   fundCluster String
   programName String?
-  description String?
   users       User[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
