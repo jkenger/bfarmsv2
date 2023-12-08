@@ -15,6 +15,7 @@ import { SheetTrigger } from "@/components/ui/sheet";
 import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
 import useFilterParams from "@/components/hooks/useFilterParams";
 import { getDesignations } from "../api/designation.api";
+import { Skeleton } from "@/components/ui/skeleton";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
 };
@@ -31,8 +32,9 @@ function EmployeeTable({ employeeColumns }: Props) {
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
 
-  const { data: desData } = useQuery(getDesignations({ type: "all" }));
-  console.log(desData);
+  const { data: desData, isPending: isDesignationPending } = useQuery(
+    getDesignations({ type: "all" })
+  );
   const designationData = desData?.data.data;
 
   // reset page to 1 if data length is less than numOfPages
@@ -105,17 +107,21 @@ function EmployeeTable({ employeeColumns }: Props) {
                 >
                   Payroll Group
                 </FacetedFilterButton>
-                <FacetedFilterButton
-                  onSelectedChange={handleDesignationChange}
-                  // filter={jobStatusfilter}
-                  options={
-                    designationData.length
-                      ? designationData.map((des: TDataFields) => des.name)
-                      : []
-                  }
-                >
-                  Designations
-                </FacetedFilterButton>
+                {isDesignationPending ? (
+                  <Skeleton className="w-24 h-8" />
+                ) : (
+                  <FacetedFilterButton
+                    onSelectedChange={handleDesignationChange}
+                    // filter={jobStatusfilter}
+                    options={
+                      designationData.length
+                        ? designationData.map((des: TDataFields) => des.name)
+                        : []
+                    }
+                  >
+                    Designations
+                  </FacetedFilterButton>
+                )}
               </>
             ),
           }}

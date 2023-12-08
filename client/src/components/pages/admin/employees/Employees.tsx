@@ -8,10 +8,10 @@ import { Plus } from "lucide-react";
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import AddEmployee from "./form/employee/AddEmployee";
 import { QueryClient } from "@tanstack/react-query";
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import Error from "../../Error";
 import { getEmployees } from "./api/employee.api";
-import EmployeeTable from "./tables/EmployeeTable";
+const EmployeeTable = lazy(() => import("./tables/EmployeeTable"));
 import { IconProperties } from "@/types/common";
 import TableFallBack from "@/components/ui/table-fallback";
 import DataTableHistory from "@/components/ui/data-table-history";
@@ -19,21 +19,16 @@ import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "./ui/activity-card";
 import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 import { SheetTrigger } from "@/components/ui/sheet";
-import { getDesignations } from "./api/designation.api";
-
 // import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
     data: queryClient.ensureQueryData(getEmployees()),
-    designationData: queryClient.ensureQueryData(
-      getDesignations({ type: "all" })
-    ),
   });
 };
 
 function Employees() {
-  const { data: initialData, designationData } = useLoaderData() as {
+  const { data: initialData } = useLoaderData() as {
     data: TDataFields;
     designationData: TDataFields;
   };
@@ -146,13 +141,8 @@ function Employees() {
       </Main.Header>
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
-          <Await
-            resolve={Promise.all([initialData, designationData]).then(
-              (value) => value
-            )}
-            errorElement={<Error />}
-          >
-            {<EmployeeTable employeeColumns={employeeColumns} />}
+          <Await resolve={initialData} errorElement={<Error />}>
+            <EmployeeTable employeeColumns={employeeColumns} />
           </Await>
         </Suspense>
       </Main.Content>
