@@ -20,7 +20,10 @@ function FormSubmit<T extends TDataFields>({
   const onSubmit: SubmitHandler<T> = (data) => {
     const closeSheet = document.getElementById("sheetCloseBtn");
 
-    if (!form.formState.isDirty && mutationType === MutationType.UPDATE) {
+    if (
+      JSON.stringify(form.formState.defaultValues) === JSON.stringify(data) &&
+      mutationType === MutationType.UPDATE
+    ) {
       toast.warning(`No Changes Detected`, {
         description: "No changes were made to the form.",
       });

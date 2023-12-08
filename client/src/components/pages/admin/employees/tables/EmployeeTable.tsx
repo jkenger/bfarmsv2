@@ -17,7 +17,6 @@ import useFilterParams from "@/components/hooks/useFilterParams";
 import { getDesignations } from "../api/designation.api";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
-  initialData: TEmployees[];
 };
 
 function EmployeeTable({ employeeColumns }: Props) {
@@ -32,9 +31,9 @@ function EmployeeTable({ employeeColumns }: Props) {
   const data = res ? res.data.data : [];
   const numOfPages = res ? res.data.numOfPages : 0;
 
-  const { data: desData } = useQuery(getDesignations());
-
-  const designationData = desData?.data.data ? desData.data.data : [];
+  const { data: desData } = useQuery(getDesignations({ type: "all" }));
+  console.log(desData);
+  const designationData = desData?.data.data;
 
   // reset page to 1 if data length is less than numOfPages
   const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
@@ -109,7 +108,11 @@ function EmployeeTable({ employeeColumns }: Props) {
                 <FacetedFilterButton
                   onSelectedChange={handleDesignationChange}
                   // filter={jobStatusfilter}
-                  options={designationData.map((des: TDataFields) => des.name)}
+                  options={
+                    designationData.length
+                      ? designationData.map((des: TDataFields) => des.name)
+                      : []
+                  }
                 >
                   Designations
                 </FacetedFilterButton>

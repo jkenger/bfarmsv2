@@ -16,7 +16,7 @@ import { SheetTrigger } from "@/components/ui/sheet";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
-    data: queryClient.ensureQueryData(getDesignations()),
+    data: queryClient.ensureQueryData(getDesignations({ type: "paginated" })),
   });
 };
 

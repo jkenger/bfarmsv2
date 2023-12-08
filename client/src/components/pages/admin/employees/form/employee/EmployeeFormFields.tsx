@@ -46,7 +46,7 @@ function EmployeeFormFields<T extends TDataFields>({
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
-  const { data } = useQuery(getDesignations());
+  const { data } = useQuery(getDesignations({ type: "all" }));
   const designationData = data?.data.data ? data.data.data : [];
 
   const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>(
@@ -238,7 +238,6 @@ function EmployeeFormFields<T extends TDataFields>({
         </div>
         <div className="flex flex-col justify-between">
           <div className="flex flex-col gap-2 mt-4">
-            <h1 className="text-xs">Designations</h1>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -264,11 +263,13 @@ function EmployeeFormFields<T extends TDataFields>({
                 <Command>
                   <CommandInput
                     className="text-xs"
-                    placeholder="Search language..."
+                    placeholder="Search designations..."
                   />
-                  <CommandEmpty className="text-xs p-4 text-center">
-                    No designation found.
-                  </CommandEmpty>
+                  {!designationData.length && (
+                    <CommandEmpty className="text-xs p-4 text-center">
+                      No designation found.
+                    </CommandEmpty>
+                  )}
                   <CommandGroup>
                     {designationData.map((designation: TDataFields) => (
                       <CommandItem

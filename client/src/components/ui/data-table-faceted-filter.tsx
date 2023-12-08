@@ -83,37 +83,40 @@ function FacetedFilterButton<A>({
         <Command>
           <CommandInput placeholder={`Filter by ${children}`} />
           <CommandList>
-            <CommandEmpty>No results found</CommandEmpty>
             <CommandGroup className="">
-              {options?.map((s, i) => (
-                <CommandItem
-                  key={i}
-                  onSelect={(e) => {
-                    // If e is not in selectedValue, add it, if it is, return the previous selectedValue
-                    setSelectedValues((prev) => {
-                      if (prev.includes(e as never)) {
-                        return prev.filter((item) => item !== e);
-                      } else {
-                        return [...prev, e];
-                      }
-                    });
-                  }}
-                  className="space-x-2"
-                >
-                  <div
-                    className={`flex items-center justify-center text-xs w-4 h-4 rounded-sm border text-white ${
-                      selectedValues?.includes(s.toLowerCase() as string)
-                        ? "bg-primary"
-                        : "bg-secondary"
-                    }`}
+              {options.length ? (
+                options?.map((s, i) => (
+                  <CommandItem
+                    key={i}
+                    onSelect={(e) => {
+                      // If e is not in selectedValue, add it, if it is, return the previous selectedValue
+                      setSelectedValues((prev) => {
+                        if (prev.includes(e as never)) {
+                          return prev.filter((item) => item !== e);
+                        } else {
+                          return [...prev, e];
+                        }
+                      });
+                    }}
+                    className="space-x-2"
                   >
-                    {selectedValues?.includes(s.toLowerCase() as string) && (
-                      <Check size="16" />
-                    )}
-                  </div>
-                  <span className="capitalize">{s as string} </span>
-                </CommandItem>
-              ))}
+                    <div
+                      className={`flex items-center justify-center text-xs w-4 h-4 rounded-sm border text-white ${
+                        selectedValues?.includes(s.toLowerCase() as string)
+                          ? "bg-primary"
+                          : "bg-secondary"
+                      }`}
+                    >
+                      {selectedValues?.includes(s.toLowerCase() as string) && (
+                        <Check size="16" />
+                      )}
+                    </div>
+                    <span className="capitalize">{s as string} </span>
+                  </CommandItem>
+                ))
+              ) : (
+                <CommandEmpty>No results found</CommandEmpty>
+              )}
             </CommandGroup>
           </CommandList>
           <Separator />

@@ -25,7 +25,7 @@ function DesignationTable({ columns }: Props) {
     isSuccess,
     error,
     refetch,
-  } = useQuery(getDesignations());
+  } = useQuery(getDesignations({ type: "paginated" }));
 
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;

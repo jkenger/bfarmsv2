@@ -11,20 +11,35 @@ type TMutation = {
   form?: UseFormReturn<TDataFields, unknown, undefined>;
 };
 
+type TDesignationsOptions = {
+  type?: "paginated" | "all";
+};
+
 export type getResponse = {
   data: TDataFields[];
   numOfPages: number;
 };
 
-export const getDesignations = () => {
+export const getDesignations = ({
+  type = "paginated",
+}: TDesignationsOptions) => {
+  console.log(type);
   const { searchParams: designationSearchParams } = getSearchParams();
   const searchParams = new URLSearchParams(designationSearchParams);
+  // If type is paginated, then add the search params to the query key
+  const qKey =
+    type === "paginated"
+      ? [QueryKeys.DESIGNATIONS, searchParams.toString()]
+      : [QueryKeys.DESIGNATIONS];
+
+  const qFnQuery =
+    type === "paginated"
+      ? `admin/employees/designations?${searchParams.toString()}`
+      : `admin/employees/designations/all`;
   return {
-    queryKey: [QueryKeys.DESIGNATIONS, searchParams.toString()],
+    queryKey: qKey,
     queryFn: async () => {
-      return await fetch.get(
-        `/admin/employees/designations?${searchParams.toString()}`
-      );
+      return await fetch.get(qFnQuery);
     },
 
     placeholderData: keepPreviousData,

@@ -35,6 +35,7 @@ const DesignationQueryContext = React.createContext<TDesignationQueryContext>(
 
 function DesignationQueryProvider({ children }: Props) {
   const queryClient = useQueryClient();
+
   const createMutation = useMutation(createDesignation({ queryClient }));
   const editMutation = useMutation(editDesignation({ queryClient }));
   const deleteMutation = useMutation(deleteDesignation({ queryClient }));

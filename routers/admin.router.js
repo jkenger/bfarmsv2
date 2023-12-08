@@ -4,13 +4,14 @@ import express from "express";
 import {
   getEmployees,
   createEmployee,
-  getDesignations,
   createPayrollGroup,
   createDesignation,
   deleteEmployee,
   updateEmployee,
   deleteDesignation,
   updateDesignation,
+  getPaginatedDesignations,
+  getAllDesignations,
 } from "../controllers/admin.controller.js";
 import {
   validateDesignation,
@@ -41,8 +42,13 @@ router
 // @Access  : Private (Admin)
 router
   .route("/employees/designations")
-  .get(getDesignations)
+  .get(getPaginatedDesignations)
   .post(validateDesignation, createDesignation);
+
+// @Desc    : Read and Create Designations
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router.route("/employees/designations/all").get(getAllDesignations);
 
 // @Desc   : Delete and Update Designations
 // @Method : DELETE / PUT /

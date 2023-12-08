@@ -118,7 +118,20 @@ export const deleteEmployee = asyncHandler(async (req, res) => {
 });
 
 /// Employees/Designation
-export const getDesignations = asyncHandler(async (req, res) => {
+
+export const getAllDesignations = asyncHandler(async (req, res) => {
+  const data = await prisma.designation.findMany();
+  if (!data || !data.length) {
+    return res.status(StatusCodes.OK).json({
+      data: [],
+    });
+  }
+  return res.status(StatusCodes.OK).json({
+    data,
+  });
+});
+
+export const getPaginatedDesignations = asyncHandler(async (req, res) => {
   const { queryObject, filter, limit } = createQueryObject(
     req,
     designationSearch

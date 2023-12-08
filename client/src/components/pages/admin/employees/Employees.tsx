@@ -26,12 +26,17 @@ import { getDesignations } from "./api/designation.api";
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
     data: queryClient.ensureQueryData(getEmployees()),
-    designationData: queryClient.ensureQueryData(getDesignations()),
+    designationData: queryClient.ensureQueryData(
+      getDesignations({ type: "all" })
+    ),
   });
 };
 
 function Employees() {
-  const { data: initialData } = useLoaderData() as { data: TDataFields };
+  const { data: initialData, designationData } = useLoaderData() as {
+    data: TDataFields;
+    designationData: TDataFields;
+  };
   const { createdActivities, deletedActivities, editedActivities } =
     useEmployeeQuery();
 
@@ -141,13 +146,13 @@ function Employees() {
       </Main.Header>
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
-          <Await resolve={initialData} errorElement={<Error />}>
-            {(data) => (
-              <EmployeeTable
-                employeeColumns={employeeColumns}
-                initialData={data}
-              />
+          <Await
+            resolve={Promise.all([initialData, designationData]).then(
+              (value) => value
             )}
+            errorElement={<Error />}
+          >
+            {<EmployeeTable employeeColumns={employeeColumns} />}
           </Await>
         </Suspense>
       </Main.Content>
