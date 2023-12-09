@@ -5,13 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
 
 import { PrismaClient } from "@prisma/client";
-import {
-  createQueryObject,
-  designation,
-  employee,
-  holiday,
-  payrollGroups,
-} from "../lib/utils.js";
+import { designation, employee, holiday, payrollGroups } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 
 const prisma = new PrismaClient().$extends({
@@ -111,24 +105,9 @@ export const updatePayrollGroup = asyncHandler(async (req, res) =>
 export const getAllHolidays = asyncHandler(async (req, res) =>
   models.getAllModel(res, prisma.holiday)
 );
-export const getPaginatedHolidays = asyncHandler(async (req, res) => {
-  const { queryObject, filter, limit } = createQueryObject(req, holiday);
-
-  const data = await prisma.holiday.findMany(queryObject);
-
-  const dataCount = await prisma.holiday.count(filter);
-  const numOfPages = Math.ceil(dataCount / limit);
-  if (!data || !data.length) {
-    return res.status(StatusCodes.OK).json({
-      data: [],
-      numOfPages: 0,
-    });
-  }
-  return res.status(StatusCodes.OK).json({
-    data,
-    numOfPages,
-  });
-});
+export const getPaginatedHolidays = asyncHandler(async (req, res) =>
+  models.getPaginatedModel(req, res, prisma.holiday, holiday)
+);
 
 export const createHoliday = asyncHandler(async (req, res) => {
   const data = [
