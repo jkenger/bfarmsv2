@@ -67,7 +67,6 @@ function HolidaysTable({ columns }: Props) {
                 table="Designations"
                 error={editMutationError?.response?.data as string}
               >
-                {/* @@@@@@@@@TOCHANGE */}
                 <EditHoliday toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
@@ -89,7 +88,6 @@ function HolidaysTable({ columns }: Props) {
                 table="Designations"
                 error={createMutationError?.response?.data as string}
               >
-                {/* @@@@@@@@@TOCHANGE */}
                 <AddHoliday toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
