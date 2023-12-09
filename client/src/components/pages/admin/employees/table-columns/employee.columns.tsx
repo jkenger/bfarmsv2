@@ -69,6 +69,19 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.payrollGroup ? (
+            row.original.payrollGroup?.name
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground">
+              No payroll group
+            </Badge>
+          )}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "designation",

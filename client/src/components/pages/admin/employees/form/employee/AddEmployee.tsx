@@ -20,6 +20,7 @@ function AddEmployee({ toEditItem }: Props) {
       lastName: toEditItem ? toEditItem.lastName : "",
       age: toEditItem ? toEditItem.age : "",
       designationId: toEditItem ? toEditItem.designationId : "",
+      payrollGroupId: toEditItem ? toEditItem.payrollGroupId : "",
     },
   });
   const { createMutation } = useEmployeeQuery();

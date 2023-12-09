@@ -83,7 +83,7 @@ export const createEmployee = asyncHandler(async (req, res) => {
       });
     }
   }
-
+  console.log(data);
   const userAdded = await prisma.user.create({
     data: data[0],
   });

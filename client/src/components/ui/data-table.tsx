@@ -44,6 +44,7 @@ import {
   DataTableColumnStatusEditFails,
 } from "./data-table-column-status";
 import { DataTableProps, useDataTable } from "../context/data-table-provider";
+import { Badge } from "./badge";
 
 export function DataTable<TData extends TDataFields, TValue>() {
   const [columnVisibility, setColumnVisibility] =
@@ -220,6 +221,9 @@ export function DataTable<TData extends TDataFields, TValue>() {
                           cell.column.columnDef.cell,
                           cell.getContext()
                         )}
+                        {/* @TODO: Create a badge when a new row is successfully added labaled new */}
+                        {cell.column.columnDef.id === "name" &&
+                          mutations?.create.isSuccess && <Badge> New </Badge>}
                       </TableCell>
                     </>
                   ))}

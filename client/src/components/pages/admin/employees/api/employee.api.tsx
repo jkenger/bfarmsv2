@@ -38,6 +38,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
         ...data,
         age: Number(data.age),
         designationId: data.designationId ? data.designationId : null,
+        payrollGroupId: data.payrollGroupId ? data.payrollGroupId : null,
       });
     },
     onSuccess: async () => {
@@ -65,6 +66,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
         ...data,
         age: Number(data.age),
         designationId: data.designationId ? data.designationId : null,
+        payrollGroupId: data.payrollGroupId ? data.payrollGroupId : null,
       });
     },
     onSuccess: async () => {

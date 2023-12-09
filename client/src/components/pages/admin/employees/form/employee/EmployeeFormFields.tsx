@@ -19,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import GroupContainer from "../../ui/group-container";
 
 import PopoverCommand from "@/components/ui/popover-command";
+import { getPayrollGroups } from "../../../payroll/api/payrollGroups.api";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -33,9 +34,10 @@ function EmployeeFormFields<T extends TDataFields>({
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
-  const { data } = useQuery(getDesignations({ type: "all" }));
-  const designationData = data?.data.data ? data.data.data : [];
 
+  // Designation constants/query for facetedfilter
+  const { data: ddataResult } = useQuery(getDesignations({ type: "all" }));
+  const designationData = ddataResult?.data.data ? ddataResult.data.data : [];
   const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>(
     designationData.find(
       (designation: TDataFields) =>
@@ -44,13 +46,27 @@ function EmployeeFormFields<T extends TDataFields>({
   );
   const designationDetailsSelect = useRef<HTMLSpanElement>(null);
 
+  // Payrollgroup constants/query for facetedfilter
+  const { data: pgdataResult } = useQuery(getPayrollGroups({ type: "all" }));
+  const payrollgroupData = pgdataResult?.data.data
+    ? pgdataResult.data.data
+    : [];
+  const [selectedPayrollGroup, setSelectedPayrollGroup] = useState<TDataFields>(
+    payrollgroupData.find(
+      (payrollgroup: TDataFields) =>
+        payrollgroup.id === form.getValues("payrollGroupId")
+    ) || {}
+  );
+  const payrollgroupDetailsSelect = useRef<HTMLSpanElement>(null);
+
   const scrollToBottom = () => {
     designationDetailsSelect.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Scroll to bottom when designation or payroll group is selected
   useEffect(() => {
     scrollToBottom();
-  }, [selectedDesignation]);
+  }, [selectedDesignation, selectedPayrollGroup]);
 
   return (
     <>
@@ -167,54 +183,71 @@ function EmployeeFormFields<T extends TDataFields>({
         )}
       />
 
+      {/* Payroll group select */}
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <Label htmlFor="firstName" className="">
-            Payroll Group
+            Payroll Groups
           </Label>
 
           <p>Optional</p>
         </div>
-        <div className="bg-card rounded-lg text-muted-foreground border p-4 flex flex-col gap-2">
-          <p>
-            The following id for this group will be{" "}
-            <span className="text-primary">added</span>:{" "}
-          </p>
-          <div className="flex flex-col gap-4 items-start">
-            <Group assignTo="id">023023020302032</Group>
-            <Group assignTo="cluster"> NIFEP/BASIL</Group>
-            <Group assignTo="project_name">
-              CARPS FINGERLING PRODUCTION AND HATCHERY
-              DEVELOPMENT/ADMINISTRATION AND OPERATION OF NIFTC/BASIL
-            </Group>
-          </div>
-          <div className="space-x-2 mt-4">
-            <Button variant="outline" size="sm" className="text-foreground">
-              Edit group{" "}
-            </Button>
-            <Button variant="outline" size="sm" className="text-foreground">
-              Remove
-            </Button>
+        <div className="flex flex-col justify-between">
+          <div className="flex flex-col gap-2 mt-4">
+            <PopoverCommand
+              label="Payroll Group"
+              data={payrollgroupData}
+              selectedItem={selectedPayrollGroup}
+              onSelect={(d) => {
+                setSelectedPayrollGroup(d);
+                form.setValue("payrollGroupId", d.id, {
+                  shouldDirty: true,
+                });
+              }}
+            />
           </div>
         </div>
+        {selectedPayrollGroup?.id && (
+          <GroupContainer
+            groupActions={
+              <>
+                <Button variant="outline" size="sm" type="button">
+                  Edit Group
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  type="button"
+                  onClick={() => {
+                    setSelectedPayrollGroup({} as TDataFields);
+                    form.setValue("payrollGroupId", "");
+                  }}
+                >
+                  Remove
+                </Button>
+              </>
+            }
+          >
+            {Object.keys(selectedPayrollGroup).map((key) => (
+              <Group assignTo={key} key={key}>
+                {selectedPayrollGroup[key as keyof TDataFields] ? (
+                  <span ref={payrollgroupDetailsSelect}>
+                    {
+                      selectedPayrollGroup[
+                        key as keyof TDataFields
+                      ] as React.ReactNode
+                    }
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">No data</span>
+                )}
+              </Group>
+            ))}
+          </GroupContainer>
+        )}
       </div>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
-          <Label htmlFor="firstName" className="">
-            Payroll Group
-          </Label>
 
-          <p>Optional</p>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="xs"
-          className="self-start bg-background "
-        >
-          Add payroll group
-        </Button>
-      </div>
+      {/* Designation select */}
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <Label htmlFor="firstName" className="">
@@ -225,67 +258,8 @@ function EmployeeFormFields<T extends TDataFields>({
         </div>
         <div className="flex flex-col justify-between">
           <div className="flex flex-col gap-2 mt-4">
-            {/* <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn(
-                    " justify-between text-xs ",
-                    !selectedDesignation?.name && "text-muted-foreground"
-                  )}
-                >
-                  {selectedDesignation?.name ? (
-                    designationData.find(
-                      (designation: TDataFields) =>
-                        designation.name === selectedDesignation?.name
-                    )?.name
-                  ) : (
-                    <span>Select designation</span>
-                  )}
-                  <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Command>
-                  <CommandInput
-                    className="text-xs"
-                    placeholder="Search designations..."
-                  />
-                  {!designationData.length && (
-                    <CommandEmpty className="text-xs p-4 text-center">
-                      No designation found.
-                    </CommandEmpty>
-                  )}
-                  <CommandGroup>
-                    {designationData.map((designation: TDataFields) => (
-                      <CommandItem
-                        value={designation.name}
-                        key={designation.id}
-                        className="text-xs"
-                        onSelect={() => {
-                          setSelectedDesignation(designation);
-                          form.setValue("designationId", designation.id, {
-                            shouldDirty: true,
-                          });
-                        }}
-                      >
-                        <CheckIcon
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            designation.name === selectedDesignation.name
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {designation.name}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover> */}
             <PopoverCommand
+              label="Designation"
               data={designationData}
               selectedItem={selectedDesignation}
               onSelect={(d) => {

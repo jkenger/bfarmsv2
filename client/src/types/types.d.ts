@@ -26,6 +26,7 @@ type TEmployees = {
   age: number | string;
   avatar?: string;
   payrollGroupId?: string;
+  payrollGroup?: TPayrollGroup;
   designationId?: string;
   designation?: TDesignation;
   createdAt: string;
@@ -42,7 +43,7 @@ type TDesignation = {
   updatedAt: string;
 };
 
-type TPayrollGroups = {
+type TPayrollGroup = {
   id: string;
   name: string;
   fundCluster: string;
@@ -56,4 +57,4 @@ type TTableValues = {
   id: string;
 };
 
-type TDataFields = TEmployees & TDesignation & TPayrollGroups;
+type TDataFields = TEmployees & TDesignation & TPayrollGroup;

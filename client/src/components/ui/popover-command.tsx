@@ -17,9 +17,10 @@ type Props = {
   selectedItem: TDataFields;
   setSelectedItem?: React.Dispatch<React.SetStateAction<TDataFields>>;
   onSelect: (d: TDataFields) => void;
+  label?: string;
 };
 
-function PopoverCommand({ data, selectedItem, onSelect }: Props) {
+function PopoverCommand({ data, selectedItem, onSelect, label }: Props) {
   const [open, setOpen] = React.useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -35,7 +36,7 @@ function PopoverCommand({ data, selectedItem, onSelect }: Props) {
           {selectedItem?.name ? (
             data.find((d: TDataFields) => d.name === selectedItem?.name)?.name
           ) : (
-            <span>Select designation</span>
+            <span>Select {label ? label : "item"}</span>
           )}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -48,7 +49,7 @@ function PopoverCommand({ data, selectedItem, onSelect }: Props) {
           />
           {!data.length && (
             <CommandEmpty className="text-xs p-4 text-center">
-              No designation found.
+              No {label ? label : "item"} found.
             </CommandEmpty>
           )}
           <CommandGroup>
@@ -56,7 +57,7 @@ function PopoverCommand({ data, selectedItem, onSelect }: Props) {
               <CommandItem
                 value={d.name}
                 key={d.id}
-                className="text-xs"
+                className="text-xs "
                 onSelect={() => {
                   onSelect(d);
                   setOpen(false);

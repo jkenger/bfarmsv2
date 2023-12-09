@@ -29,6 +29,7 @@ function EditEmployee<T extends TDataFields>({
       lastName: toEditItem ? toEditItem.lastName : "",
       age: toEditItem ? toEditItem.age : "",
       designationId: toEditItem ? toEditItem.designationId : "",
+      payrollGroupId: toEditItem ? toEditItem.payrollGroupId : "",
     } as TDataFields,
   });
 
