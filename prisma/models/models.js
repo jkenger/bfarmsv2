@@ -57,7 +57,9 @@ export const models = {
   },
   getPaginatedModel: async (req, res, prismaModel, toQuery) => {
     const { queryObject, filter, limit } = createQueryObject(req, toQuery);
+    console.log("qobject", toQuery);
     const data = await prismaModel.findMany(queryObject);
+    console.log("pmodel", data);
 
     const dataCount = await prismaModel.count(filter);
     const numOfPages = Math.ceil(dataCount / limit);
