@@ -5,13 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
 
 import { PrismaClient } from "@prisma/client";
-import {
-  createQueryObject,
-  designation,
-  employee,
-  holiday,
-  payrollGroups,
-} from "../lib/utils.js";
+import { designation, employee, holiday, payrollGroups } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 
 const prisma = new PrismaClient().$extends({
