@@ -2,7 +2,7 @@ import { fetch } from "@/lib/utils";
 import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 
-import { QueryKeys } from "@/types/common";
+import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
 
@@ -16,13 +16,24 @@ export type getEmployeeResponse = {
   numOfPages: number;
 };
 
-export const getEmployees = () => {
+export const getEmployees = ({
+  type = GetQueryType.PAGINATED,
+}: TGetQueryOptions) => {
   const { searchParams: employeeSearchParams } = getSearchParams();
   const searchParams = new URLSearchParams(employeeSearchParams);
+  const qKey =
+    type === GetQueryType.PAGINATED
+      ? [QueryKeys.EMPLOYEES, searchParams.toString()]
+      : [QueryKeys.EMPLOYEES];
+
+  const qFnQuery =
+    type === GetQueryType.PAGINATED
+      ? `admin/employees?${searchParams.toString()}`
+      : `admin/employees/all`;
   return {
-    queryKey: [QueryKeys.EMPLOYEES, searchParams.toString()],
+    queryKey: qKey,
     queryFn: async () => {
-      return await fetch.get(`/admin/employees?${searchParams.toString()}`);
+      return await fetch.get(qFnQuery);
     },
 
     placeholderData: keepPreviousData,

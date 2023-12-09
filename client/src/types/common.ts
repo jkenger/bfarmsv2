@@ -54,6 +54,11 @@ export enum QueryKeys {
   DELETE_PAYROLL_GROUP = "deletePayrollGroup",
   CREATE_PAYROLL_GROUP = "createPayrollGroup",
   EDIT_PAYROLL_GROUP = "editPayrollGroup",
+
+  HOLIDAYS = "holidays",
+  DELETE_HOLIDAY = "deleteHoliday",
+  CREATE_HOLIDAY = "createHoliday",
+  EDIT_HOLIDAY = "editHoliday",
 }
 
 export enum SortType {
@@ -79,4 +84,9 @@ export enum MutationType {
   DELETE = "delete",
   DELETE_MANY = "deleteMany",
   UPDATE_MANY = "updateMany",
+}
+
+export enum GetQueryType {
+  PAGINATED = "paginated",
+  ALL = "all",
 }

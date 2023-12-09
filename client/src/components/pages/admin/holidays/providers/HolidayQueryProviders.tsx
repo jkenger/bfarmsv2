@@ -6,43 +6,39 @@ import {
 import React from "react";
 
 import { QueryKeys } from "@/types/common";
-import {
-  createDesignation,
-  deleteDesignation,
-  editDesignation,
-} from "../api/designation.api";
+import { createHoliday, deleteHoliday, editHoliday } from "../api/holidays.api";
 
 type Props = {
   children: React.ReactNode;
 };
 
-const DesignationQueryContext = React.createContext<TQueryContext>(
+const HolidyQueryContext = React.createContext<TQueryContext>(
   {} as TQueryContext
 );
 
-function DesignationQueryProvider({ children }: Props) {
+function HolidayQueryProvider({ children }: Props) {
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation(createDesignation({ queryClient }));
-  const editMutation = useMutation(editDesignation({ queryClient }));
-  const deleteMutation = useMutation(deleteDesignation({ queryClient }));
+  const createMutation = useMutation(createHoliday({ queryClient }));
+  const editMutation = useMutation(editHoliday({ queryClient }));
+  const deleteMutation = useMutation(deleteHoliday({ queryClient }));
   const deletedActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.DELETE_DESIGNATION],
+      mutationKey: [QueryKeys.DELETE_HOLIDAY],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,
   }) as TDataFields[];
   const editedActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.EDIT_DESIGNATION],
+      mutationKey: [QueryKeys.EDIT_HOLIDAY],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,
   }) as TDataFields[];
   const createdActivities = useMutationState({
     filters: {
-      mutationKey: [QueryKeys.CREATE_DESIGNATION],
+      mutationKey: [QueryKeys.CREATE_HOLIDAY],
       status: "success",
     },
     select: (mutation) => mutation.state.variables,
@@ -58,20 +54,20 @@ function DesignationQueryProvider({ children }: Props) {
   };
 
   return (
-    <DesignationQueryContext.Provider value={value}>
+    <HolidyQueryContext.Provider value={value}>
       {children}
-    </DesignationQueryContext.Provider>
+    </HolidyQueryContext.Provider>
   );
 }
 
-export function useDesignationQuery(): TQueryContext {
-  const context = React.useContext<TQueryContext>(DesignationQueryContext);
+export function useHolidayQuery(): TQueryContext {
+  const context = React.useContext<TQueryContext>(HolidyQueryContext);
   if (context === undefined) {
     throw new Error(
-      "useDesignationQuery must be used within a DesignationQueryProvider"
+      "usePayrollGroupQuery must be used within a PayrollGroupQueryProvider"
     );
   }
   return context;
 }
 
-export default DesignationQueryProvider;
+export default HolidayQueryProvider;

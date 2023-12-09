@@ -53,8 +53,34 @@ type TPayrollGroup = {
   updatedAt: string;
 };
 
+type THolidays = {
+  id: string;
+  name: string;
+  description: string;
+  prerequisiteDate: string;
+  requisiteDate: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type TGetQueryOptions = {
+  type: GetQueryType;
+};
+
+type TQueryContext = {
+  createMutation: UseMutationResult<void, Error, TDataFields, unknown>;
+
+  editMutation: UseMutationResult<void, Error, TDataFields, unknown>;
+
+  deleteMutation: UseMutationResult<void, Error, TDataFields, unknown>;
+
+  deletedActivities: TDataFields[];
+  editedActivities: TDataFields[];
+  createdActivities: TDataFields[];
+};
+
 type TTableValues = {
   id: string;
 };
 
-type TDataFields = TEmployees & TDesignation & TPayrollGroup;
+type TDataFields = TEmployees & TDesignation & TPayrollGroup & THolidays;

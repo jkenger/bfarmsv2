@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "../form/employee/DeleteEmployee";
 import EditEmployee from "../form/employee/EditEmployee";
 import { Badge } from "@/components/ui/badge";
+import ParseDate from "@/components/ui/ParseDate";
 
 export type TGlobalEmployees = TEmployees;
 
@@ -51,12 +52,25 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
-    accessorKey: "avatar",
+    accessorKey: "fundCluster",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Avatar</span>
+          <span>Fund Cluster</span>
         </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.payrollGroup ? (
+            row.original.payrollGroup?.fundCluster
+          ) : (
+            <Badge variant="outline" className="text-muted-foreground">
+              No fund cluster
+            </Badge>
+          )}
+        </span>
       );
     },
   },
@@ -71,7 +85,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
     },
     cell: ({ row }) => {
       return (
-        <span>
+        <div className="w-md max-w-md">
           {row.original.payrollGroup ? (
             row.original.payrollGroup?.name
           ) : (
@@ -79,7 +93,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
               No payroll group
             </Badge>
           )}
-        </span>
+        </div>
       );
     },
   },
@@ -140,6 +154,9 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
           <span>Joined</span>
         </DataTableHeader>
       );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.createdAt}</ParseDate>;
     },
   },
   {

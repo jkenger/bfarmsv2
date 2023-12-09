@@ -1,49 +1,41 @@
 import Main from "@/components/wrappers/Main";
-import { useLoaderData, defer, Await } from "react-router-dom";
+import { QueryClient } from "@tanstack/react-query";
+import { Await, defer, useLoaderData } from "react-router-dom";
 
-import { employeeColumns } from "./table-columns/employee.columns";
-import { buttonVariants } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Suspense } from "react";
+import TableFallBack from "@/components/ui/table-fallback";
+
+import Error from "../../Error";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
-import AddEmployee from "./form/employee/AddEmployee";
-import { QueryClient } from "@tanstack/react-query";
-import { Suspense, lazy } from "react";
-import Error from "../../Error";
-import { getEmployees } from "./api/employee.api";
-const EmployeeTable = lazy(() => import("./tables/EmployeeTable"));
-import { IconProperties } from "@/types/common";
-import TableFallBack from "@/components/ui/table-fallback";
-import DataTableHistory from "@/components/ui/data-table-history";
-
-import ActivityCard from "./ui/activity-card";
-import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 import { SheetTrigger } from "@/components/ui/sheet";
-// import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
+import { buttonVariants } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { IconProperties } from "@/types/common";
+
+import DataTableHistory from "@/components/ui/data-table-history";
+import ActivityCard from "../employees/ui/activity-card";
+import { useHolidayQuery } from "./providers/HolidayQueryProviders";
+import { getHolidays } from "./api/holidays.api";
+import HolidaysTable from "./tables/HolidaysTable";
+import { holidaysColumns } from "./columns/holidays.columns";
+import AddHoliday from "./form/AddHoliday";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
-    data: queryClient.ensureQueryData(getEmployees({ type: "paginated" })),
+    data: queryClient.ensureQueryData(getHolidays({ type: "paginated" })),
   });
 };
-
-function Employees() {
-  const { data: initialData } = useLoaderData() as {
-    data: TDataFields;
-    designationData: TDataFields;
-  };
+function Holidays() {
+  const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useEmployeeQuery();
-
+    useHolidayQuery();
   return (
     <>
       <Main.Header>
-        {/* <Main.BreadCrumbs>
-          <BreadCrumb title="Employees" />
-        </Main.BreadCrumbs> */}
         <Main.Heading
-          title="Employees"
-          access="Admin"
+          title="Holidays"
+          access="admin"
           mobileButton={
             <MutationSheet
               triggerElement={
@@ -62,14 +54,13 @@ function Employees() {
                 </SheetTrigger>
               }
               title="Add new data to"
-              table="Employees"
+              table="Holidays"
             >
-              <AddEmployee />
+              <AddHoliday />
             </MutationSheet>
           }
         >
-          {/* Create New Employee Sheet*/}
-
+          {" "}
           <MutationSheet
             triggerElement={
               <SheetTrigger
@@ -88,11 +79,10 @@ function Employees() {
               </SheetTrigger>
             }
             title="Add new data to"
-            table="Employees"
+            table="Holidays"
           >
-            <AddEmployee />
+            <AddHoliday />
           </MutationSheet>
-          {/* Activities */}
           <DataTableHistory
             render={{
               edited: editedActivities.length ? (
@@ -142,7 +132,7 @@ function Employees() {
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
           <Await resolve={initialData} errorElement={<Error />}>
-            <EmployeeTable employeeColumns={employeeColumns} />
+            <HolidaysTable columns={holidaysColumns} />
           </Await>
         </Suspense>
       </Main.Content>
@@ -150,4 +140,4 @@ function Employees() {
   );
 }
 
-export default Employees;
+export default Holidays;

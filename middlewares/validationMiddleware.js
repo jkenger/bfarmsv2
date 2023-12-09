@@ -54,6 +54,15 @@ export const validatePayrollGroup = withValidationErrors([
     .withMessage("Fund Cluster must not be empty"),
 ]);
 
+export const validateHoliday = withValidationErrors([
+  body().toArray(),
+  body("*.name").notEmpty().withMessage("Name must not be empty"),
+  body("*.prerequisiteDate")
+    .notEmpty()
+    .withMessage("Pre-requisite must not be empty"),
+  body("*.requisiteDate").notEmpty().withMessage("requisite must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

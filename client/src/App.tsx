@@ -15,13 +15,14 @@ import Navigation from "./components/wrappers/nav/Navigation";
 import AdminDTR from "./components/pages/admin/DailyTimeRecord";
 import AdminEmployees from "./components/pages/admin/employees/Employees";
 import AdminPayroll from "./components/pages/admin/Payroll";
-import AdminHolidays from "./components/pages/admin/Holidays";
+import AdminHolidays from "./components/pages/admin/holidays/Holidays";
 import AdminTravelPass from "./components/pages/admin/TravelPass";
 import AdminDeductions from "./components/pages/admin/Deductions";
 import AdminLeaves from "./components/pages/admin/leaves/Leaves";
 import AdminDashboard from "./components/pages/admin/Dashboard";
 import { loader as employeesLoader } from "./components/pages/admin/employees/Employees";
 import { loader as designationsLoader } from "./components/pages/admin/employees/Designations";
+import { loader as holidaysLoader } from "./components/pages/admin/holidays/Holidays";
 import PayrollGroups, {
   loader as payrollGroupLoader,
 } from "./components/pages/admin/payroll/PayrollGroups";
@@ -35,6 +36,7 @@ import { Roles } from "./types/common";
 import EmployeeQueryProvider from "./components/pages/admin/employees/providers/EmployeeQueryProvider";
 import DesignationQueryProvider from "./components/pages/admin/employees/providers/DesignationQueryProvider";
 import PayrollGroupQueryProvider from "./components/pages/admin/payroll/providers/PayrollGroupProvider";
+import HolidayQueryProvider from "./components/pages/admin/holidays/providers/HolidayQueryProviders";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -117,7 +119,12 @@ const router = createBrowserRouter([
           },
           {
             path: "holidays",
-            element: <AdminHolidays />,
+            loader: holidaysLoader(queryClient),
+            element: (
+              <HolidayQueryProvider>
+                <AdminHolidays />
+              </HolidayQueryProvider>
+            ),
           },
           {
             path: "travelpass",

@@ -1,5 +1,4 @@
 import {
-  UseMutationResult,
   useMutation,
   useMutationState,
   useQueryClient,
@@ -17,20 +16,8 @@ type Props = {
   children: React.ReactNode;
 };
 
-type TEmployeeQueryContext = {
-  createMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  editMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  deleteMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  deletedActivities: TDataFields[];
-  editedActivities: TDataFields[];
-  createdActivities: TDataFields[];
-};
-
-const EmployeeQueryContext = React.createContext<TEmployeeQueryContext>(
-  {} as TEmployeeQueryContext
+const EmployeeQueryContext = React.createContext<TQueryContext>(
+  {} as TQueryContext
 );
 
 function EmployeeQueryProvider({ children }: Props) {
@@ -76,8 +63,8 @@ function EmployeeQueryProvider({ children }: Props) {
   );
 }
 
-export function useEmployeeQuery(): TEmployeeQueryContext {
-  const context = React.useContext<TEmployeeQueryContext>(EmployeeQueryContext);
+export function useEmployeeQuery(): TQueryContext {
+  const context = React.useContext<TQueryContext>(EmployeeQueryContext);
   if (context === undefined) {
     throw new Error(
       "useEmployeeQuery must be used within a EmployeeQueryProvider"

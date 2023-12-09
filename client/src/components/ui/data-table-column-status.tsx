@@ -4,6 +4,7 @@ import { Loader2, MoveRight } from "lucide-react";
 import { AxiosError } from "axios";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Button } from "./button";
+import { TableCell } from "./table";
 
 type Props = {
   children: React.ReactNode;
@@ -11,9 +12,9 @@ type Props = {
 
 function DataTableColumnStatus({ children }: Props) {
   return (
-    <div className="flex items-center justify-center backdrop-blur-sm bg-muted gap-2 absolute inset-0">
+    <TableCell className="flex items-center justify-center backdrop-blur-sm bg-muted gap-2 absolute inset-0">
       {children}
-    </div>
+    </TableCell>
   );
 }
 
@@ -36,7 +37,7 @@ function DataTableColumnStatusAddingFails({
   action?: React.ReactNode;
 }) {
   const error = mutation?.error as AxiosError;
-
+  console.log(error);
   return (
     <DataTableColumnStatus>
       <Badge variant="destructive" className="hover:cursor-default space-x-2">

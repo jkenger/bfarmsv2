@@ -29,7 +29,6 @@ function FormSubmit<T extends TDataFields>({
       });
       return;
     }
-
     mutation?.mutate(data as TDataFields);
     form.reset();
     closeSheet?.click();

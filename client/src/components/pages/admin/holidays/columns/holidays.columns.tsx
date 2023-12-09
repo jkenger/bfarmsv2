@@ -1,64 +1,59 @@
 import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
-// import DeleteDesignation from "../form/designation/DeleteDesignation";
-// import EditDesignation from "../form/designation/EditDesignation";
-import { Badge } from "@/components/ui/badge";
-import DeletePayrollGroup from "../form/payrollgroups/DeletePayrollGroup";
-import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import ParseDate from "@/components/ui/ParseDate";
+import DeleteHoliday from "../form/DeleteHoliday";
+import EditHoliday from "../form/EditHoliday";
 
-export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
-  {
-    accessorKey: "fundCluster",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Fund Cluster</span>
-        </DataTableHeader>
-      );
-    },
-  },
+export const holidaysColumns: ColumnDef<TDataFields>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Project Name</span>
-        </DataTableHeader>
-      );
-    },
-    cell: ({ row }) => {
-      return <div className="w-lg max-w-lg">{row.original.name} </div>;
-    },
-  },
-
-  {
-    accessorKey: "programName",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Program Name</span>
+          <span>Name</span>
         </DataTableHeader>
       );
     },
   },
   {
-    accessorKey: "users",
+    accessorKey: "description",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Users</span>
+          <span>Description</span>
         </DataTableHeader>
       );
     },
-
     cell: ({ row }) => {
-      return row.original.users.length > 0 ? (
-        <span> {row.original.users.length} Employees </span>
-      ) : (
-        <Badge variant="outline">No employee</Badge>
+      return <div className="w-lg max-w-lg">{row.original.description} </div>;
+    },
+  },
+
+  {
+    accessorKey: "prerequisiteDate",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Pre-requisite Date</span>
+        </DataTableHeader>
       );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.prerequisiteDate}</ParseDate>;
+    },
+  },
+  {
+    accessorKey: "requisiteDate",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Requisite Date</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.requisiteDate}</ParseDate>;
     },
   },
 
@@ -84,11 +79,11 @@ export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
           <DataTableActions
             key={row.original.id}
             deleteElement={
-              <DeletePayrollGroup data={row.original} trigger={false} />
+              <DeleteHoliday data={row.original} trigger={false} />
             }
             editElement={
               // @TOCHANGE
-              <EditPayrollGroup toEditItem={row.original} from="tableAction" />
+              <EditHoliday toEditItem={row.original} from="tableAction" />
             }
           />
         </>

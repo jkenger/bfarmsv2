@@ -1,5 +1,4 @@
 import {
-  UseMutationResult,
   useMutation,
   useMutationState,
   useQueryClient,
@@ -17,20 +16,8 @@ type Props = {
   children: React.ReactNode;
 };
 
-type TPayrollGroupQueryContext = {
-  createMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  editMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  deleteMutation: UseMutationResult<void, Error, TDataFields, unknown>;
-
-  deletedActivities: TDataFields[];
-  editedActivities: TDataFields[];
-  createdActivities: TDataFields[];
-};
-
-const PayrollGropQueryContext = React.createContext<TPayrollGroupQueryContext>(
-  {} as TPayrollGroupQueryContext
+const PayrollGropQueryContext = React.createContext<TQueryContext>(
+  {} as TQueryContext
 );
 
 function PayrollGroupQueryProvider({ children }: Props) {
@@ -77,10 +64,8 @@ function PayrollGroupQueryProvider({ children }: Props) {
   );
 }
 
-export function usePayrollGroupQuery(): TPayrollGroupQueryContext {
-  const context = React.useContext<TPayrollGroupQueryContext>(
-    PayrollGropQueryContext
-  );
+export function usePayrollGroupQuery(): TQueryContext {
+  const context = React.useContext<TQueryContext>(PayrollGropQueryContext);
   if (context === undefined) {
     throw new Error(
       "usePayrollGroupQuery must be used within a PayrollGroupQueryProvider"

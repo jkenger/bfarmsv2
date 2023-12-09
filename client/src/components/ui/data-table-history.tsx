@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { History } from "lucide-react";
-import { Button } from "./button";
+import { buttonVariants } from "./button";
 
 type TDataTableHistory = {
   render: {
@@ -21,10 +21,16 @@ type TDataTableHistory = {
 function DataTableHistory({ render }: TDataTableHistory) {
   return (
     <Sheet>
-      <SheetTrigger className="self-start hidden lg:flex gap-2 text-xs">
-        <Button variant="outline" size="sm" className="text-muted-foreground">
-          <History size="16" />
-        </Button>
+      <SheetTrigger
+        className={
+          buttonVariants({
+            variant: "outline",
+            size: "sm",
+            className: "text-muted-foreground",
+          }) + ` self-start hidden lg:flex gap-2 text-xs`
+        }
+      >
+        <History size="16" />
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

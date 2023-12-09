@@ -2,7 +2,7 @@ import { fetch } from "@/lib/utils";
 import { QueryClient, keepPreviousData } from "@tanstack/react-query";
 import { UseFormReturn } from "react-hook-form";
 
-import { QueryKeys } from "@/types/common";
+import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
 
@@ -11,29 +11,25 @@ type TMutation = {
   form?: UseFormReturn<TDataFields, unknown, undefined>;
 };
 
-type TDesignationsOptions = {
-  type?: "paginated" | "all";
-};
-
 export type getResponse = {
   data: TDataFields[];
   numOfPages: number;
 };
 
 export const getDesignations = ({
-  type = "paginated",
-}: TDesignationsOptions) => {
+  type = GetQueryType.PAGINATED,
+}: TGetQueryOptions) => {
   console.log(type);
   const { searchParams: designationSearchParams } = getSearchParams();
   const searchParams = new URLSearchParams(designationSearchParams);
   // If type is paginated, then add the search params to the query key
   const qKey =
-    type === "paginated"
+    type === GetQueryType.PAGINATED
       ? [QueryKeys.DESIGNATIONS, searchParams.toString()]
       : [QueryKeys.DESIGNATIONS];
 
   const qFnQuery =
-    type === "paginated"
+    type === GetQueryType.PAGINATED
       ? `admin/employees/designations?${searchParams.toString()}`
       : `admin/employees/designations/all`;
   return {

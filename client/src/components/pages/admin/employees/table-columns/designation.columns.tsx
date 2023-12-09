@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DeleteDesignation from "../form/designation/DeleteDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
 import { Badge } from "@/components/ui/badge";
+import ParseDate from "@/components/ui/ParseDate";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [
   {
@@ -72,6 +73,9 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
           <span>Created</span>
         </DataTableHeader>
       );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.createdAt}</ParseDate>;
     },
   },
   {

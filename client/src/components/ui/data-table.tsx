@@ -20,7 +20,7 @@ import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { RotateCw, X } from "lucide-react";
 import { Button } from "./button";
@@ -186,19 +186,22 @@ export function DataTable<TData extends TDataFields, TValue>() {
               <>
                 {mutations?.create.isPending && (
                   <TableRow
-                    key={mutations?.create.submittedAt}
-                    className="h-12 max-h12 relative"
+                    className="h-12 max-h12 relative flex items-center justify-center backdrop-blur-sm bg-muted gap-2 absolute inset-0"
+                    key={mutations.create.variables.id}
                   >
-                    <DataTableColumnStatusAdding />
+                    <DataTableColumnStatusAdding
+                      key={mutations.create.variables.id}
+                    />
                   </TableRow>
                 )}
 
                 {mutations?.create.isError && (
                   <TableRow
-                    key={mutations?.create.submittedAt}
+                    key={mutations.create.variables.id}
                     className="h-12 max-h12 relative"
                   >
                     <DataTableColumnStatusAddingFails
+                      key={mutations.create.variables.id}
                       mutation={mutations.create}
                       action={onCreateErrorAction}
                     />
@@ -215,7 +218,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <>
+                    <React.Fragment key={cell.id}>
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -225,7 +228,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                         {cell.column.columnDef.id === "name" &&
                           mutations?.create.isSuccess && <Badge> New </Badge>}
                       </TableCell>
-                    </>
+                    </React.Fragment>
                   ))}
 
                   {mutations?.edit && mutations?.delete && (
@@ -233,12 +236,14 @@ export function DataTable<TData extends TDataFields, TValue>() {
                       {mutations?.edit.isPending &&
                         mutations.edit.variables.id === row.original.id && (
                           <DataTableColumnStatusEdit
+                            key={row.original.id}
                             variables={mutations.edit.variables}
                           />
                         )}
                       {mutations?.edit.isError &&
                         mutations.edit.variables.id === row.original.id && (
                           <DataTableColumnStatusEditFails
+                            key={row.original.id}
                             mutation={mutations.edit}
                             action={onEditErrorAction}
                           />
@@ -249,6 +254,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                           {mutations?.delete.variables.id ===
                             row.original.id && (
                             <DataTableColumnStatusDelete
+                              key={row.original.id}
                               variables={mutations?.delete.variables}
                             />
                           )}
@@ -259,6 +265,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
                           {mutations?.delete.variables.id ===
                             row.original.id && (
                             <DataTableColumnStatusDeleteFails
+                              key={row.original.id}
                               mutation={mutations.delete}
                             />
                           )}

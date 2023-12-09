@@ -9,59 +9,68 @@ generator client {
 // }
 
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
-  id         String   @id @default(uuid())
-  employeeId String   @unique
+  id         String  @id @default(uuid())
+  employeeId String  @unique
   fullName   String?
   firstName  String
   middleName String?
   lastName   String
   age        Int
   avatar     String?
-  
-  payrollGroup PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
+
+  payrollGroup   PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
   payrollGroupId String?
 
-  designation Designation? @relation(fields: [designationId], references: [id])
-  designationId String? 
+  designation   Designation? @relation(fields: [designationId], references: [id])
+  designationId String?
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
 }
 
 model Designation {
-  id         String   @id @default(uuid())
-  name       String   @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
-  users      User[]
-  salary     Float
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  users       User[]
+  salary      Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
 }
 
-
-model PayrollGroup{
-  id         String   @id @default(uuid())
-  name       String 
+model PayrollGroup {
+  id          String   @id @default(uuid())
+  name        String
   fundCluster String
   programName String?
   users       User[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
 }
 
-
+model Holiday {
+  id               String   @id @default(uuid())
+  name             String   @unique
+  description      String?
+  prerequisiteDate DateTime
+  requisiteDate    DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
 
 // model House {
 //   id           String   @id @default(uuid())

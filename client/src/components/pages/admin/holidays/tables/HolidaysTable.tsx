@@ -1,26 +1,26 @@
 import { ColumnDef } from "@tanstack/react-table";
 
 import { useQuery } from "@tanstack/react-query";
-import { getEmployees } from "../api/employee.api";
+
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { buttonVariants } from "@/components/ui/button";
-import EditEmployee from "../form/employee/EditEmployee";
-import AddEmployee from "../form/employee/AddEmployee";
-import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
-import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
-import useFilterParams from "@/components/hooks/useFilterParams";
-import { getDesignations } from "../api/designation.api";
-import { Skeleton } from "@/components/ui/skeleton";
+import { getHolidays } from "../api/holidays.api";
+import { useHolidayQuery } from "../providers/HolidayQueryProviders";
+import EditPayrollGroup from "../../payroll/form/payrollgroups/EditPayrollGroup";
+import AddPayrollGroups from "../../payroll/form/payrollgroups/AddPayrollGroup";
+import EditHoliday from "../form/EditHoliday";
+import AddHoliday from "../form/AddHoliday";
+
 type Props = {
-  employeeColumns: ColumnDef<TDataFields>[];
+  columns: ColumnDef<TDataFields>[];
 };
 
-function EmployeeTable({ employeeColumns }: Props) {
+function HolidaysTable({ columns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
@@ -28,18 +28,13 @@ function EmployeeTable({ employeeColumns }: Props) {
     isSuccess,
     error,
     refetch,
-  } = useQuery(getEmployees({ type: "paginated" }));
-  const data = res ? res.data.data : [];
-  const numOfPages = res ? res.data.numOfPages : 0;
+  } = useQuery(getHolidays({ type: "paginated" }));
 
-  const { data: desData, isPending: isDesignationPending } = useQuery(
-    getDesignations({ type: "all" })
-  );
-  const designationData = desData?.data.data;
-
+  const data = res?.data.data ? res.data.data : [];
+  const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
-  const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
-  const { handleDesignationChange, handleGroupChange } = useFilterParams();
+
+  const { createMutation, deleteMutation, editMutation } = useHolidayQuery();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (
@@ -47,7 +42,7 @@ function EmployeeTable({ employeeColumns }: Props) {
       {isSuccess && (
         <DataTableProvider<TDataFields, string>
           value={{
-            columns: employeeColumns,
+            columns: columns,
             data,
             numOfPages,
             dataReloader: refetch,
@@ -71,10 +66,11 @@ function EmployeeTable({ employeeColumns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Employees"
+                table="Designations"
                 error={editMutationError?.response?.data as string}
               >
-                <EditEmployee toEditItem={editMutation.variables} />
+                {/* @@@@@@@@@TOCHANGE */}
+                <EditHoliday toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -92,37 +88,12 @@ function EmployeeTable({ employeeColumns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Employees"
+                table="Designations"
                 error={createMutationError?.response?.data as string}
               >
-                <AddEmployee toEditItem={createMutation.variables} />
+                {/* @@@@@@@@@TOCHANGE */}
+                <AddHoliday toEditItem={createMutation?.variables} />
               </MutationSheet>
-            ),
-            facetedFilterButtons: (
-              <>
-                <FacetedFilterButton
-                  onSelectedChange={handleGroupChange}
-                  // filter={jobStatusfilter}
-                  options={["sampel1", "sample2"]}
-                >
-                  Payroll Group
-                </FacetedFilterButton>
-                {isDesignationPending ? (
-                  <Skeleton className="w-24 h-8" />
-                ) : (
-                  <FacetedFilterButton
-                    onSelectedChange={handleDesignationChange}
-                    // filter={jobStatusfilter}
-                    options={
-                      designationData.length
-                        ? designationData.map((des: TDataFields) => des.name)
-                        : []
-                    }
-                  >
-                    Designations
-                  </FacetedFilterButton>
-                )}
-              </>
             ),
           }}
         >
@@ -134,4 +105,4 @@ function EmployeeTable({ employeeColumns }: Props) {
   );
 }
 
-export default EmployeeTable;
+export default HolidaysTable;
