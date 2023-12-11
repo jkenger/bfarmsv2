@@ -5,7 +5,13 @@ import { StatusCodes } from "http-status-codes";
 import asyncHandler from "express-async-handler";
 
 import { PrismaClient } from "@prisma/client";
-import { designation, employee, holiday, payrollGroups } from "../lib/utils.js";
+import {
+  designation,
+  employee,
+  holiday,
+  payrollGroups,
+  travelpass,
+} from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 
 const prisma = new PrismaClient().$extends({
@@ -68,9 +74,17 @@ export const getAllDesignations = asyncHandler(async (req, res) =>
 export const getPaginatedDesignations = asyncHandler(async (req, res) =>
   models.getPaginatedModel(req, res, prisma.designation, designation)
 );
-export const createDesignation = asyncHandler(async (req, res) =>
-  models.addModel(res, req.body, prisma.designation)
-);
+export const createDesignation = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        salary: parseFloat(item.salary),
+      };
+    }),
+  ];
+  return models.addModel(res, data, prisma.designation);
+});
 
 export const deleteDesignation = asyncHandler(async (req, res) =>
   models.deleteModel(res, req.params.id, prisma.designation)
@@ -128,4 +142,33 @@ export const deleteHoliday = asyncHandler(async (req, res) =>
 
 export const updateHoliday = asyncHandler(async (req, res) =>
   models.updateModel(res, req.params.id, req.body, prisma.holiday)
+);
+
+// Travelpass Controller
+export const getAllTravelpass = asyncHandler(async (req, res) =>
+  models.getAllModel(res, prisma.travelpass)
+);
+export const getPaginatedTravelpass = asyncHandler(async (req, res) =>
+  models.getPaginatedModel(req, res, prisma.travelpass, travelpass)
+);
+
+export const createTravelpass = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        start: new Date(item.start),
+        end: new Date(item.end),
+      };
+    }),
+  ];
+  return models.addModel(res, data, prisma.travelpass);
+});
+
+export const deleteTravelpass = asyncHandler(async (req, res) =>
+  models.deleteModel(res, req.params.id, prisma.travelpass)
+);
+
+export const updateTravelpass = asyncHandler(async (req, res) =>
+  models.updateModel(res, req.params.id, req.body, prisma.travelpass)
 );

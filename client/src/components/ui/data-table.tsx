@@ -186,7 +186,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
               <>
                 {mutations?.create.isPending && (
                   <TableRow
-                    className="h-12 max-h12 relative flex items-center justify-center backdrop-blur-sm bg-muted gap-2 absolute inset-0"
+                    className="h-12 max-h12 relative"
                     key={mutations.create.variables.id}
                   >
                     <DataTableColumnStatusAdding

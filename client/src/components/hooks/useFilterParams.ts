@@ -44,9 +44,9 @@ const useFilterParams = () => {
 
   function handleGroupChange(group: string[]) {
     if (group?.length) {
-      setFilterParams("group", group);
+      setFilterParams("payrollGroup", group);
     } else {
-      searchParams.delete("group");
+      searchParams.delete("payrollGroup");
       setSearchParams(searchParams);
     }
   }
@@ -101,7 +101,8 @@ export const getSearchParams = () => {
   const limit = new URLSearchParams(url.search).get("limit") || "10";
   const search = new URLSearchParams(url.search).get("search") || "";
   const sp = new URLSearchParams(url.search).get("sp") || "";
-  const group = new URLSearchParams(url.search).get("group") || "";
+  const payrollGroup =
+    new URLSearchParams(url.search).get("payrollGroup") || "";
   const designation = new URLSearchParams(url.search).get("designation") || "";
 
   const searchParams = {
@@ -109,7 +110,7 @@ export const getSearchParams = () => {
     limit,
     search,
     sp,
-    group,
+    payrollGroup,
     designation,
   };
 

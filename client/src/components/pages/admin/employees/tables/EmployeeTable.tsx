@@ -16,6 +16,7 @@ import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
 import useFilterParams from "@/components/hooks/useFilterParams";
 import { getDesignations } from "../api/designation.api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getPayrollGroups } from "../../payroll/api/payrollGroups.api";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
 };
@@ -36,6 +37,11 @@ function EmployeeTable({ employeeColumns }: Props) {
     getDesignations({ type: "all" })
   );
   const designationData = desData?.data.data;
+
+  const { data: pgData, isPending: isPGPending } = useQuery(
+    getPayrollGroups({ type: "all" })
+  );
+  const payrollGroupData = pgData?.data.data;
 
   // reset page to 1 if data length is less than numOfPages
   const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
@@ -74,7 +80,7 @@ function EmployeeTable({ employeeColumns }: Props) {
                 table="Employees"
                 error={editMutationError?.response?.data as string}
               >
-                <EditEmployee toEditItem={editMutation.variables} />
+                <EditEmployee toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -95,18 +101,39 @@ function EmployeeTable({ employeeColumns }: Props) {
                 table="Employees"
                 error={createMutationError?.response?.data as string}
               >
-                <AddEmployee toEditItem={createMutation.variables} />
+                <AddEmployee toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
             facetedFilterButtons: (
               <>
-                <FacetedFilterButton
-                  onSelectedChange={handleGroupChange}
-                  // filter={jobStatusfilter}
-                  options={["sampel1", "sample2"]}
-                >
-                  Payroll Group
-                </FacetedFilterButton>
+                {isPGPending ? (
+                  <Skeleton className="w-24 h-8" />
+                ) : (
+                  <FacetedFilterButton
+                    onSelectedChange={handleGroupChange}
+                    // filter={jobStatusfilter}
+                    options={payrollGroupData.map(
+                      (pg: TDataFields) => pg.fundCluster
+                    )}
+                  >
+                    Fund Clusters
+                  </FacetedFilterButton>
+                )}
+                {isPGPending ? (
+                  <Skeleton className="w-24 h-8" />
+                ) : (
+                  <FacetedFilterButton
+                    onSelectedChange={handleGroupChange}
+                    // filter={jobStatusfilter}
+                    options={
+                      payrollGroupData.length
+                        ? payrollGroupData.map((pg: TDataFields) => pg.name)
+                        : []
+                    }
+                  >
+                    Payroll Groups
+                  </FacetedFilterButton>
+                )}
                 {isDesignationPending ? (
                   <Skeleton className="w-24 h-8" />
                 ) : (

@@ -28,6 +28,7 @@ type TEmployees = {
   payrollGroupId?: string;
   payrollGroup?: TPayrollGroup;
   designationId?: string;
+  travelpass: TTravelpass[];
   designation?: TDesignation;
   createdAt: string;
   updatedAt: string;
@@ -63,6 +64,15 @@ type THolidays = {
   updatedAt: string;
 };
 
+type TTravelpass = {
+  id: string;
+  user: TEmployees;
+  userId: string;
+  typeOf: TravelpassType;
+  start: string;
+  end: string;
+};
+
 type TGetQueryOptions = {
   type: GetQueryType;
 };
@@ -83,4 +93,8 @@ type TTableValues = {
   id: string;
 };
 
-type TDataFields = TEmployees & TDesignation & TPayrollGroup & THolidays;
+type TDataFields = TEmployees &
+  TDesignation &
+  TPayrollGroup &
+  THolidays &
+  TTravelpass;

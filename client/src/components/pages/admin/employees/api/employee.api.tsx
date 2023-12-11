@@ -109,6 +109,7 @@ export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
         description: "The employee has been removed from the records.",
       });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.TRAVELPASS] });
     },
     onError: async () => {
       toast.error("Failed to Delete Employee", {

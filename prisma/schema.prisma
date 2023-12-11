@@ -3,16 +3,16 @@ generator client {
   // previewFeatures = ["fullTextSearch"]
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
 datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
+
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+// }
 
 model User {
   id         String  @id @default(uuid())
@@ -29,6 +29,8 @@ model User {
 
   designation   Designation? @relation(fields: [designationId], references: [id])
   designationId String?
+  
+  travelPass    Travelpass[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -66,6 +68,20 @@ model Holiday {
   description      String?
   prerequisiteDate DateTime
   requisiteDate    DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")
+}
+
+
+model Travelpass {
+  id               String   @id @default(uuid())
+  user             User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String   
+  typeOf           String
+  start            DateTime
+  end              DateTime
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")

@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 import Group from "../../ui/group";
 import { MutationType } from "@/types/common";
@@ -20,6 +20,11 @@ import GroupContainer from "../../ui/group-container";
 
 import PopoverCommand from "@/components/ui/popover-command";
 import { getPayrollGroups } from "../../../payroll/api/payrollGroups.api";
+import { cn } from "@/lib/utils";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CommandItem } from "@/components/ui/command";
+import { CheckIcon, Loader2 } from "lucide-react";
+import { useScrollToView } from "@/components/hooks/useScrollToView";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -36,37 +41,40 @@ function EmployeeFormFields<T extends TDataFields>({
   }, []);
 
   // Designation constants/query for facetedfilter
-  const { data: ddataResult } = useQuery(getDesignations({ type: "all" }));
+  const {
+    data: ddataResult,
+    isPending: isDesignationPending,
+    isSuccess: isDesignationSuccess,
+  } = useQuery(getDesignations({ type: "all" }));
   const designationData = ddataResult?.data.data ? ddataResult.data.data : [];
-  const [selectedDesignation, setSelectedDesignation] = useState<TDataFields>(
-    designationData.find(
-      (designation: TDataFields) =>
-        designation.id === form.getValues("designationId")
-    ) || {}
-  );
+
   const designationDetailsSelect = useRef<HTMLSpanElement>(null);
 
   // Payrollgroup constants/query for facetedfilter
-  const { data: pgdataResult } = useQuery(getPayrollGroups({ type: "all" }));
+  const {
+    data: pgdataResult,
+    isPending: isPayrollGroupPending,
+    isSuccess: isPayrollGroupSuccess,
+  } = useQuery(getPayrollGroups({ type: "all" }));
   const payrollgroupData = pgdataResult?.data.data
     ? pgdataResult.data.data
     : [];
-  const [selectedPayrollGroup, setSelectedPayrollGroup] = useState<TDataFields>(
-    payrollgroupData.find(
-      (payrollgroup: TDataFields) =>
-        payrollgroup.id === form.getValues("payrollGroupId")
-    ) || {}
-  );
+
   const payrollgroupDetailsSelect = useRef<HTMLSpanElement>(null);
 
-  const scrollToBottom = () => {
-    designationDetailsSelect.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollToView = useScrollToView();
 
-  // Scroll to bottom when designation or payroll group is selected
   useEffect(() => {
-    scrollToBottom();
-  }, [selectedDesignation, selectedPayrollGroup]);
+    if (designationDetailsSelect.current) {
+      scrollToView(designationDetailsSelect);
+    }
+  }, [form.getValues("designationId")]);
+
+  useEffect(() => {
+    if (payrollgroupDetailsSelect.current) {
+      scrollToView(payrollgroupDetailsSelect);
+    }
+  }, [form.getValues("payrollGroupId")]);
 
   return (
     <>
@@ -183,7 +191,129 @@ function EmployeeFormFields<T extends TDataFields>({
         )}
       />
 
-      {/* Payroll group select */}
+      <FormField
+        control={form.control}
+        name="payrollGroupId"
+        render={({ field }) => {
+          const selectedPayrollGroup: TDataFields = payrollgroupData.find(
+            (payrollgroup: TDataFields) => payrollgroup.id === field.value
+          );
+          return (
+            <FormItem>
+              <div className="flex justify-between">
+                <Label htmlFor="payrollGroup" className="">
+                  Payroll Groups
+                </Label>
+
+                <p>Optional</p>
+              </div>
+              <FormControl>
+                <Input {...field} className="sr-only" />
+              </FormControl>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col justify-between">
+                  <div className="flex flex-col gap-2">
+                    <PopoverCommand
+                      label="PayrollGroup"
+                      formControl={true}
+                      buttonTrigger={
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            " justify-between text-xs ",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {selectedPayrollGroup ? (
+                            selectedPayrollGroup.name
+                          ) : (
+                            <span>Select Payroll Group</span>
+                          )}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      }
+                      commandItems={
+                        <>
+                          {isPayrollGroupPending && (
+                            <div className="py-4 flex items-center justify-center">
+                              <Loader2 className="animate-spin" />
+                            </div>
+                          )}
+                          {isPayrollGroupSuccess &&
+                            payrollgroupData.map((d: TDataFields) => (
+                              <CommandItem
+                                value={d.id}
+                                key={d.id}
+                                className="text-xs"
+                                onSelect={() => {
+                                  form.setValue("payrollGroupId", d.id, {
+                                    shouldDirty: true,
+                                  });
+                                  scrollToView(payrollgroupDetailsSelect);
+                                }}
+                              >
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    d.id === selectedPayrollGroup?.id
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {d.name}
+                              </CommandItem>
+                            ))}
+                        </>
+                      }
+                    />
+                  </div>
+                </div>
+                {selectedPayrollGroup?.name && (
+                  <GroupContainer
+                    groupActions={
+                      <>
+                        <Button variant="outline" size="sm" type="button">
+                          Edit Group
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          type="button"
+                          onClick={() => {
+                            field.onChange("");
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </>
+                    }
+                  >
+                    {Object.keys(selectedPayrollGroup).map((key) => (
+                      <Group assignTo={key} key={key}>
+                        {selectedPayrollGroup[key as keyof TDataFields] ? (
+                          <span ref={payrollgroupDetailsSelect}>
+                            {
+                              selectedPayrollGroup[
+                                key as keyof TDataFields
+                              ] as React.ReactNode
+                            }
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground">No data</span>
+                        )}
+                      </Group>
+                    ))}
+                  </GroupContainer>
+                )}
+              </div>
+              <FormMessage />
+            </FormItem>
+          );
+        }}
+      />
+
+      {/* Payroll group select
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <Label htmlFor="firstName" className="">
@@ -245,71 +375,131 @@ function EmployeeFormFields<T extends TDataFields>({
             ))}
           </GroupContainer>
         )}
-      </div>
-
+      </div> */}
       {/* Designation select */}
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
-          <Label htmlFor="firstName" className="">
-            Designation
-          </Label>
 
-          <p>Optional</p>
-        </div>
-        <div className="flex flex-col justify-between">
-          <div className="flex flex-col gap-2 mt-4">
-            <PopoverCommand
-              label="Designation"
-              data={designationData}
-              selectedItem={selectedDesignation}
-              onSelect={(d) => {
-                setSelectedDesignation(d);
-                form.setValue("designationId", d.id, {
-                  shouldDirty: true,
-                });
-              }}
-            />
-          </div>
-        </div>
-        {selectedDesignation?.id && (
-          <GroupContainer
-            groupActions={
-              <>
-                <Button variant="outline" size="sm" type="button">
-                  Edit Group
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  type="button"
-                  onClick={() => {
-                    setSelectedDesignation({} as TDataFields);
-                    form.setValue("designationId", "");
-                  }}
-                >
-                  Remove
-                </Button>
-              </>
-            }
-          >
-            {Object.keys(selectedDesignation).map((key) => (
-              <Group assignTo={key} key={key}>
-                {selectedDesignation[key as keyof TDataFields] ? (
-                  <span ref={designationDetailsSelect}>
-                    {
-                      selectedDesignation[
-                        key as keyof TDataFields
-                      ] as React.ReactNode
+      <FormField
+        control={form.control}
+        name="designationId"
+        render={({ field }) => {
+          const selectedDesignation: TDataFields = designationData.find(
+            (designation: TDataFields) => designation.id === field.value
+          );
+          return (
+            <FormItem>
+              <div className="flex justify-between">
+                <Label htmlFor="designation" className="">
+                  Designation
+                </Label>
+
+                <p>Optional</p>
+              </div>
+              <FormControl>
+                <Input id="designation" {...field} className="sr-only" hidden />
+              </FormControl>
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-col justify-between">
+                  <div className="flex flex-col gap-2">
+                    <PopoverCommand
+                      label="Designation"
+                      formControl={true}
+                      buttonTrigger={
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            " justify-between text-xs ",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            selectedDesignation.name
+                          ) : (
+                            <span>Select Designation</span>
+                          )}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      }
+                      commandItems={
+                        <>
+                          {isDesignationPending && (
+                            <div className="py-4 flex items-center justify-center">
+                              <Loader2 className="animate-spin" />
+                            </div>
+                          )}
+                          {isDesignationSuccess &&
+                            designationData.map((d: TDataFields) => (
+                              <CommandItem
+                                value={d.id}
+                                key={d.id}
+                                className="text-xs"
+                                onSelect={() => {
+                                  form.setValue("designationId", d.id, {
+                                    shouldDirty: true,
+                                  });
+                                  scrollToView(payrollgroupDetailsSelect);
+                                }}
+                              >
+                                <CheckIcon
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    d.id === selectedDesignation?.id
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {d.name}
+                              </CommandItem>
+                            ))}
+                        </>
+                      }
+                    />
+                  </div>
+                </div>
+                {field?.value && (
+                  <GroupContainer
+                    groupActions={
+                      <>
+                        <Button variant="outline" size="sm" type="button">
+                          Edit Group
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          type="button"
+                          onClick={() => {
+                            field.onChange("");
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </>
                     }
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">No data</span>
+                  >
+                    {Object.keys(selectedDesignation).map((key) => (
+                      <Group assignTo={key} key={key}>
+                        {selectedDesignation[key as keyof TDataFields] ? (
+                          <span ref={designationDetailsSelect}>
+                            {
+                              selectedDesignation[
+                                key as keyof TDataFields
+                              ] as React.ReactNode
+                            }
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground">No data</span>
+                        )}
+                      </Group>
+                    ))}
+                  </GroupContainer>
                 )}
-              </Group>
-            ))}
-          </GroupContainer>
-        )}
-      </div>
+              </div>
+              <FormMessage />
+            </FormItem>
+          );
+        }}
+      />
+
       <SheetFooter
         id="sheetFooter"
         className="flex justify-end absolute bottom-4 right-4 w-full gap-2"

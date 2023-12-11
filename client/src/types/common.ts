@@ -59,6 +59,11 @@ export enum QueryKeys {
   DELETE_HOLIDAY = "deleteHoliday",
   CREATE_HOLIDAY = "createHoliday",
   EDIT_HOLIDAY = "editHoliday",
+
+  TRAVELPASS = "travelpass",
+  DELETE_TRAVELPASS = "deleteTravelpass",
+  CREATE_TRAVELPASS = "createTravelpass",
+  EDIT_TRAVELPASS = "editTravelpass",
 }
 
 export enum SortType {
@@ -89,4 +94,9 @@ export enum MutationType {
 export enum GetQueryType {
   PAGINATED = "paginated",
   ALL = "all",
+}
+
+export enum TravelpassType {
+  OFFICIAL_BUSINESS = "officialBusiness",
+  TRAVEL_ORDER = "travelOrder",
 }

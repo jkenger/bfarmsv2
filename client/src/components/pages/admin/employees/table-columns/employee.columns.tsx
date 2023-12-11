@@ -5,6 +5,7 @@ import DeleteEmployee from "../form/employee/DeleteEmployee";
 import EditEmployee from "../form/employee/EditEmployee";
 import { Badge } from "@/components/ui/badge";
 import ParseDate from "@/components/ui/ParseDate";
+import FormatToFullName from "@/components/ui/format-to-fullname";
 
 export type TGlobalEmployees = TEmployees;
 
@@ -33,10 +34,11 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
       const middleName = row.original.middleName || "";
       const lastName = row.original.lastName || "";
       return (
-        <span>
-          {lastName}, {firstName}{" "}
-          {middleName !== "" ? middleName.charAt(0) + "." : ""}{" "}
-        </span>
+        <FormatToFullName
+          firstName={firstName}
+          middleName={middleName}
+          lastName={lastName}
+        />
       );
     },
   },

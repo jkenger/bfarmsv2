@@ -1,77 +1,49 @@
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Button } from "./button";
-import { cn } from "@/lib/utils";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "./command";
-import { CheckIcon } from "lucide-react";
+
+import { Command, CommandEmpty, CommandGroup, CommandInput } from "./command";
+
+import { FormControl } from "./form";
 
 type Props = {
-  data: TDataFields[];
-  selectedItem: TDataFields;
-  setSelectedItem?: React.Dispatch<React.SetStateAction<TDataFields>>;
-  onSelect: (d: TDataFields) => void;
+  buttonTrigger: React.ReactNode;
+  commandItems: React.ReactNode;
   label?: string;
+  formControl?: boolean;
 };
 
-function PopoverCommand({ data, selectedItem, onSelect, label }: Props) {
+// TODO: revision of popup command, think of a better way to implement this component
+// TODO: travelpass delete function is not working, it says 404 not found even though the id is correct
+
+function PopoverCommand({ buttonTrigger, commandItems, label }: Props) {
   const [open, setOpen] = React.useState(false);
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          className={cn(
-            " justify-between text-xs ",
-            !selectedItem?.name && "text-muted-foreground"
-          )}
-        >
-          {selectedItem?.name ? (
-            data.find((d: TDataFields) => d.name === selectedItem?.name)?.name
-          ) : (
-            <span>Select {label ? label : "item"}</span>
-          )}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0">
-        <Command>
-          <CommandInput
-            className="text-xs"
-            placeholder="Search designations..."
-          />
-          {!data.length && (
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
+      <FormControl>
+        <PopoverTrigger asChild>{buttonTrigger}</PopoverTrigger>
+      </FormControl>
+      <PopoverContent className="p-0 ">
+        {/* <CommandDialog open={open} onOpenChange={setOpen}>
+          <CommandInput placeholder="Type a command or search..." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">{commandItems}</CommandGroup>
+          </CommandList>
+          <div className="mr-3">
+            <DataTablePaginationNoBtn numOfPages={numOfPages} />
+          </div>
+        </CommandDialog> */}
+        <Command className="">
+          <CommandInput className="text-xs" placeholder="Search for an item" />
+
+          <CommandGroup
+            heading={label + "s"}
+            className="h-auto max-h-48 overflow-y-scroll"
+          >
             <CommandEmpty className="text-xs p-4 text-center">
               No {label ? label : "item"} found.
             </CommandEmpty>
-          )}
-          <CommandGroup>
-            {data.map((d: TDataFields) => (
-              <CommandItem
-                value={d.name}
-                key={d.id}
-                className="text-xs "
-                onSelect={() => {
-                  onSelect(d);
-                  setOpen(false);
-                }}
-              >
-                <CheckIcon
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    d.name === selectedItem.name ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {d.name}
-              </CommandItem>
-            ))}
+            {commandItems}
           </CommandGroup>
         </Command>
       </PopoverContent>

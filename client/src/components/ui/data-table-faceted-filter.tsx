@@ -24,11 +24,12 @@ type Props<A> = {
 function FacetedFilterButton<A>({
   children,
   onSelectedChange,
-  options,
+  options = [],
 }: Props<A>) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const filterCount = selectedValues.length || 0;
   const [searchParams] = useSearchParams();
+  const optionsLength = options.length ? true : false;
 
   // Set State on mount
   useEffect(() => {
@@ -41,7 +42,6 @@ function FacetedFilterButton<A>({
       setSelectedValues([]);
     }
   }, [searchParams]);
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -83,9 +83,10 @@ function FacetedFilterButton<A>({
         <Command>
           <CommandInput placeholder={`Filter by ${children}`} />
           <CommandList>
+            <CommandEmpty>No results found</CommandEmpty>
             <CommandGroup className="">
-              {options.length ? (
-                options?.map((s, i) => (
+              {optionsLength &&
+                options.map((s, i) => (
                   <CommandItem
                     key={i}
                     onSelect={(e) => {
@@ -113,10 +114,7 @@ function FacetedFilterButton<A>({
                     </div>
                     <span className="capitalize">{s as string} </span>
                   </CommandItem>
-                ))
-              ) : (
-                <CommandEmpty>No results found</CommandEmpty>
-              )}
+                ))}
             </CommandGroup>
           </CommandList>
           <Separator />

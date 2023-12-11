@@ -66,7 +66,7 @@ function PayrollGroupsFields<T extends TDataFields>({
             <FormControl>
               <Input
                 {...field}
-                placeholder="Type your description here."
+                placeholder="column_data"
                 className=" text-xs"
               />
             </FormControl>

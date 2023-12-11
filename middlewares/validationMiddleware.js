@@ -63,6 +63,14 @@ export const validateHoliday = withValidationErrors([
   body("*.requisiteDate").notEmpty().withMessage("requisite must not be empty"),
 ]);
 
+export const validateTravelpass = withValidationErrors([
+  body().toArray(),
+  body("*.userId").notEmpty().withMessage("userId must not be empty"),
+  body("*.typeOf").notEmpty().withMessage("Travelpass type must not be empty"),
+  body("*.start").notEmpty().withMessage("start must not be empty"),
+  body("*.end").notEmpty().withMessage("end must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

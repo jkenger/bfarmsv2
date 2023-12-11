@@ -22,6 +22,11 @@ import {
   updateHoliday,
   deleteHoliday,
   getAllHolidays,
+  getPaginatedTravelpass,
+  createTravelpass,
+  getAllTravelpass,
+  updateTravelpass,
+  deleteTravelpass,
 } from "../controllers/admin.controller.js";
 import {
   validateDesignation,
@@ -29,6 +34,7 @@ import {
   validateHoliday,
   validateId,
   validatePayrollGroup,
+  validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
@@ -104,8 +110,26 @@ router.route("/holidays/all").get(getAllHolidays);
 // @Method  : DELETE / PUT /
 // @Access  : Private (Admin)
 router
-  .route("/holidays/:id")
+  .route("/travelpass/:id")
   .put(validateHoliday, updateHoliday)
   .delete(validateId, deleteHoliday);
+
+// Travelpass Routes
+// @Desc    : Read and Create Travelpass
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router
+  .route("/travelpass")
+  .get(getPaginatedTravelpass)
+  .post(validateTravelpass, createTravelpass);
+router.route("/travelpass/all").get(getAllTravelpass);
+
+// @Desc    : Delete and Update Travelpass
+// @Method  : DELETE / PUT /
+// @Access  : Private (Admin)
+router
+  .route("/travelpass/:id")
+  .put(validateTravelpass, updateTravelpass)
+  .delete(validateId, deleteTravelpass);
 
 export default router;

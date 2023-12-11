@@ -35,6 +35,7 @@ export const models = {
     });
   },
   deleteModel: async (res, id, prismaModel) => {
+    console.log(id);
     const dataDeleted = await prismaModel.delete({
       where: {
         id: id,
