@@ -60,11 +60,10 @@ export function DataTable<TData extends TDataFields, TValue>() {
     limit,
     searchParams: dtSearchParams,
   } = getSearchParams();
-  const isNotEmptyParams = Object.values(dtSearchParams).some(
-    (value, index) =>
-      value.trim() !== "" && // Check for non-empty values
-      !(index === 0 && value === "1") && // Exclude default value for 'page'
-      !(index === 1 && value === "10") // Exclude default value for 'limit'
+  const isNotEmptyParams = Object.entries(dtSearchParams).some(([key, value]) =>
+    key !== "page" && key !== "limit"
+      ? value.trim() !== ""
+      : value !== "1" && value !== "10"
   );
 
   const {

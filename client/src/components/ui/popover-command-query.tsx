@@ -1,7 +1,13 @@
 import React, { useRef } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-import { CommandDialog, CommandGroup, CommandItem } from "./command";
+import {
+  CommandDialog,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandQueryInput,
+} from "./command";
 
 import { FormControl } from "./form";
 import { Input } from "./input";
@@ -96,7 +102,7 @@ function PopoverCommandQuery({
         </CommandDialog> */}
         <CommandDialog open={open} onOpenChange={setOpen}>
           <div>
-            <Input
+            <CommandQueryInput
               className="text-xs"
               placeholder="Search for an item"
               defaultValue={search}
