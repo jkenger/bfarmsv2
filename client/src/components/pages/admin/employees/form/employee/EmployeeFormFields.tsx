@@ -32,7 +32,6 @@ function EmployeeFormFields<T extends TDataFields>({
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
-
   return (
     <>
       <FormField

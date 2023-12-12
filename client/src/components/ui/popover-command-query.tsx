@@ -59,7 +59,7 @@ function PopoverCommandQuery({
     (d: TDataFields) => d.id === selected.value
   );
   const [selectedData, setSelectedData] = React.useState<TDataFields | null>(
-    itemData[0]
+    selectedItem ? selectedItem : itemData[0]
   );
   const detailsSelect = useRef<HTMLSpanElement>(null);
   return (

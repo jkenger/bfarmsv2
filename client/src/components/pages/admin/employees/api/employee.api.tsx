@@ -120,7 +120,7 @@ export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
       await fetch.delete(`/admin/employees/${data.id}`);
     },
     onSuccess: async () => {
-      toast.warning(`Employee Deleted`, {
+      toast.success(`Employee Deleted`, {
         className: "bg-primary",
         description: "The employee has been removed from the records.",
       });

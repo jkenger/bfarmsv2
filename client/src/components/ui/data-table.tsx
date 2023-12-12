@@ -26,7 +26,6 @@ import { Button } from "./button";
 import { IconProperties } from "@/types/common";
 import debounce from "debounce";
 import DataTableSearch from "./data-table-search";
-import { useSearchParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -55,8 +54,19 @@ export function DataTable<TData extends TDataFields, TValue>() {
     handleResetParams,
     handlePageLimit,
   } = useFilterParams();
-  const [searchParams] = useSearchParams();
-  const { page, search, limit } = getSearchParams();
+  const {
+    page,
+    search,
+    limit,
+    searchParams: dtSearchParams,
+  } = getSearchParams();
+  const isNotEmptyParams = Object.values(dtSearchParams).some(
+    (value, index) =>
+      value.trim() !== "" && // Check for non-empty values
+      !(index === 0 && value === "1") && // Exclude default value for 'page'
+      !(index === 1 && value === "10") // Exclude default value for 'limit'
+  );
+
   const {
     columns,
     data,
@@ -120,7 +130,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
           {facetedFilterButtons}
 
           {/* Reset */}
-          {searchParams.size > 0 && (
+          {isNotEmptyParams && (
             <Button
               variant="ghost"
               size="sm"
