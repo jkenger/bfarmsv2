@@ -12,7 +12,7 @@ import { Label } from "@radix-ui/react-label";
 import { useLayoutEffect, useRef } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
-import { MutationType } from "@/types/common";
+import { Links, MutationType } from "@/types/common";
 
 import { getDesignations } from "../../api/designation.api";
 import { getPayrollGroups } from "../../../payroll/api/payrollGroups.api";
@@ -170,6 +170,7 @@ function EmployeeFormFields<T extends TDataFields>({
                   commandItemRender={(d: TDataFields) => d.name}
                   selected={field}
                   getItem={getPayrollGroups}
+                  ifEmptyLink={Links.PAYROLL_GROUPS}
                 />
               </div>
               <FormMessage />
@@ -265,6 +266,7 @@ function EmployeeFormFields<T extends TDataFields>({
                   commandItemRender={(d: TDataFields) => d.name}
                   selected={field}
                   getItem={getDesignations}
+                  ifEmptyLink={Links.DESIGNATIONS}
                 />
               </div>
               <FormMessage />

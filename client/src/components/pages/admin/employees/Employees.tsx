@@ -34,7 +34,6 @@ function Employees() {
   };
   const { createdActivities, deletedActivities, editedActivities } =
     useEmployeeQuery();
-
   return (
     <>
       <Main.Header>

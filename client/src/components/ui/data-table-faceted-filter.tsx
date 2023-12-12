@@ -7,24 +7,26 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "./command";
 import { Check, Filter } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { Links } from "@/types/common";
 
 type Props<A> = {
   children: React.ReactNode;
   onSelectedChange: (value: A) => void;
   options: string[];
+  ifEmptyLink: Links;
 };
 function FacetedFilterButton<A>({
   children,
   onSelectedChange,
   options = [],
+  ifEmptyLink,
 }: Props<A>) {
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const filterCount = selectedValues.length || 0;
@@ -83,8 +85,15 @@ function FacetedFilterButton<A>({
         <Command>
           <CommandInput placeholder={`Filter by ${children}`} />
           <CommandList>
-            <CommandEmpty>No results found</CommandEmpty>
             <CommandGroup className="">
+              {!optionsLength && (
+                <span className="text-xs p-4 flex items-center justify-center w-full">
+                  No item found.
+                  <span className="ml-1 text-primary underline">
+                    <Link to={ifEmptyLink}> Add</Link>
+                  </span>
+                </span>
+              )}
               {optionsLength &&
                 options.map((s, i) => (
                   <CommandItem

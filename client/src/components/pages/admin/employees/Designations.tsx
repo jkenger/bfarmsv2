@@ -27,6 +27,7 @@ function Designations() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
     useDesignationQuery();
+
   return (
     <>
       <Main.Header>

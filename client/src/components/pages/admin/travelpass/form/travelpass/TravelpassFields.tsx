@@ -13,7 +13,7 @@ import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { useLayoutEffect, useRef } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import { MutationType, TravelpassType } from "@/types/common";
+import { Links, MutationType, TravelpassType } from "@/types/common";
 import {
   Select,
   SelectContent,
@@ -90,6 +90,7 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
                       lastName={d.lastName}
                     />
                   )}
+                  ifEmptyLink={Links.EMPLOYEES}
                   selected={field}
                   getItem={getEmployees}
                 />

@@ -17,6 +17,7 @@ import useFilterParams from "@/components/hooks/useFilterParams";
 import { getDesignations } from "../api/designation.api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPayrollGroups } from "../../payroll/api/payrollGroups.api";
+import { Links } from "@/types/common";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
 };
@@ -117,6 +118,7 @@ function EmployeeTable({ employeeColumns }: Props) {
                     options={payrollGroupData.map(
                       (pg: TDataFields) => pg.fundCluster
                     )}
+                    ifEmptyLink={Links.PAYROLL_GROUPS}
                   >
                     Fund Clusters
                   </FacetedFilterButton>
@@ -132,6 +134,7 @@ function EmployeeTable({ employeeColumns }: Props) {
                         ? payrollGroupData.map((pg: TDataFields) => pg.name)
                         : []
                     }
+                    ifEmptyLink={Links.PAYROLL_GROUPS}
                   >
                     Payroll Groups
                   </FacetedFilterButton>
@@ -147,6 +150,7 @@ function EmployeeTable({ employeeColumns }: Props) {
                         ? designationData.map((des: TDataFields) => des.name)
                         : []
                     }
+                    ifEmptyLink={Links.DESIGNATIONS}
                   >
                     Designations
                   </FacetedFilterButton>

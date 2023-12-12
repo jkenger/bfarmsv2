@@ -1,18 +1,13 @@
 import React, { useRef } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "./command";
+import { CommandDialog, CommandGroup, CommandItem } from "./command";
 
 import { FormControl } from "./form";
 import { Input } from "./input";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "debounce";
-import { IconProperties } from "@/types/common";
+import { IconProperties, Links } from "@/types/common";
 import { Loader2 } from "lucide-react";
 import { AxiosResponse } from "axios";
 import { Button } from "./button";
@@ -22,6 +17,7 @@ import GroupContainer from "../pages/admin/employees/ui/group-container";
 import { ControllerRenderProps } from "react-hook-form";
 import GroupItem from "./group-item";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
+import { Link } from "react-router-dom";
 
 type Props = {
   selected: ControllerRenderProps<TDataFields, any>;
@@ -33,16 +29,17 @@ type Props = {
     placeholderData: <T>(previousData: T | undefined) => T | undefined;
     staleTime: number;
   };
+  ifEmptyLink: Links;
 };
 
-// TODO: revision of popup command, think of a better way to implement this component
-// TODO: travelpass delete function is not working, it says 404 not found even though the id is correct
+// TOFIX: empty state for command query is not working
 
 function PopoverCommandQuery({
   label,
   selected,
   commandItemRender,
   getItem,
+  ifEmptyLink,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
@@ -112,9 +109,14 @@ function PopoverCommandQuery({
               heading={label + "s"}
               className="h-auto max-h-64 overflow-y-scroll"
             >
-              <CommandEmpty className="text-xs p-4 text-center">
-                No {label ? label : "item"} found.
-              </CommandEmpty>
+              {isSuccess && !itemData.length && (
+                <span className="text-xs p-4 flex items-center justify-center w-full">
+                  No {label ? label : "item"} found.{" "}
+                  <span className="ml-1 text-primary underline">
+                    <Link to={ifEmptyLink + "?ref=notfound"}>Add</Link>
+                  </span>
+                </span>
+              )}
               {isPending && (
                 <span className="w-full flex items-center justify-center py-4">
                   <Loader2
