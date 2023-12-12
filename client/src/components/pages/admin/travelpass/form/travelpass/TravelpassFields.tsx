@@ -68,14 +68,14 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
           required: "This field is required",
           maxLength: {
             value: 100,
-            message: "Name must be 100 characters long",
+            message: "userId must be 100 characters long",
           },
         }}
         render={({ field }) => {
           return (
             <FormItem>
               <div className="flex justify-between">
-                <FormLabel className="text-xs text-foreground">Name</FormLabel>
+                <FormLabel className="text-xs text-foreground">User</FormLabel>
               </div>
               <FormControl>
                 <Input {...field} className="sr-only" />

@@ -61,6 +61,12 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
         description: "A new employee has been successfully addded.",
       });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLL_GROUPS],
+      });
       form?.reset();
     },
     onError: async () => {
@@ -89,6 +95,12 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
         description: "Changes to the employee details have been saved.",
       });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLL_GROUPS],
+      });
       sheetCloseBtn?.click();
       form?.reset();
     },
@@ -114,6 +126,12 @@ export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
       });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.TRAVELPASS] });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.DESIGNATIONS],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLL_GROUPS],
+      });
     },
     onError: async () => {
       toast.error("Failed to Delete Employee", {

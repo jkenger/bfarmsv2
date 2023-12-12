@@ -13,7 +13,7 @@ import { Input } from "./input";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "debounce";
 import { IconProperties } from "@/types/common";
-import { CheckIcon, Loader2 } from "lucide-react";
+import { Check, CheckIcon, Loader2 } from "lucide-react";
 import { AxiosResponse } from "axios";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
@@ -47,6 +47,8 @@ function PopoverCommandQuery({
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState("1");
+
+  const commandQueryGroup = document.getElementById("commandQueryGroup");
 
   function handleCommandPageChange(page: number) {
     setPage(page.toString());
@@ -98,49 +100,55 @@ function PopoverCommandQuery({
           </div>
         </CommandDialog> */}
         <CommandDialog open={open} onOpenChange={setOpen}>
-          <Input
-            className="text-xs"
-            placeholder="Search for an item"
-            defaultValue={search}
-            onChange={debounce((e) => {
-              setSearch(e.target.value);
-            }, 500)}
-          />
-
-          <CommandGroup
-            heading={label + "s"}
-            className="h-auto max-h-48 overflow-y-scroll"
-          >
-            <CommandEmpty className="text-xs p-4 text-center">
-              No {label ? label : "item"} found.
-            </CommandEmpty>
-            {isPending && (
-              <span className="w-full flex items-center justify-center py-4">
-                <Loader2 size={IconProperties.SIZE} className="animate-spin" />
-              </span>
-            )}
-            {isSuccess &&
-              itemData.map((d: TDataFields) => (
-                <CommandItem
-                  value={d.id}
-                  key={d.id}
-                  className="text-xs"
-                  onSelect={() => setSelectedData(d)}
-                >
-                  <CheckIcon
-                    className={cn(
-                      "mr-2 h-2 w-2",
-                      d.id === selectedData?.id ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {commandItemRender(d)}
-                </CommandItem>
-              ))}
-            <DataTablePaginationNoBtn
-              numOfPages={numOfPages}
-              pageChange={{ page, handlePageChange: handleCommandPageChange }}
+          <div>
+            <Input
+              className="text-xs"
+              placeholder="Search for an item"
+              defaultValue={search}
+              onChange={debounce((e) => {
+                setSearch(e.target.value);
+              }, 500)}
             />
-          </CommandGroup>
+
+            <CommandGroup
+              heading={label + "s"}
+              className="h-auto max-h-64 overflow-y-scroll"
+            >
+              <CommandEmpty className="text-xs p-4 text-center">
+                No {label ? label : "item"} found.
+              </CommandEmpty>
+              {isPending && (
+                <span className="w-full flex items-center justify-center py-4">
+                  <Loader2
+                    size={IconProperties.SIZE}
+                    className="animate-spin"
+                  />
+                </span>
+              )}
+              {isSuccess &&
+                itemData.map((d: TDataFields) => (
+                  <CommandItem
+                    value={d.id}
+                    key={d.id}
+                    className="text-xs"
+                    onSelect={() => setSelectedData(d)}
+                  >
+                    <div
+                      className={`flex items-center justify-center text-xs mr-2 w-4 h-4 rounded-full border text-white ${
+                        d.id === selectedData?.id
+                          ? "bg-primary"
+                          : "bg-secondary"
+                      }`}
+                    ></div>
+                    {commandItemRender(d)}
+                  </CommandItem>
+                ))}
+              <DataTablePaginationNoBtn
+                numOfPages={numOfPages}
+                pageChange={{ page, handlePageChange: handleCommandPageChange }}
+              />
+            </CommandGroup>
+          </div>
           {selectedData && (
             <GroupContainer
               groupActions={

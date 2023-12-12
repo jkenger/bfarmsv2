@@ -18,9 +18,13 @@ export type getResponse = {
 
 export const getPayrollGroups = ({
   type = GetQueryType.PAGINATED,
+  customParams,
 }: TGetQueryOptions) => {
   const { searchParams: payrollGroupParams } = getSearchParams();
-  const searchParams = new URLSearchParams(payrollGroupParams);
+  const searchParams = customParams
+    ? Object.keys(customParams).length && new URLSearchParams(customParams)
+    : new URLSearchParams(payrollGroupParams);
+
   // If type is paginated, then add the search params to the query key
   const qKey =
     type === GetQueryType.PAGINATED
