@@ -13,7 +13,7 @@ import { Input } from "./input";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "debounce";
 import { IconProperties } from "@/types/common";
-import { Check, CheckIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { AxiosResponse } from "axios";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
@@ -47,8 +47,6 @@ function PopoverCommandQuery({
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState("1");
-
-  const commandQueryGroup = document.getElementById("commandQueryGroup");
 
   function handleCommandPageChange(page: number) {
     setPage(page.toString());
