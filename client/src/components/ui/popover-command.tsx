@@ -1,9 +1,10 @@
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-import { Command, CommandEmpty, CommandGroup, CommandInput } from "./command";
+import { Command, CommandEmpty, CommandGroup } from "./command";
 
 import { FormControl } from "./form";
+import { Input } from "./input";
 
 type Props = {
   buttonTrigger: React.ReactNode;
@@ -34,7 +35,7 @@ function PopoverCommand({ buttonTrigger, commandItems, label }: Props) {
           </div>
         </CommandDialog> */}
         <Command className="">
-          <CommandInput className="text-xs" placeholder="Search for an item" />
+          <Input className="text-xs" placeholder="Search for an item" />
 
           <CommandGroup
             heading={label + "s"}

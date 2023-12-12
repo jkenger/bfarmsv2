@@ -10,7 +10,7 @@ function GroupContainer({ children, groupActions }: Props) {
         <span className="text-primary">added</span>:{" "}
       </p>
       <div className="flex flex-col gap-4 items-start">{children}</div>
-      <div className="space-x-2 mt-4">
+      <div className="space-x-2 mt-4 flex justify-end w-full ">
         {/* Navigate to desgination */}
         {groupActions}
       </div>

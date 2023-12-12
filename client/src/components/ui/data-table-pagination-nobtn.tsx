@@ -1,16 +1,23 @@
 import { Button } from "./button";
-import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
+
 import { Input } from "./input";
 import debounce from "debounce";
 import { useEffect, useRef } from "react";
 
-function DataTablePaginationNoBtn({ numOfPages = 0 }: { numOfPages?: number }) {
-  const { handlePageChange } = useFilterParams();
-  const { page } = getSearchParams();
-  const pageInputRef = useRef<HTMLInputElement>(null);
+function DataTablePaginationNoBtn({
+  numOfPages = 0,
+  pageChange,
+}: {
+  numOfPages?: number;
+  pageChange: {
+    page: string;
+    handlePageChange: (page: number) => void;
+  };
+}) {
+  const page = pageChange.page;
+  const handlePageChange = pageChange.handlePageChange;
   const currentPage = Number(page);
-  // Should not be reil
-
+  const pageInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (pageInputRef.current)
       pageInputRef.current.value = currentPage.toString();

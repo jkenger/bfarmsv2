@@ -18,9 +18,13 @@ export type getEmployeeResponse = {
 
 export const getEmployees = ({
   type = GetQueryType.PAGINATED,
+  customParams,
 }: TGetQueryOptions) => {
   const { searchParams: employeeSearchParams } = getSearchParams();
-  const searchParams = new URLSearchParams(employeeSearchParams);
+  const searchParams = customParams
+    ? Object.keys(customParams).length && new URLSearchParams(customParams)
+    : new URLSearchParams(employeeSearchParams);
+
   const qKey =
     type === GetQueryType.PAGINATED
       ? [QueryKeys.EMPLOYEES, searchParams.toString()]

@@ -21,6 +21,7 @@ function DesignationTable({ columns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
+    isFetching,
     isError,
     isSuccess,
     error,
@@ -42,6 +43,7 @@ function DesignationTable({ columns }: Props) {
           value={{
             columns: columns,
             data,
+            isFetching,
             numOfPages,
             dataReloader: refetch,
             mutations: {

@@ -110,7 +110,7 @@ router.route("/holidays/all").get(getAllHolidays);
 // @Method  : DELETE / PUT /
 // @Access  : Private (Admin)
 router
-  .route("/travelpass/:id")
+  .route("/holidays/:id")
   .put(validateHoliday, updateHoliday)
   .delete(validateId, deleteHoliday);
 

@@ -19,7 +19,6 @@ export type getResponse = {
 export const getDesignations = ({
   type = GetQueryType.PAGINATED,
 }: TGetQueryOptions) => {
-  console.log(type);
   const { searchParams: designationSearchParams } = getSearchParams();
   const searchParams = new URLSearchParams(designationSearchParams);
   // If type is paginated, then add the search params to the query key

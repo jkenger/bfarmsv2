@@ -28,8 +28,8 @@ type TEmployees = {
   payrollGroupId?: string;
   payrollGroup?: TPayrollGroup;
   designationId?: string;
-  travelpass: TTravelpass[];
   designation?: TDesignation;
+  travelpass: TTravelpass[];
   createdAt: string;
   updatedAt: string;
 };
@@ -75,6 +75,10 @@ type TTravelpass = {
 
 type TGetQueryOptions = {
   type: GetQueryType;
+  customParams?: {
+    page: string;
+    search: string;
+  };
 };
 
 type TQueryContext = {

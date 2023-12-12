@@ -25,6 +25,7 @@ function EmployeeTable({ employeeColumns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
+    isFetching,
     isError,
     isSuccess,
     error,
@@ -55,6 +56,7 @@ function EmployeeTable({ employeeColumns }: Props) {
           value={{
             columns: employeeColumns,
             data,
+            isFetching,
             numOfPages,
             dataReloader: refetch,
             mutations: {

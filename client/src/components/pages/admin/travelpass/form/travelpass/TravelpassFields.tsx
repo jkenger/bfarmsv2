@@ -13,12 +13,7 @@ import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { useLayoutEffect, useRef } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-import {
-  GetQueryType,
-  IconProperties,
-  MutationType,
-  TravelpassType,
-} from "@/types/common";
+import { MutationType, TravelpassType } from "@/types/common";
 import {
   Select,
   SelectContent,
@@ -32,17 +27,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, CheckIcon, Loader2 } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { useQuery } from "@tanstack/react-query";
 import { getEmployees } from "../../../employees/api/employee.api";
-import PopoverCommand from "@/components/ui/popover-command";
-import GroupContainer from "../../../employees/ui/group-container";
-import Group from "../../../employees/ui/group";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { CommandItem } from "@/components/ui/command";
 import FormatToFullName from "@/components/ui/format-to-fullname";
+import PopoverCommandQuery from "@/components/ui/popover-command-query";
 
 type Props = {
   form: UseFormReturn<TDataFields, unknown, undefined>;
@@ -52,14 +42,6 @@ type Props = {
 function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    data: queryData,
-    isPending: isEmployeePending,
-    isSuccess: isEmployeeSuccess,
-  } = useQuery(getEmployees({ type: GetQueryType.ALL }));
-
-  const employeeData = queryData?.data.data || [];
-  const employeeDetailsSelect = useRef<HTMLSpanElement>(null);
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -90,122 +72,27 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
           },
         }}
         render={({ field }) => {
-          const selectedEmployee: TDataFields =
-            employeeData.find((d: TDataFields) => d.id === field.value) || {};
-          console.log(selectedEmployee);
           return (
             <FormItem>
               <div className="flex justify-between">
                 <FormLabel className="text-xs text-foreground">Name</FormLabel>
               </div>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className="sr-only" />
               </FormControl>
               <div className="flex flex-col gap-2">
-                <div className="flex flex-col justify-between">
-                  <div className="flex flex-col gap-2 mt-4">
-                    <PopoverCommand
-                      label="Employee"
-                      buttonTrigger={
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            " justify-between text-xs ",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            <FormatToFullName
-                              firstName={selectedEmployee.firstName}
-                              middleName={selectedEmployee.middleName}
-                              lastName={selectedEmployee.lastName}
-                            />
-                          ) : (
-                            <span>Select Employee</span>
-                          )}
-                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      }
-                      commandItems={
-                        <>
-                          {isEmployeePending && (
-                            <span>
-                              <Loader2
-                                size={IconProperties.SIZE}
-                                className="animate-spin"
-                              />
-                            </span>
-                          )}
-                          {isEmployeeSuccess &&
-                            employeeData.map((d: TDataFields) => (
-                              <CommandItem
-                                value={d.id}
-                                key={d.id}
-                                className="text-xs"
-                                onSelect={() => {
-                                  form.setValue("userId", d.id, {
-                                    shouldDirty: true,
-                                  });
-                                }}
-                              >
-                                <CheckIcon
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    d.employeeId === selectedEmployee?.userId
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                <FormatToFullName
-                                  firstName={d.firstName}
-                                  middleName={d.middleName}
-                                  lastName={d.lastName}
-                                />
-                              </CommandItem>
-                            ))}
-                        </>
-                      }
+                <PopoverCommandQuery
+                  label="Employee"
+                  commandItemRender={(d: TDataFields) => (
+                    <FormatToFullName
+                      firstName={d.firstName}
+                      middleName={d.middleName}
+                      lastName={d.lastName}
                     />
-                  </div>
-                </div>
-                {field?.value && (
-                  <GroupContainer
-                    groupActions={
-                      <>
-                        <Button variant="outline" size="sm" type="button">
-                          Edit Group
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          type="button"
-                          onClick={() => {
-                            field.onChange("");
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </>
-                    }
-                  >
-                    {Object.keys(selectedEmployee).map((key) => (
-                      <Group assignTo={key} key={key}>
-                        {selectedEmployee[key as keyof TDataFields] ? (
-                          <span ref={employeeDetailsSelect}>
-                            {
-                              selectedEmployee[
-                                key as keyof TDataFields
-                              ] as React.ReactNode
-                            }
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">No data</span>
-                        )}
-                      </Group>
-                    ))}
-                  </GroupContainer>
-                )}
+                  )}
+                  selected={field}
+                  getItem={getEmployees}
+                />
               </div>
               <FormMessage />
             </FormItem>

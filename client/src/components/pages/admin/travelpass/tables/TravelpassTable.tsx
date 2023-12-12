@@ -22,6 +22,7 @@ function TravelpassTable({ columns }: Props) {
   const {
     data: res,
     isError,
+    isFetching,
     isSuccess,
     error,
     refetch,
@@ -42,6 +43,7 @@ function TravelpassTable({ columns }: Props) {
           value={{
             columns: columns,
             data,
+            isFetching,
             numOfPages,
             dataReloader: refetch,
             mutations: {

@@ -9,9 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
-import Group from "../../ui/group";
+
 import { MutationType } from "@/types/common";
 
 import { getDesignations } from "../../api/designation.api";
@@ -25,6 +25,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { CommandItem } from "@/components/ui/command";
 import { CheckIcon, Loader2 } from "lucide-react";
 import { useScrollToView } from "@/components/hooks/useScrollToView";
+import GroupItem from "@/components/ui/group-item";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -290,19 +291,12 @@ function EmployeeFormFields<T extends TDataFields>({
                     }
                   >
                     {Object.keys(selectedPayrollGroup).map((key) => (
-                      <Group assignTo={key} key={key}>
-                        {selectedPayrollGroup[key as keyof TDataFields] ? (
-                          <span ref={payrollgroupDetailsSelect}>
-                            {
-                              selectedPayrollGroup[
-                                key as keyof TDataFields
-                              ] as React.ReactNode
-                            }
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">No data</span>
-                        )}
-                      </Group>
+                      <GroupItem
+                        detailsSelect={payrollgroupDetailsSelect}
+                        selectedItem={selectedPayrollGroup}
+                        objectKey={key}
+                        key={key}
+                      />
                     ))}
                   </GroupContainer>
                 )}
@@ -477,19 +471,12 @@ function EmployeeFormFields<T extends TDataFields>({
                     }
                   >
                     {Object.keys(selectedDesignation).map((key) => (
-                      <Group assignTo={key} key={key}>
-                        {selectedDesignation[key as keyof TDataFields] ? (
-                          <span ref={designationDetailsSelect}>
-                            {
-                              selectedDesignation[
-                                key as keyof TDataFields
-                              ] as React.ReactNode
-                            }
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">No data</span>
-                        )}
-                      </Group>
+                      <GroupItem
+                        detailsSelect={designationDetailsSelect}
+                        selectedItem={selectedDesignation}
+                        objectKey={key}
+                        key={key}
+                      />
                     ))}
                   </GroupContainer>
                 )}

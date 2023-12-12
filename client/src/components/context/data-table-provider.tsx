@@ -5,6 +5,7 @@ import { createContext, useContext } from "react";
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isFetching?: boolean;
   numOfPages?: number;
   dataReloader?: () => void;
   mutations?: {

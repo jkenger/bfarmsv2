@@ -16,7 +16,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import TableLoader from "./table-loader";
-import { useIsFetching } from "@tanstack/react-query";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 import { DataTableViewOptions } from "./data-table-view-options";
@@ -49,7 +48,7 @@ import { Badge } from "./badge";
 export function DataTable<TData extends TDataFields, TValue>() {
   const [columnVisibility, setColumnVisibility] =
     useLocalStorageState<VisibilityState>([], "columnVisibility");
-  const isFetching = useIsFetching();
+
   const {
     handleSearchChange,
     handlePageChange,
@@ -61,6 +60,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
   const {
     columns,
     data,
+    isFetching: isDataFetching,
     numOfPages,
     dataReloader,
     mutations,
@@ -68,6 +68,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
     onCreateErrorAction,
     facetedFilterButtons,
   } = useDataTable() as DataTableProps<TData, TValue>;
+  const isFetching = isDataFetching;
 
   const table = useReactTable<TData>({
     data,
@@ -148,7 +149,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
           <Button
             variant="outline"
             size="sm"
-            disabled={isFetching > 0}
+            disabled={isFetching}
             onClick={dataReloader}
           >
             <RotateCw
@@ -317,7 +318,10 @@ export function DataTable<TData extends TDataFields, TValue>() {
             {numOfPages} results
           </span>
         </div>
-        <DataTablePaginationNoBtn numOfPages={numOfPages} />
+        <DataTablePaginationNoBtn
+          numOfPages={numOfPages}
+          pageChange={{ page, handlePageChange }}
+        />
       </div>
     </div>
   );
