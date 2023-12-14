@@ -16,7 +16,7 @@ export type getResponse = {
   numOfPages: number;
 };
 
-export const getTravelpass = ({
+export const getDeductions = ({
   type = GetQueryType.PAGINATED,
 }: TGetQueryOptions) => {
   const { searchParams: travelpassParams } = getSearchParams();
@@ -24,13 +24,13 @@ export const getTravelpass = ({
   // If type is paginated, then add the search params to the query key
   const qKey =
     type === GetQueryType.PAGINATED
-      ? [QueryKeys.TRAVELPASS, searchParams.toString()]
-      : [QueryKeys.TRAVELPASS];
+      ? [QueryKeys.DEDUCTIONS, searchParams.toString()]
+      : [QueryKeys.DEDUCTIONS];
 
   const qFnQuery =
     type === GetQueryType.PAGINATED
-      ? `admin/travelpass?${searchParams.toString()}`
-      : `admin/travelpass/all`;
+      ? `admin/deductions?${searchParams.toString()}`
+      : `admin/deductions/all`;
   return {
     queryKey: qKey,
     queryFn: async () => {
@@ -42,47 +42,45 @@ export const getTravelpass = ({
   };
 };
 
-export const createTravelpass = ({ queryClient, form }: TMutation) => {
+export const createDeduction = ({ queryClient, form }: TMutation) => {
   return {
-    mutationKey: [QueryKeys.CREATE_TRAVELPASS],
+    mutationKey: [QueryKeys.CREATE_DEDUCTION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/travelpass", {
-        ...data,
-      });
+      await fetch.post("/admin/deductions", data);
     },
     onSuccess: async () => {
-      toast.success(`Travelpass Created`, {
-        description: "A new travelpass has been successfully addded.",
+      toast.success(`Deduction Created`, {
+        description: "A new deduction has been successfully addded.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.TRAVELPASS],
+        queryKey: [QueryKeys.DEDUCTIONS],
       });
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Create Travelpass`, {
+      toast.error(`Failed to Create Deduction`, {
         description:
-          "Travelpass could not be removed due to an issue. Please try again.",
+          "Deduction could not be removed due to an issue. Please try again.",
       });
     },
   };
 };
 
-export const editTravelpass = ({ queryClient, form }: TMutation) => {
+export const editDeduction = ({ queryClient, form }: TMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
-    mutationKey: [QueryKeys.EDIT_TRAVELPASS],
+    mutationKey: [QueryKeys.EDIT_DEDUCTION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/travelpass/${data.id}`, {
+      await fetch.put(`/admin/deductions/${data.id}`, {
         ...data,
       });
     },
     onSuccess: async () => {
-      toast.success(`Travelpass Updated`, {
-        description: "Changes to the Travelpass details have been saved.",
+      toast.success(`Deduction Updated`, {
+        description: "Changes to the Deduction details have been saved.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PAYROLL_GROUPS],
+        queryKey: [QueryKeys.DEDUCTIONS],
       });
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.EMPLOYEES],
@@ -91,34 +89,34 @@ export const editTravelpass = ({ queryClient, form }: TMutation) => {
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Update Travelpass`, {
+      toast.error(`Failed to Update Deduction`, {
         description:
-          "Changes to the Travelpass details could not be saved. Please retry.",
+          "Changes to the Deduction details could not be saved. Please retry.",
       });
     },
   };
 };
 
-export const deleteTravelpass = ({ queryClient }: TMutation) => {
+export const deleteDeduction = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_TRAVELPASS],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/travelpass/${data.id}`);
+      await fetch.delete(`/admin/deductions/${data.id}`);
     },
     onSuccess: async () => {
-      toast.warning(`Travelpass Deleted`, {
+      toast.warning(`Deduction Deleted`, {
         className: "bg-primary",
-        description: "Travelpass selected has been removed from the records.",
+        description: "Deduction selected has been removed from the records.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.TRAVELPASS],
+        queryKey: [QueryKeys.DEDUCTIONS],
       });
       // await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
     onError: async () => {
-      toast.error("Failed to Delete Travelpass", {
+      toast.error("Failed to Delete Deduction", {
         description:
-          "Travelpass selected could not be removed due to an issue. Please try again.",
+          "Deduction selected could not be removed due to an issue. Please try again.",
       });
     },
   };

@@ -29,8 +29,10 @@ model User {
 
   designation   Designation? @relation(fields: [designationId], references: [id])
   designationId String?
-  
-  travelPass    Travelpass[]
+
+  deductions   Deduction[]
+
+  travelPass Travelpass[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -55,7 +57,7 @@ model PayrollGroup {
   name        String
   fundCluster String
   programName String?
-  users       User[]
+  users       User[] 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
@@ -74,19 +76,41 @@ model Holiday {
   // houseBuild House[]  @relation("HouseBuilder")
 }
 
-
 model Travelpass {
-  id               String   @id @default(uuid())
-  user             User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           String   
-  typeOf           String
-  start            DateTime
-  end              DateTime
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id        String   @id @default(uuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  typeOf    String
+  start     DateTime
+  end       DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
 }
+
+model Deduction {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  user      User[] 
+  amount    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")  
+}
+
+// model UserDeduction {
+//   id            String     @id @default(uuid())
+//   user          User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId        String
+//   deduction     Deduction? @relation(fields: [deductionId], references: [id], onDelete: Cascade)
+//   deductionId   String
+//   createdAt     DateTime   @default(now())
+//   updatedAt     DateTime   @updatedAt
+//   // houseOwned House[]  @relation("HouseOwner")
+//   // houseBuild House[]  @relation("HouseBuilder")  
+// }
 
 // model House {
 //   id           String   @id @default(uuid())
@@ -99,3 +123,4 @@ model Travelpass {
 //   createdAt    DateTime @default(now())
 //   updatedAt    DateTime @updatedAt
 // }
+

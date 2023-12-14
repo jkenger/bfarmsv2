@@ -1,32 +1,38 @@
 import Main from "@/components/wrappers/Main";
 import { QueryClient } from "@tanstack/react-query";
 import { Await, defer, useLoaderData } from "react-router-dom";
+
 import { Suspense } from "react";
 import TableFallBack from "@/components/ui/table-fallback";
-import PayrollGroupsTable from "./tables/TravelpassTable";
+
 import Error from "../../Error";
+
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { IconProperties } from "@/types/common";
-import AddPayrollGroups from "./form/travelpass/AddTravelpass";
+
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
-import { useTravelpassQuery } from "./providers/TravelpassQueryProvider";
-import { getTravelpass } from "./api/travelpass.api";
-import { travelpassColumns } from "./columns/travelpass.columns";
+
+import { getDeductions } from "./api/deductions.api";
+import { useDeductionQuery } from "./providers/DeductionsQueryProviders";
+import DeductionsTable from "./tables/DeductionsTable";
+import { deductionsColumns } from "./columns/deductions.columns";
+
+import AddDeduction from "./form/deductions/AddDeduction";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
-    data: queryClient.ensureQueryData(getTravelpass({ type: "paginated" })),
+    data: queryClient.ensureQueryData(getDeductions({ type: "paginated" })),
   });
 };
-function PayrollGroups() {
+function Deductions() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useTravelpassQuery();
-  const pageTitle = "Travelpass";
+    useDeductionQuery();
+  const pageTitle = "Deductions";
   return (
     <>
       <Main.Header>
@@ -53,7 +59,7 @@ function PayrollGroups() {
               title="Add new data to"
               table={pageTitle}
             >
-              <AddPayrollGroups />
+              <AddDeduction />
             </MutationSheet>
           }
         >
@@ -78,7 +84,7 @@ function PayrollGroups() {
             title="Add new data to"
             table={pageTitle}
           >
-            <AddPayrollGroups />
+            <AddDeduction />
           </MutationSheet>
           <DataTableHistory
             render={{
@@ -129,7 +135,7 @@ function PayrollGroups() {
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
           <Await resolve={initialData} errorElement={<Error />}>
-            <PayrollGroupsTable columns={travelpassColumns} />
+            <DeductionsTable columns={deductionsColumns} />
           </Await>
         </Suspense>
       </Main.Content>
@@ -137,4 +143,4 @@ function PayrollGroups() {
   );
 }
 
-export default PayrollGroups;
+export default Deductions;

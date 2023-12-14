@@ -64,6 +64,11 @@ export enum QueryKeys {
   DELETE_TRAVELPASS = "deleteTravelpass",
   CREATE_TRAVELPASS = "createTravelpass",
   EDIT_TRAVELPASS = "editTravelpass",
+
+  DEDUCTIONS = "deductions",
+  DELETE_DEDUCTION = "deleteDeduction",
+  CREATE_DEDUCTION = "createDeduction",
+  EDIT_DEDUCTION = "editDeduction",
 }
 
 export enum SortType {

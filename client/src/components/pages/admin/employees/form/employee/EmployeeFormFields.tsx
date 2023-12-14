@@ -133,6 +133,9 @@ function EmployeeFormFields<T extends TDataFields>({
             if (isNaN(Number(value))) {
               return "Age must be a number";
             }
+            if (Number(value) < 0) {
+              return "Age must be above 0 number";
+            }
             return true;
           },
         }}

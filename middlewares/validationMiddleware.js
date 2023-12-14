@@ -71,6 +71,12 @@ export const validateTravelpass = withValidationErrors([
   body("*.end").notEmpty().withMessage("end must not be empty"),
 ]);
 
+export const validateDeductions = withValidationErrors([
+  body().toArray(),
+  body("*.name").notEmpty().withMessage("Name must not be empty"),
+  body("*.amount").notEmpty().withMessage("Amount must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

@@ -3,8 +3,9 @@ import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import DeleteDesignation from "../form/designation/DeleteDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
-import { Badge } from "@/components/ui/badge";
+
 import ParseDate from "@/components/ui/ParseDate";
+import CountBadge from "@/components/ui/count-badge";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [
   {
@@ -37,13 +38,7 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
-    cell: ({ row }) => {
-      return row.original.users.length > 0 ? (
-        <span> {row.original.users.length} Employees </span>
-      ) : (
-        <Badge variant="outline">No employee</Badge>
-      );
-    },
+    cell: ({ row }) => <CountBadge length={row.original.users.length} />,
   },
   {
     accessorKey: "salary",

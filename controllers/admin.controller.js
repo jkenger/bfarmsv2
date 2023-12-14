@@ -6,6 +6,7 @@ import asyncHandler from "express-async-handler";
 
 import { PrismaClient } from "@prisma/client";
 import {
+  deductions,
   designation,
   employee,
   holiday,
@@ -53,13 +54,36 @@ export const getPaginatedEmployees = asyncHandler(async (req, res) =>
   models.getPaginatedModel(req, res, prisma.user, employee)
 );
 
-export const createEmployee = asyncHandler(async (req, res) =>
-  models.addModel(res, req.body, prisma.user)
-);
+export const createEmployee = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        age: Number(item.age),
+        designationId: item.designationId ? item.designationId : null,
+        payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
+      };
+    }),
+  ];
+  return models.addModel(res, data, prisma.user, {
+    type: "explicit",
+    fields: ["deductions"],
+  });
+});
 
-export const updateEmployee = asyncHandler(async (req, res) =>
-  models.updateModel(res, req.params.id, req.body, prisma.user)
-);
+export const updateEmployee = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        age: Number(item.age),
+        designationId: item.designationId ? item.designationId : null,
+        payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
+      };
+    }),
+  ];
+  return models.updateModel(res, req.params.id, data, prisma.user);
+});
 
 export const deleteEmployee = asyncHandler(async (req, res) =>
   models.deleteModel(res, req.params.id, prisma.user)
@@ -90,9 +114,17 @@ export const deleteDesignation = asyncHandler(async (req, res) =>
   models.deleteModel(res, req.params.id, prisma.designation)
 );
 
-export const updateDesignation = asyncHandler(async (req, res) =>
-  models.updateModel(res, req.params.id, req.body, prisma.designation)
-);
+export const updateDesignation = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        salary: parseFloat(item.salary),
+      };
+    }),
+  ];
+  return models.updateModel(res, req.params.id, data, prisma.designation);
+});
 
 // Payroll Groups
 export const getAllPayrollGroups = asyncHandler(async (req, res) =>
@@ -172,3 +204,39 @@ export const deleteTravelpass = asyncHandler(async (req, res) =>
 export const updateTravelpass = asyncHandler(async (req, res) =>
   models.updateModel(res, req.params.id, req.body, prisma.travelpass)
 );
+
+// Deductions Controller
+export const getAllDeductions = asyncHandler(async (req, res) =>
+  models.getAllModel(res, prisma.deduction)
+);
+export const getPaginatedDeductions = asyncHandler(async (req, res) =>
+  models.getPaginatedModel(req, res, prisma.deduction, deductions)
+);
+
+export const createDeductions = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        amount: parseFloat(item.amount),
+      };
+    }),
+  ];
+  return models.addModel(res, data, prisma.deduction);
+});
+
+export const deleteDeductions = asyncHandler(async (req, res) =>
+  models.deleteModel(res, req.params.id, prisma.deduction)
+);
+
+export const updateDeductions = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        amount: parseFloat(item.amount),
+      };
+    }),
+  ];
+  return models.updateModel(res, req.params.id, data, prisma.deduction);
+});

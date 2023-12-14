@@ -27,8 +27,14 @@ import {
   getAllTravelpass,
   updateTravelpass,
   deleteTravelpass,
+  getPaginatedDeductions,
+  createDeductions,
+  getAllDeductions,
+  updateDeductions,
+  deleteDeductions,
 } from "../controllers/admin.controller.js";
 import {
+  validateDeductions,
   validateDesignation,
   validateEmployee,
   validateHoliday,
@@ -131,5 +137,23 @@ router
   .route("/travelpass/:id")
   .put(validateTravelpass, updateTravelpass)
   .delete(validateId, deleteTravelpass);
+
+// Deductions Routes
+// @Desc    : Read and Create Travelpass
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router
+  .route("/deductions")
+  .get(getPaginatedDeductions)
+  .post(validateDeductions, createDeductions);
+router.route("/deductions/all").get(getAllDeductions);
+
+// @Desc    : Delete and Update Travelpass
+// @Method  : DELETE / PUT /
+// @Access  : Private (Admin)
+router
+  .route("/deductions/:id")
+  .put(validateDeductions, updateDeductions)
+  .delete(validateId, deleteDeductions);
 
 export default router;

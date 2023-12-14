@@ -49,12 +49,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/employees", {
-        ...data,
-        age: Number(data.age),
-        designationId: data.designationId ? data.designationId : null,
-        payrollGroupId: data.payrollGroupId ? data.payrollGroupId : null,
-      });
+      await fetch.post("/admin/employees", data);
     },
     onSuccess: async () => {
       toast.success(`Employee Created`, {
@@ -83,12 +78,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/employees/${data.id}`, {
-        ...data,
-        age: Number(data.age),
-        designationId: data.designationId ? data.designationId : null,
-        payrollGroupId: data.payrollGroupId ? data.payrollGroupId : null,
-      });
+      await fetch.put(`/admin/employees/${data.id}`, data);
     },
     onSuccess: async () => {
       toast.success(`Employee Updated`, {

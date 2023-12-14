@@ -2,7 +2,14 @@ import { StatusCodes } from "http-status-codes";
 import { createQueryObject } from "../../lib/utils.js";
 
 export const models = {
-  addModel: async (res, data, prismaModel) => {
+  addModel: async (
+    res,
+    data,
+    prismaModel,
+    relation = { type: "", fields: [] }
+  ) => {
+    console.log(data);
+    console.log(relation);
     if (Array.isArray(data)) {
       if (data?.length > 1) {
         console.log("Multiple data adding");
@@ -15,6 +22,25 @@ export const models = {
           message: addedData,
         });
       }
+    }
+
+    // TODO: make it dynamic for multiple fields
+    if (relation.type === "explicit" && data[0].deductionIds?.length) {
+      const dataAdded = await prismaModel.create({
+        data: {
+          ...data[0],
+          deductions: {
+            connect: [
+              ...data[0].deductionIds.map((id) => ({
+                id: id,
+              })),
+            ],
+          },
+        },
+      });
+      return res.status(StatusCodes.OK).json({
+        data: dataAdded,
+      });
     }
     const dataAdded = await prismaModel.create({
       data: data[0],

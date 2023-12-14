@@ -17,7 +17,7 @@ import AdminEmployees from "./components/pages/admin/employees/Employees";
 import AdminPayroll from "./components/pages/admin/Payroll";
 import AdminHolidays from "./components/pages/admin/holidays/Holidays";
 import AdminTravelPass from "./components/pages/admin/travelpass/Travelpass";
-import AdminDeductions from "./components/pages/admin/Deductions";
+import AdminDeductions from "./components/pages/admin/deductions/Deductions";
 import AdminLeaves from "./components/pages/admin/leaves/Leaves";
 import AdminDashboard from "./components/pages/admin/Dashboard";
 import { loader as employeesLoader } from "./components/pages/admin/employees/Employees";
@@ -27,6 +27,8 @@ import { loader as travelpassLoader } from "./components/pages/admin/travelpass/
 import PayrollGroups, {
   loader as payrollGroupLoader,
 } from "./components/pages/admin/payroll/PayrollGroups";
+import { loader as deductionsLoader } from "./components/pages/admin/deductions/Deductions";
+
 import Designations from "./components/pages/admin/employees/Designations";
 import LeaveTypes from "./components/pages/admin/leaves/Types";
 
@@ -39,6 +41,7 @@ import DesignationQueryProvider from "./components/pages/admin/employees/provide
 import PayrollGroupQueryProvider from "./components/pages/admin/payroll/providers/PayrollGroupProvider";
 import HolidayQueryProvider from "./components/pages/admin/holidays/providers/HolidayQueryProviders";
 import TravelpassQueryProvider from "./components/pages/admin/travelpass/providers/TravelpassQueryProvider";
+import DeductionsQueryProvider from "./components/pages/admin/deductions/providers/DeductionsQueryProviders";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -139,7 +142,12 @@ const router = createBrowserRouter([
           },
           {
             path: "deductions",
-            element: <AdminDeductions />,
+            loader: deductionsLoader(queryClient),
+            element: (
+              <DeductionsQueryProvider>
+                <AdminDeductions />
+              </DeductionsQueryProvider>
+            ),
           },
           {
             path: "leaves",

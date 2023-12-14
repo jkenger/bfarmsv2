@@ -29,6 +29,8 @@ type TEmployees = {
   payrollGroup?: TPayrollGroup;
   designationId?: string;
   designation?: TDesignation;
+  deductions: TDeductions[];
+  deductionIds: string[];
   travelpass: TTravelpass[];
   createdAt: string;
   updatedAt: string;
@@ -73,6 +75,14 @@ type TTravelpass = {
   end: string;
 };
 
+type TDeductions = {
+  id: string;
+  users: TEmployees[];
+  amount: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type TGetQueryOptions = {
   type: GetQueryType;
   customParams?: {
@@ -101,4 +111,5 @@ type TDataFields = TEmployees &
   TDesignation &
   TPayrollGroup &
   THolidays &
-  TTravelpass;
+  TTravelpass &
+  TDeductions;
