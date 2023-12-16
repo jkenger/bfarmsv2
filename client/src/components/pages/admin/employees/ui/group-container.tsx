@@ -4,7 +4,7 @@ type Props = { children: React.ReactNode; groupActions: React.ReactNode };
 
 function GroupContainer({ children, groupActions }: Props) {
   return (
-    <div className="bg-card rounded-lg  border p-4 flex flex-col gap-2">
+    <div className="bg-card rounded-b-lg border-t  p-4 flex flex-col gap-2">
       <p className="text-xs">
         The following data for this group will be{" "}
         <span className="text-primary">added</span>:{" "}

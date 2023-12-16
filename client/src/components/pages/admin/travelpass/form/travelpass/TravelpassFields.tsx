@@ -94,6 +94,13 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
                   selected={field}
                   getItem={getEmployees}
                   displayField="fullName"
+                  groupSelect={[
+                    "fullName",
+                    "age",
+                    "payrollGroupId",
+                    "designationId",
+                    "employeeId",
+                  ]}
                 />
               </div>
               <FormMessage />

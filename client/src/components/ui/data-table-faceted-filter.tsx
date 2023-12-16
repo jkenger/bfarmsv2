@@ -111,7 +111,7 @@ function FacetedFilterButton<A>({
                     className="space-x-2"
                   >
                     <div
-                      className={`flex items-center justify-center text-xs w-4 h-4 rounded-sm border text-white ${
+                      className={`flex items-center justify-center text-xs w-3 h-3 rounded-sm border text-white ${
                         selectedValues?.includes(s.toLowerCase() as string)
                           ? "bg-primary"
                           : "bg-secondary"
@@ -121,7 +121,7 @@ function FacetedFilterButton<A>({
                         <Check size="16" />
                       )}
                     </div>
-                    <span className="capitalize">{s as string} </span>
+                    <span className="capitalize text-xs">{s as string} </span>
                   </CommandItem>
                 ))}
             </CommandGroup>

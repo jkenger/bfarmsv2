@@ -13,7 +13,7 @@ import { FormControl } from "./form";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "debounce";
 import { IconProperties, Links } from "@/types/common";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { AxiosResponse } from "axios";
 import { Button } from "./button";
 
@@ -64,9 +64,16 @@ function PopoverCommandQueryMultiple({
   const itemData = data?.data.data ? data.data.data : [];
   const numOfPages = data?.data.numOfPages ? data.data.numOfPages : 0;
   const [selectedItems, setSelectedItems] = useState(
-    selected.value ? [...selected.value] : []
+    selected.value
+      ? itemData.filter((item: TDataFields) =>
+          selected.value.some(
+            (selectedItem: TDataFields) => selectedItem.id === item.id
+          )
+        )
+      : []
   );
 
+  console.log(selectedItems);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <FormControl>
@@ -153,14 +160,16 @@ function PopoverCommandQueryMultiple({
                     }}
                   >
                     <div
-                      className={`flex items-center justify-center text-xs mr-2 w-3 h-3 rounded-md border text-white ${
-                        selectedItems
-                          ?.map((d: TDataFields) => d.id)
-                          .includes(d.id)
+                      className={`flex items-center justify-center text-xs w-3 h-3 rounded-sm border text-white mr-2 ${
+                        selectedItems?.includes(d)
                           ? "bg-primary"
                           : "bg-secondary"
                       }`}
-                    ></div>
+                    >
+                      {selectedItems?.includes(d) && (
+                        <Check size={IconProperties.SIZE_ICON} />
+                      )}
+                    </div>
                     {commandItemRender(d)}
                   </CommandItem>
                 ))}
@@ -170,67 +179,69 @@ function PopoverCommandQueryMultiple({
               />
             </CommandGroup>
             {selectedItems && (
-              <Table>
-                {selectedItems.length > 0 && (
-                  <TableCaption className="mb-4 text-xs">
-                    Selected {label ? label + "s" : "items"}
-                  </TableCaption>
-                )}
-                <TableBody>
-                  {!selectedItems.length && (
-                    <TableRow>
-                      <TableCell className="text-xs text-center">
-                        <span className="text-muted-foreground ">
-                          No {label ? label : "item"} selected.
-                        </span>
-                      </TableCell>
-                    </TableRow>
+              <div className="p-3">
+                <Table>
+                  {selectedItems.length > 0 && (
+                    <TableCaption className="mb-4 text-xs">
+                      Selected {label ? label + "s" : "items"}
+                    </TableCaption>
                   )}
-                  {selectedItems.map((d: TDataFields) => (
-                    <TableRow key={d.id}>
-                      {Object.keys(d).map(
-                        (key) =>
-                          groupSelect?.includes(key as keyof TDataFields) && (
-                            <TableCell key={key} className="">
-                              <div className="flex flex-col">
-                                <p className="font-medium text-xs">
-                                  {d[key as keyof TDataFields]}
-                                </p>
-                                <span className="text-muted-foreground capitalize text-xs">
-                                  {key}
-                                </span>
-                              </div>
-                            </TableCell>
-                          )
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  <TableBody>
+                    {!selectedItems.length && (
+                      <TableRow>
+                        <TableCell className="text-xs text-center">
+                          <span className="text-muted-foreground ">
+                            No {label ? label : "item"} selected.
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                    {selectedItems.map((d: TDataFields) => (
+                      <TableRow key={d.id}>
+                        {Object.keys(d).map(
+                          (key) =>
+                            groupSelect?.includes(key as keyof TDataFields) && (
+                              <TableCell key={key} className="">
+                                <div className="flex flex-col">
+                                  <p className="font-medium text-xs">
+                                    {d[key as keyof TDataFields]}
+                                  </p>
+                                  <span className="text-muted-foreground capitalize text-xs">
+                                    {key}
+                                  </span>
+                                </div>
+                              </TableCell>
+                            )
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="flex w-full justify-end gap-2">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    type="button"
+                    onClick={() => {
+                      setSelectedItems([]);
+                    }}
+                  >
+                    Remove
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    onClick={() => {
+                      selected.onChange(selectedItems);
+                      setOpen(false);
+                    }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </div>
             )}
-          </div>
-          <div className="flex w-full justify-end gap-2 mb-4 mr-4">
-            <Button
-              variant="destructive"
-              size="sm"
-              type="button"
-              onClick={() => {
-                setSelectedItems([]);
-              }}
-            >
-              Remove
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              type="button"
-              onClick={() => {
-                selected.onChange(selectedItems);
-                setOpen(false);
-              }}
-            >
-              Save
-            </Button>
           </div>
         </CommandDialog>
       </PopoverContent>

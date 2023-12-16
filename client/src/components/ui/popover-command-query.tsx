@@ -35,7 +35,7 @@ type Props = {
   };
   ifEmptyLink: Links;
   displayField?: keyof TDataFields;
-  groupSelect?: string[];
+  groupSelect?: Array<keyof TDataFields>;
 };
 
 // TOFIX: empty state for command query is not working
