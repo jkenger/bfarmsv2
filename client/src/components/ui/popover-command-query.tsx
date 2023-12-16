@@ -35,6 +35,7 @@ type Props = {
   };
   ifEmptyLink: Links;
   displayField?: keyof TDataFields;
+  groupSelect?: string[];
 };
 
 // TOFIX: empty state for command query is not working
@@ -46,6 +47,7 @@ function PopoverCommandQuery({
   getItem,
   ifEmptyLink,
   displayField = "id",
+  groupSelect,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
@@ -187,7 +189,16 @@ function PopoverCommandQuery({
             >
               {Object.keys(selectedItem).map((key) => {
                 // Return null for keys with object values
-                return (
+                return groupSelect ? (
+                  groupSelect.includes(key) ? (
+                    <GroupItem
+                      detailsSelect={detailsSelect}
+                      selectedItem={selectedItem}
+                      objectKey={key}
+                      key={key}
+                    />
+                  ) : null
+                ) : (
                   <GroupItem
                     detailsSelect={detailsSelect}
                     selectedItem={selectedItem}

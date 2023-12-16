@@ -175,6 +175,7 @@ function EmployeeFormFields<T extends TDataFields>({
                   getItem={getPayrollGroups}
                   displayField="name"
                   ifEmptyLink={Links.PAYROLL_GROUPS}
+                  groupSelect={["name", "fundCluster", "programName"]}
                 />
               </div>
               <FormMessage />
@@ -213,6 +214,7 @@ function EmployeeFormFields<T extends TDataFields>({
                   getItem={getDesignations}
                   displayField="name"
                   ifEmptyLink={Links.DESIGNATIONS}
+                  groupSelect={["name", "description", "salary"]}
                 />
               </div>
               <FormMessage />
