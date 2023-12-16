@@ -48,7 +48,7 @@ export const models = {
     }
 
     // DONE: make it dynamic for multiple fields
-    if (relation.type === "explicit") {
+    if (relation?.type === "explicit") {
       const createQuery = createExplicitQuery(data[0], relation);
 
       const dataAdded = await prismaModel.create({ data: createQuery });
@@ -65,7 +65,7 @@ export const models = {
     });
   },
   updateModel: async (res, id, data, prismaModel, relation) => {
-    if (relation.type === "explicit") {
+    if (relation?.type === "explicit") {
       const updateQuery = createExplicitQuery(data[0], relation, "update");
       const dataUpdated = await prismaModel.update({
         where: {
