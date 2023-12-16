@@ -18,6 +18,8 @@ import { getDesignations } from "../../api/designation.api";
 import { getPayrollGroups } from "../../../payroll/api/payrollGroups.api";
 
 import PopoverCommandQuery from "@/components/ui/popover-command-query";
+import { getDeductions } from "../../../deductions/api/deductions.api";
+import PopoverCommandQueryMultiple from "@/components/ui/popover-command-query-multiple";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -160,7 +162,6 @@ function EmployeeFormFields<T extends TDataFields>({
                 <Label htmlFor="payrollGroup" className="">
                   Payroll Groups
                 </Label>
-
                 <p>Optional</p>
               </div>
               <FormControl>
@@ -172,6 +173,7 @@ function EmployeeFormFields<T extends TDataFields>({
                   commandItemRender={(d: TDataFields) => d.name}
                   selected={field}
                   getItem={getPayrollGroups}
+                  displayField="name"
                   ifEmptyLink={Links.PAYROLL_GROUPS}
                 />
               </div>
@@ -180,72 +182,7 @@ function EmployeeFormFields<T extends TDataFields>({
           );
         }}
       />
-
-      {/* Payroll group select
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
-          <Label htmlFor="firstName" className="">
-            Payroll Groups
-          </Label>
-
-          <p>Optional</p>
-        </div>
-        <div className="flex flex-col justify-between">
-          <div className="flex flex-col gap-2 mt-4">
-            <PopoverCommand
-              label="Payroll Group"
-              data={payrollgroupData}
-              selectedItem={selectedPayrollGroup}
-              onSelect={(d) => {
-                setSelectedPayrollGroup(d);
-                form.setValue("payrollGroupId", d.id, {
-                  shouldDirty: true,
-                });
-              }}
-            />
-          </div>
-        </div>
-        {selectedPayrollGroup?.id && (
-          <GroupContainer
-            groupActions={
-              <>
-                <Button variant="outline" size="sm" type="button">
-                  Edit Group
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  type="button"
-                  onClick={() => {
-                    setSelectedPayrollGroup({} as TDataFields);
-                    form.setValue("payrollGroupId", "");
-                  }}
-                >
-                  Remove
-                </Button>
-              </>
-            }
-          >
-            {Object.keys(selectedPayrollGroup).map((key) => (
-              <Group assignTo={key} key={key}>
-                {selectedPayrollGroup[key as keyof TDataFields] ? (
-                  <span ref={payrollgroupDetailsSelect}>
-                    {
-                      selectedPayrollGroup[
-                        key as keyof TDataFields
-                      ] as React.ReactNode
-                    }
-                  </span>
-                ) : (
-                  <span className="text-muted-foreground">No data</span>
-                )}
-              </Group>
-            ))}
-          </GroupContainer>
-        )}
-      </div> */}
       {/* Designation select */}
-
       <FormField
         control={form.control}
         name="designationId"
@@ -260,7 +197,13 @@ function EmployeeFormFields<T extends TDataFields>({
                 <p>Optional</p>
               </div>
               <FormControl>
-                <Input id="designation" {...field} className="sr-only" hidden />
+                <Input
+                  id="designation"
+                  {...field}
+                  value={field.value}
+                  className="sr-only"
+                  hidden
+                />
               </FormControl>
               <div className="flex flex-col gap-2">
                 <PopoverCommandQuery
@@ -268,7 +211,35 @@ function EmployeeFormFields<T extends TDataFields>({
                   commandItemRender={(d: TDataFields) => d.name}
                   selected={field}
                   getItem={getDesignations}
+                  displayField="name"
                   ifEmptyLink={Links.DESIGNATIONS}
+                />
+              </div>
+              <FormMessage />
+            </FormItem>
+          );
+        }}
+      />
+      <FormField
+        control={form.control}
+        name="deductions"
+        render={({ field }) => {
+          return (
+            <FormItem>
+              <div className="flex justify-between">
+                <Label htmlFor="deductions" className="">
+                  Deductions
+                </Label>
+                <p>Optional</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <PopoverCommandQueryMultiple
+                  label="Deduction"
+                  commandItemRender={(d: TDataFields) => d.name}
+                  selected={field}
+                  getItem={getDeductions}
+                  ifEmptyLink={Links.PAYROLL_GROUPS}
+                  groupSelect={["name", "amount"]}
                 />
               </div>
               <FormMessage />

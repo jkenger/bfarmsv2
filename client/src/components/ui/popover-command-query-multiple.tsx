@@ -4,11 +4,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import {
   CommandDialog,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandQueryInput,
 } from "./command";
 
 import { FormControl } from "./form";
+import { Input } from "./input";
 import { useQuery } from "@tanstack/react-query";
 import debounce from "debounce";
 import { IconProperties, Links } from "@/types/common";
@@ -22,6 +24,8 @@ import { ControllerRenderProps } from "react-hook-form";
 import GroupItem from "./group-item";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import { Link } from "react-router-dom";
+import { Badge } from "./badge";
+import { Table, TableBody, TableCaption, TableCell, TableRow } from "./table";
 
 type Props = {
   selected: ControllerRenderProps<TDataFields, any>;
@@ -35,17 +39,18 @@ type Props = {
   };
   ifEmptyLink: Links;
   displayField?: keyof TDataFields;
+  groupSelect?: string[];
 };
 
 // TOFIX: empty state for command query is not working
 
-function PopoverCommandQuery({
+function PopoverCommandQueryMultiple({
   label,
   selected,
   commandItemRender,
   getItem,
   ifEmptyLink,
-  displayField = "id",
+  groupSelect,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
@@ -61,33 +66,30 @@ function PopoverCommandQuery({
 
   const itemData = data?.data.data ? data.data.data : [];
   const numOfPages = data?.data.numOfPages ? data.data.numOfPages : 0;
-  const [selectedItem, setSelectedItem] = useState(
-    selected.value
-      ? itemData.find((item: TDataFields) => item.id === selected.value)
-      : null
+  const [selectedItems, setSelectedItems] = useState(
+    selected.value ? [...selected.value] : []
   );
-  console.log(selectedItem);
 
-  const detailsSelect = useRef<HTMLSpanElement>(null);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <FormControl>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            className={cn(
-              " justify-between text-xs ",
-              !selectedItem?.id && "text-muted-foreground"
-            )}
-          >
-            {selectedItem ? (
-              selectedItem[displayField]
-            ) : (
-              <span>Select {label ? label : "Item"}</span>
-            )}
-            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+          <div className="flex h-9">
+            <span className="bg-secondary border flex items-center justify-center px-3 rounded-l-md hover:cursor-pointer">
+              {selected.value ? selected.value.length : 0}
+            </span>
+            <Badge
+              variant="outline"
+              className="rounded-l-none border-l-0 rounded-r-md hover:cursor-pointer w-full hover:bg-secondary"
+            >
+              {" "}
+              {selected.value?.length ? (
+                label + "s selected"
+              ) : (
+                <span>Selected {label ? label : "Item"}</span>
+              )}
+            </Badge>
+          </div>
         </PopoverTrigger>
       </FormControl>
       <PopoverContent className="p-0 border-0">
@@ -138,11 +140,26 @@ function PopoverCommandQuery({
                     value={d.id}
                     key={d.id}
                     className="text-xs"
-                    onSelect={() => setSelectedItem(d)}
+                    onSelect={() => {
+                      setSelectedItems((prev: TDataFields[]) => {
+                        if (
+                          prev &&
+                          prev.some((item: TDataFields) => item.id === d.id)
+                        ) {
+                          return prev.filter(
+                            (item: TDataFields) => item.id !== d.id
+                          );
+                        } else {
+                          return prev ? [...prev, d] : [d];
+                        }
+                      });
+                    }}
                   >
                     <div
-                      className={`flex items-center justify-center text-xs mr-2 w-3 h-3 rounded-full border text-white ${
-                        selectedItem?.id === d.id
+                      className={`flex items-center justify-center text-xs mr-2 w-3 h-3 rounded-md border text-white ${
+                        selectedItems
+                          ?.map((d: TDataFields) => d.id)
+                          .includes(d.id)
                           ? "bg-primary"
                           : "bg-secondary"
                       }`}
@@ -155,53 +172,73 @@ function PopoverCommandQuery({
                 pageChange={{ page, handlePageChange: handleCommandPageChange }}
               />
             </CommandGroup>
+            {selectedItems && (
+              <Table>
+                {selectedItems.length > 0 && (
+                  <TableCaption className="mb-4 text-xs">
+                    Selected {label ? label + "s" : "items"}
+                  </TableCaption>
+                )}
+                <TableBody>
+                  {!selectedItems.length && (
+                    <TableRow>
+                      <TableCell className="text-xs text-center">
+                        <span className="text-muted-foreground ">
+                          No {label ? label : "item"} selected.
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {selectedItems.map((d: TDataFields) => (
+                    <TableRow key={d.id}>
+                      {Object.keys(d).map(
+                        (key) =>
+                          groupSelect?.includes(key as keyof TDataFields) && (
+                            <TableCell key={key} className="">
+                              <div className="flex flex-col">
+                                <p className="font-medium text-xs">
+                                  {d[key as keyof TDataFields]}
+                                </p>
+                                <span className="text-muted-foreground capitalize text-xs">
+                                  {key}
+                                </span>
+                              </div>
+                            </TableCell>
+                          )
+                      )}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
-          {selectedItem && (
-            <GroupContainer
-              groupActions={
-                <>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    type="button"
-                    onClick={() => {
-                      setSelectedItem(null);
-                      selected.onChange(null);
-                    }}
-                  >
-                    Remove
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    type="button"
-                    onClick={() => {
-                      selected.onChange(selectedItem.id);
-                      setOpen(false);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </>
-              }
+          <div className="flex w-full justify-end gap-2 mb-4 mr-4">
+            <Button
+              variant="destructive"
+              size="sm"
+              type="button"
+              onClick={() => {
+                setSelectedItems([]);
+              }}
             >
-              {Object.keys(selectedItem).map((key) => {
-                // Return null for keys with object values
-                return (
-                  <GroupItem
-                    detailsSelect={detailsSelect}
-                    selectedItem={selectedItem}
-                    objectKey={key}
-                    key={key}
-                  />
-                );
-              })}
-            </GroupContainer>
-          )}
+              Remove
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              onClick={() => {
+                selected.onChange(selectedItems);
+                setOpen(false);
+              }}
+            >
+              Save
+            </Button>
+          </div>
         </CommandDialog>
       </PopoverContent>
     </Popover>
   );
 }
 
-export default PopoverCommandQuery;
+export default PopoverCommandQueryMultiple;

@@ -24,7 +24,9 @@ const prisma = new PrismaClient().$extends({
             ...args,
             data: {
               ...args.data,
-              fullName: `${args.data.lastName} ${args.data.firstName} ${args.data.middleName}`,
+              fullName: `${args.data.lastName} ${args.data.firstName} ${
+                args.data.middleName ? args.data.middleName : ""
+              }`,
             },
           });
         }
@@ -35,7 +37,9 @@ const prisma = new PrismaClient().$extends({
             data: {
               ...args.data,
 
-              fullName: `${user.lastName} ${user.firstName} ${user.middleName}`,
+              fullName: `${user.lastName} ${user.firstName} ${
+                user.middleName ? user.middleName : ""
+              }`,
             },
           });
         }
@@ -62,9 +66,11 @@ export const createEmployee = asyncHandler(async (req, res) => {
         age: Number(item.age),
         designationId: item.designationId ? item.designationId : null,
         payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
+        deductions: item.deductions.length ? item.deductions : null,
       };
     }),
   ];
+
   return models.addModel(res, data, prisma.user, {
     type: "explicit",
     fields: ["deductions"],
@@ -79,10 +85,14 @@ export const updateEmployee = asyncHandler(async (req, res) => {
         age: Number(item.age),
         designationId: item.designationId ? item.designationId : null,
         payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
+        deductions: item.deductions.length ? item.deductions : null,
       };
     }),
   ];
-  return models.updateModel(res, req.params.id, data, prisma.user);
+  return models.updateModel(res, req.params.id, data, prisma.user, {
+    type: "explicit",
+    fields: ["deductions"],
+  });
 });
 
 export const deleteEmployee = asyncHandler(async (req, res) =>

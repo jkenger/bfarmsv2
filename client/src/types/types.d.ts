@@ -20,6 +20,7 @@ type TDesignationForms = {
 type TEmployees = {
   id: string;
   employeeId: string;
+  fullName: string;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -30,7 +31,6 @@ type TEmployees = {
   designationId?: string;
   designation?: TDesignation;
   deductions: TDeductions[];
-  deductionIds: string[];
   travelpass: TTravelpass[];
   createdAt: string;
   updatedAt: string;

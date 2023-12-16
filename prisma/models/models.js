@@ -1,6 +1,31 @@
 import { StatusCodes } from "http-status-codes";
 import { createQueryObject } from "../../lib/utils.js";
 
+function createExplicitQuery(data, relation, action = "create") {
+  const explicitFields = relation.fields;
+
+  const query = data;
+
+  explicitFields.forEach((field) => {
+    if (action === "create") {
+      if (!query[field]) delete query[field];
+      if (query[field]) {
+        query[field] = {
+          connect: [...query[field]],
+        };
+      }
+    }
+    if (action === "update") {
+      // when updating, when field is empty, return immediately and do not update
+      if (!query[field]) return (query[field] = { set: [] });
+
+      if (query[field]) query[field] = { set: [...query[field]] };
+    }
+  });
+
+  return query;
+}
+
 export const models = {
   addModel: async (
     res,
@@ -8,8 +33,6 @@ export const models = {
     prismaModel,
     relation = { type: "", fields: [] }
   ) => {
-    console.log(data);
-    console.log(relation);
     if (Array.isArray(data)) {
       if (data?.length > 1) {
         console.log("Multiple data adding");
@@ -24,24 +47,16 @@ export const models = {
       }
     }
 
-    // TODO: make it dynamic for multiple fields
-    if (relation.type === "explicit" && data[0].deductionIds?.length) {
-      const dataAdded = await prismaModel.create({
-        data: {
-          ...data[0],
-          deductions: {
-            connect: [
-              ...data[0].deductionIds.map((id) => ({
-                id: id,
-              })),
-            ],
-          },
-        },
-      });
+    // DONE: make it dynamic for multiple fields
+    if (relation.type === "explicit") {
+      const createQuery = createExplicitQuery(data[0], relation);
+
+      const dataAdded = await prismaModel.create({ data: createQuery });
       return res.status(StatusCodes.OK).json({
         data: dataAdded,
       });
     }
+
     const dataAdded = await prismaModel.create({
       data: data[0],
     });
@@ -49,7 +64,19 @@ export const models = {
       data: dataAdded,
     });
   },
-  updateModel: async (res, id, data, prismaModel) => {
+  updateModel: async (res, id, data, prismaModel, relation) => {
+    if (relation.type === "explicit") {
+      const updateQuery = createExplicitQuery(data[0], relation, "update");
+      const dataUpdated = await prismaModel.update({
+        where: {
+          id: id,
+        },
+        data: updateQuery,
+      });
+      return res.status(StatusCodes.OK).json({
+        message: dataUpdated,
+      });
+    }
     const dataUpdated = await prismaModel.update({
       where: {
         id: id,

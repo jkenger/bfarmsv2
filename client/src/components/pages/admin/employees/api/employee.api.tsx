@@ -65,9 +65,9 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Delete Employee`, {
+      toast.error(`Failed to Create Employee`, {
         description:
-          "The employee could not be removed due to an issue. Please try again.",
+          "The employee could not be created due to an issue. Please try again.",
       });
     },
   };
@@ -91,6 +91,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PAYROLL_GROUPS],
       });
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.TRAVELPASS] });
       sheetCloseBtn?.click();
       form?.reset();
     },

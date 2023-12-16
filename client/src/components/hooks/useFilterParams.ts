@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 const useFilterParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   // const page = Number(searchParams.get("page")) || 1;
   // const limit = Number(searchParams.get("limit")) || 10;
   // const search = searchParams.get("search") || "";

@@ -93,6 +93,7 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
                   ifEmptyLink={Links.EMPLOYEES}
                   selected={field}
                   getItem={getEmployees}
+                  displayField="fullName"
                 />
               </div>
               <FormMessage />
@@ -221,6 +222,9 @@ function TravelpassFields({ form, mutationType = MutationType.CREATE }: Props) {
         name={"end"}
         rules={{
           required: "This field is required",
+          validate: (value) =>
+            form.getValues("start") < value ||
+            "Invalid date. Must be after start date.",
         }}
         render={({ field }) => (
           <FormItem>

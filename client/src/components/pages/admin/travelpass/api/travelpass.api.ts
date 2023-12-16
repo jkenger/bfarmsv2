@@ -82,6 +82,9 @@ export const editTravelpass = ({ queryClient, form }: TMutation) => {
         description: "Changes to the Travelpass details have been saved.",
       });
       await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.TRAVELPASS],
+      });
+      await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PAYROLL_GROUPS],
       });
       await queryClient.invalidateQueries({
