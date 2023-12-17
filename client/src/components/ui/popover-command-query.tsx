@@ -190,7 +190,7 @@ function PopoverCommandQuery({
               {Object.keys(selectedItem).map((key) => {
                 // Return null for keys with object values
                 return groupSelect ? (
-                  groupSelect.includes(key) ? (
+                  groupSelect.includes(key as keyof TDataFields) ? (
                     <GroupItem
                       detailsSelect={detailsSelect}
                       selectedItem={selectedItem}

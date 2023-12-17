@@ -2,8 +2,6 @@ import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import ParseDate from "@/components/ui/ParseDate";
-import DeleteHoliday from "../form/DeleteLeaveType";
-import EditHoliday from "../form/EditLeaveType";
 import DeleteLeaveType from "../form/DeleteLeaveType";
 import EditLeaveType from "../form/EditLeaveType";
 

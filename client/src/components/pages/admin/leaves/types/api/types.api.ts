@@ -23,7 +23,7 @@ export const getLeaveTypes = ({
 
   const { searchParams: payrollGroupParams } = getSearchParams();
   const searchParams = new URLSearchParams(payrollGroupParams);
-  // If type is paginated, then add the search params to the query key
+  // If type is paginated, then add the search params to the query key, if not query all leave types
   const qKey =
     type === GetQueryType.PAGINATED
       ? [QueryKeys.LEAVE_TYPES, searchParams.toString()]
