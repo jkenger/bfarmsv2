@@ -83,6 +83,14 @@ type TDeductions = {
   updatedAt: string;
 };
 
+type TLeaveTypes = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type TGetQueryOptions = {
   type: GetQueryType;
   customParams?: {
@@ -112,4 +120,5 @@ type TDataFields = TEmployees &
   TPayrollGroup &
   THolidays &
   TTravelpass &
-  TDeductions;
+  TDeductions &
+  TLeaveTypes;

@@ -20,6 +20,7 @@ import AdminTravelPass from "./components/pages/admin/travelpass/Travelpass";
 import AdminDeductions from "./components/pages/admin/deductions/Deductions";
 import AdminLeaves from "./components/pages/admin/leaves/Leaves";
 import AdminDashboard from "./components/pages/admin/Dashboard";
+import AdminLeaveTypes from "./components/pages/admin/leaves/types/Types";
 import { loader as employeesLoader } from "./components/pages/admin/employees/Employees";
 import { loader as designationsLoader } from "./components/pages/admin/employees/Designations";
 import { loader as holidaysLoader } from "./components/pages/admin/holidays/Holidays";
@@ -28,9 +29,9 @@ import PayrollGroups, {
   loader as payrollGroupLoader,
 } from "./components/pages/admin/payroll/PayrollGroups";
 import { loader as deductionsLoader } from "./components/pages/admin/deductions/Deductions";
+import { loader as leaveTypesLoader } from "./components/pages/admin/leaves/types/Types";
 
 import Designations from "./components/pages/admin/employees/Designations";
-import LeaveTypes from "./components/pages/admin/leaves/Types";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -42,6 +43,7 @@ import PayrollGroupQueryProvider from "./components/pages/admin/payroll/provider
 import HolidayQueryProvider from "./components/pages/admin/holidays/providers/HolidayQueryProviders";
 import TravelpassQueryProvider from "./components/pages/admin/travelpass/providers/TravelpassQueryProvider";
 import DeductionsQueryProvider from "./components/pages/admin/deductions/providers/DeductionsQueryProviders";
+import LeaveTypeQueryProviders from "./components/pages/admin/leaves/types/providers/LeaveTypeQueryProviders";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -158,7 +160,12 @@ const router = createBrowserRouter([
               },
               {
                 path: "types",
-                element: <LeaveTypes />,
+                loader: leaveTypesLoader(queryClient),
+                element: (
+                  <LeaveTypeQueryProviders>
+                    <AdminLeaveTypes />
+                  </LeaveTypeQueryProviders>
+                ),
               },
             ],
           },

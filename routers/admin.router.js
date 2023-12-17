@@ -32,6 +32,11 @@ import {
   getAllDeductions,
   updateDeductions,
   deleteDeductions,
+  getPaginatedLeaveTypes,
+  createLeaveType,
+  getAllLeaveTypes,
+  updateLeaveType,
+  deleteLeaveType,
 } from "../controllers/admin.controller.js";
 import {
   validateDeductions,
@@ -39,6 +44,7 @@ import {
   validateEmployee,
   validateHoliday,
   validateId,
+  validateLeaveTypes,
   validatePayrollGroup,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
@@ -155,5 +161,23 @@ router
   .route("/deductions/:id")
   .put(validateDeductions, updateDeductions)
   .delete(validateId, deleteDeductions);
+
+// Leave Types Routes
+// @Desc    : Read and Create Leave Types
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router
+  .route("/leaves/types")
+  .get(getPaginatedLeaveTypes)
+  .post(validateLeaveTypes, createLeaveType);
+router.route("/leaves/types/all").get(getAllLeaveTypes);
+
+// @Desc    : Delete and Update Leave Types
+// @Method  : DELETE / PUT /
+// @Access  : Private (Admin)
+router
+  .route("/leaves/types/:id")
+  .put(validateLeaveTypes, updateLeaveType)
+  .delete(validateId, deleteLeaveType);
 
 export default router;

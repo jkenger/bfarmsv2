@@ -10,6 +10,7 @@ import {
   designation,
   employee,
   holiday,
+  leaveTypes,
   payrollGroups,
   travelpass,
 } from "../lib/utils.js";
@@ -249,4 +250,24 @@ export const updateDeductions = asyncHandler(async (req, res) => {
     }),
   ];
   return models.updateModel(res, req.params.id, data, prisma.deduction);
+});
+
+// Leave Types Controller
+export const getAllLeaveTypes = asyncHandler(async (req, res) =>
+  models.getAllModel(res, prisma.leaveType)
+);
+export const getPaginatedLeaveTypes = asyncHandler(async (req, res) =>
+  models.getPaginatedModel(req, res, prisma.leaveType, leaveTypes)
+);
+
+export const createLeaveType = asyncHandler(async (req, res) => {
+  return models.addModel(res, req.body, prisma.leaveType);
+});
+
+export const deleteLeaveType = asyncHandler(async (req, res) =>
+  models.deleteModel(res, req.params.id, prisma.leaveType)
+);
+
+export const updateLeaveType = asyncHandler(async (req, res) => {
+  return models.updateModel(res, req.params.id, req.body, prisma.leaveType);
 });

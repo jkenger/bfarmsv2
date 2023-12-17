@@ -2,10 +2,11 @@ import DropDownEditSheet from "@/components/ui/dd-edit-sheet";
 import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
-import { useHolidayQuery } from "../providers/HolidayQueryProviders";
 import { MutationType, Tables } from "@/types/common";
-import FormSubmit from "../../shareable/form-submit";
-import HolidayFields from "./HolidayFields";
+
+import { useLeaveTypeQuery } from "../providers/LeaveTypeQueryProviders";
+import LeaveTypesFields from "./LeaveTypesFields";
+import FormSubmit from "../../../shareable/form-submit";
 
 type Props<T> = {
   toEditItem?: T;
@@ -14,7 +15,7 @@ type Props<T> = {
   from?: "tableAction" | string;
 };
 
-function EditHoliday<T extends TDataFields>({
+function EditLeaveType<T extends TDataFields>({
   open,
   onOpen,
   toEditItem,
@@ -25,12 +26,10 @@ function EditHoliday<T extends TDataFields>({
       id: toEditItem?.id || "",
       name: toEditItem?.name || "",
       description: toEditItem?.description || "",
-      prerequisiteDate: toEditItem?.prerequisiteDate || "",
-      requisiteDate: toEditItem?.requisiteDate || "",
     } as TDataFields,
   });
 
-  const { editMutation } = useHolidayQuery();
+  const { editMutation } = useLeaveTypeQuery();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>
@@ -40,7 +39,7 @@ function EditHoliday<T extends TDataFields>({
           form={form}
           mutationType={MutationType.UPDATE}
         >
-          <HolidayFields form={form} mutationType={MutationType.UPDATE} />
+          <LeaveTypesFields form={form} mutationType={MutationType.UPDATE} />
         </FormSubmit>
       </Form>
     </DropDownEditSheet>
@@ -51,10 +50,10 @@ function EditHoliday<T extends TDataFields>({
         form={form}
         mutationType={MutationType.UPDATE}
       >
-        <HolidayFields form={form} mutationType={MutationType.UPDATE} />
+        <LeaveTypesFields form={form} mutationType={MutationType.UPDATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default EditHoliday;
+export default EditLeaveType;

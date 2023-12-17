@@ -100,6 +100,16 @@ model Deduction {
   // houseBuild House[]  @relation("HouseBuilder")  
 }
 
+model LeaveType {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // houseOwned House[]  @relation("HouseOwner")
+  // houseBuild House[]  @relation("HouseBuilder")  
+}
+
 // model UserDeduction {
 //   id            String     @id @default(uuid())
 //   user          User?      @relation(fields: [userId], references: [id], onDelete: Cascade)

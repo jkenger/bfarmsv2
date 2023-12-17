@@ -77,6 +77,12 @@ export const validateDeductions = withValidationErrors([
   body("*.amount").notEmpty().withMessage("Amount must not be empty"),
 ]);
 
+export const validateLeaveTypes = withValidationErrors([
+  body().toArray(),
+  body("*.name").notEmpty().withMessage("Name must not be empty"),
+  body("*.description").notEmpty().withMessage("Description must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

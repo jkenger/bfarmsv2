@@ -69,6 +69,11 @@ export enum QueryKeys {
   DELETE_DEDUCTION = "deleteDeduction",
   CREATE_DEDUCTION = "createDeduction",
   EDIT_DEDUCTION = "editDeduction",
+
+  LEAVE_TYPES = "leaveTypes",
+  DELETE_LEAVE_TYPE = "deleteLeaveType",
+  CREATE_LEAVE_TYPE = "createLeaveType",
+  EDIT_LEAVE_TYPE = "editLeaveType",
 }
 
 export enum SortType {
