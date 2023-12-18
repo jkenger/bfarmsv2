@@ -1,8 +1,7 @@
 import React from "react";
 
 import DeleteDialog from "@/components/ui/delete-dialog";
-
-import { useDeductionQuery } from "../../providers/DeductionsQueryProviders";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   data: TDataFields;
@@ -18,7 +17,7 @@ function DeleteDeduction({
   trigger = true,
   children,
 }: Props) {
-  const { deleteMutation } = useDeductionQuery();
+  const { deleteMutation } = useQueryProvider();
   function handleDelete() {
     deleteMutation.mutate(data);
   }

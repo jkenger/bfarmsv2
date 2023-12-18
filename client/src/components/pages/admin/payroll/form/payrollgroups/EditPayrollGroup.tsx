@@ -4,8 +4,8 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
-import { usePayrollGroupQuery } from "../../providers/PayrollGroupProvider";
 import PayrollGroupsFields from "./PayrollGroupsFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -29,7 +29,7 @@ function EditPayrollGroup<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = usePayrollGroupQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>

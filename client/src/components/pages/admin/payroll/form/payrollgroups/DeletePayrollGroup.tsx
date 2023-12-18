@@ -1,8 +1,6 @@
 import React from "react";
-
 import DeleteDialog from "@/components/ui/delete-dialog";
-
-import { usePayrollGroupQuery } from "../../providers/PayrollGroupProvider";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   data: TDataFields;
@@ -18,7 +16,7 @@ function DeletePayrollGroup({
   trigger = true,
   children,
 }: Props) {
-  const { deleteMutation } = usePayrollGroupQuery();
+  const { deleteMutation } = useQueryProvider();
   function handleDelete() {
     deleteMutation.mutate(data);
   }

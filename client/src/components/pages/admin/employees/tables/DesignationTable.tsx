@@ -9,10 +9,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { getDesignations } from "../api/designation.api";
-import { useDesignationQuery } from "../providers/DesignationQueryProvider";
 import AddDesignation from "../form/designation/AddDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
 import { SheetTrigger } from "@/components/ui/sheet";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -32,8 +32,7 @@ function DesignationTable({ columns }: Props) {
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
-  const { createMutation, deleteMutation, editMutation } =
-    useDesignationQuery();
+  const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (

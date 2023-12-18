@@ -36,14 +36,44 @@ import Designations from "./components/pages/admin/employees/Designations";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
-import { Roles } from "./types/common";
-import EmployeeQueryProvider from "./components/pages/admin/employees/providers/EmployeeQueryProvider";
-import DesignationQueryProvider from "./components/pages/admin/employees/providers/DesignationQueryProvider";
-import PayrollGroupQueryProvider from "./components/pages/admin/payroll/providers/PayrollGroupProvider";
-import HolidayQueryProvider from "./components/pages/admin/holidays/providers/HolidayQueryProviders";
-import TravelpassQueryProvider from "./components/pages/admin/travelpass/providers/TravelpassQueryProvider";
-import DeductionsQueryProvider from "./components/pages/admin/deductions/providers/DeductionsQueryProviders";
+import { QueryKeys, Roles } from "./types/common";
 import LeaveTypeQueryProviders from "./components/pages/admin/leaves/types/providers/LeaveTypeQueryProviders";
+import QueryProvider from "./components/context/query-provider";
+import {
+  createEmployee,
+  deleteEmployee,
+  editEmployee,
+} from "./components/pages/admin/employees/api/employee.api";
+import {
+  createDesignation,
+  deleteDesignation,
+  editDesignation,
+} from "./components/pages/admin/employees/api/designation.api";
+import {
+  createDeduction,
+  deleteDeduction,
+  editDeduction,
+} from "./components/pages/admin/deductions/api/deductions.api";
+import {
+  createTravelpass,
+  deleteTravelpass,
+  editTravelpass,
+} from "./components/pages/admin/travelpass/api/travelpass.api";
+import {
+  createHoliday,
+  deleteHoliday,
+  editHoliday,
+} from "./components/pages/admin/holidays/api/holidays.api";
+import {
+  createPayrollGroup,
+  deletePayrollGroup,
+  editPayrollGroup,
+} from "./components/pages/admin/payroll/api/payrollGroups.api";
+import {
+  createLeaveType,
+  deleteLeaveType,
+  editLeaveType,
+} from "./components/pages/admin/leaves/types/api/types.api";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -86,18 +116,40 @@ const router = createBrowserRouter([
                 index: true,
                 loader: employeesLoader(queryClient),
                 element: (
-                  <EmployeeQueryProvider>
+                  <QueryProvider
+                    api={{
+                      create: createEmployee({ queryClient }),
+                      edit: editEmployee({ queryClient }),
+                      delete: deleteEmployee({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_EMPLOYEE,
+                      edit: QueryKeys.EDIT_EMPLOYEE,
+                      delete: QueryKeys.DELETE_EMPLOYEE,
+                    }}
+                  >
                     <AdminEmployees />
-                  </EmployeeQueryProvider>
+                  </QueryProvider>
                 ),
               },
               {
                 path: "designations",
                 loader: designationsLoader(queryClient),
                 element: (
-                  <DesignationQueryProvider>
+                  <QueryProvider
+                    api={{
+                      create: createDesignation({ queryClient }),
+                      edit: editDesignation({ queryClient }),
+                      delete: deleteDesignation({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_DESIGNATION,
+                      edit: QueryKeys.EDIT_DESIGNATION,
+                      delete: QueryKeys.DELETE_DESIGNATION,
+                    }}
+                  >
                     <Designations />
-                  </DesignationQueryProvider>
+                  </QueryProvider>
                 ),
               },
             ],
@@ -117,9 +169,20 @@ const router = createBrowserRouter([
                 path: "groups",
                 loader: payrollGroupLoader(queryClient),
                 element: (
-                  <PayrollGroupQueryProvider>
+                  <QueryProvider
+                    api={{
+                      create: createPayrollGroup({ queryClient }),
+                      edit: editPayrollGroup({ queryClient }),
+                      delete: deletePayrollGroup({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_PAYROLL_GROUP,
+                      edit: QueryKeys.EDIT_PAYROLL_GROUP,
+                      delete: QueryKeys.DELETE_PAYROLL_GROUP,
+                    }}
+                  >
                     <PayrollGroups />
-                  </PayrollGroupQueryProvider>
+                  </QueryProvider>
                 ),
               },
             ],
@@ -128,27 +191,60 @@ const router = createBrowserRouter([
             path: "holidays",
             loader: holidaysLoader(queryClient),
             element: (
-              <HolidayQueryProvider>
+              <QueryProvider
+                api={{
+                  create: createHoliday({ queryClient }),
+                  edit: editHoliday({ queryClient }),
+                  delete: deleteHoliday({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_HOLIDAY,
+                  edit: QueryKeys.EDIT_HOLIDAY,
+                  delete: QueryKeys.DELETE_HOLIDAY,
+                }}
+              >
                 <AdminHolidays />
-              </HolidayQueryProvider>
+              </QueryProvider>
             ),
           },
           {
             path: "travelpass",
             loader: travelpassLoader(queryClient),
             element: (
-              <TravelpassQueryProvider>
+              <QueryProvider
+                api={{
+                  create: createTravelpass({ queryClient }),
+                  edit: editTravelpass({ queryClient }),
+                  delete: deleteTravelpass({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_TRAVELPASS,
+                  edit: QueryKeys.EDIT_TRAVELPASS,
+                  delete: QueryKeys.DELETE_TRAVELPASS,
+                }}
+              >
                 <AdminTravelPass />
-              </TravelpassQueryProvider>
+              </QueryProvider>
             ),
           },
           {
             path: "deductions",
             loader: deductionsLoader(queryClient),
             element: (
-              <DeductionsQueryProvider>
+              <QueryProvider
+                api={{
+                  create: createDeduction({ queryClient }),
+                  edit: editDeduction({ queryClient }),
+                  delete: deleteDeduction({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_DEDUCTION,
+                  edit: QueryKeys.EDIT_DEDUCTION,
+                  delete: QueryKeys.DELETE_DEDUCTION,
+                }}
+              >
                 <AdminDeductions />
-              </DeductionsQueryProvider>
+              </QueryProvider>
             ),
           },
           {
@@ -162,9 +258,20 @@ const router = createBrowserRouter([
                 path: "types",
                 loader: leaveTypesLoader(queryClient),
                 element: (
-                  <LeaveTypeQueryProviders>
+                  <QueryProvider
+                    api={{
+                      create: createLeaveType({ queryClient }),
+                      edit: editLeaveType({ queryClient }),
+                      delete: deleteLeaveType({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_LEAVE_TYPE,
+                      edit: QueryKeys.EDIT_LEAVE_TYPE,
+                      delete: QueryKeys.DELETE_LEAVE_TYPE,
+                    }}
+                  >
                     <AdminLeaveTypes />
-                  </LeaveTypeQueryProviders>
+                  </QueryProvider>
                 ),
               },
             ],

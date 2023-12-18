@@ -1,5 +1,10 @@
 type TAdminForms = TEmployeeForms & TDesignationForms;
 
+type TMutation = {
+  queryClient: QueryClient;
+  form?: UseFormReturn<TDataFields, unknown, undefined>;
+};
+
 type TEmployeeForms = {
   id: string;
   employeeId: string;

@@ -13,9 +13,9 @@ import { IconProperties } from "@/types/common";
 import AddPayrollGroups from "./form/travelpass/AddTravelpass";
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
-import { useTravelpassQuery } from "./providers/TravelpassQueryProvider";
 import { getTravelpass } from "./api/travelpass.api";
 import { travelpassColumns } from "./columns/travelpass.columns";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -25,7 +25,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function PayrollGroups() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useTravelpassQuery();
+    useQueryProvider();
   const pageTitle = "Travelpass";
   return (
     <>

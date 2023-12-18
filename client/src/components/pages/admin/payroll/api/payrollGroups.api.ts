@@ -1,15 +1,9 @@
 import { fetch } from "@/lib/utils";
-import { QueryClient, keepPreviousData } from "@tanstack/react-query";
-import { UseFormReturn } from "react-hook-form";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
-
-type TMutation = {
-  queryClient: QueryClient;
-  form?: UseFormReturn<TDataFields, unknown, undefined>;
-};
 
 export type getResponse = {
   data: TDataFields[];

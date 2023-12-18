@@ -3,9 +3,9 @@ import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
-import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 import { MutationType, Tables } from "@/types/common";
 import EmployeeFormFields from "./EmployeeFormFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -34,7 +34,7 @@ function EditEmployee<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = useEmployeeQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.EMPLOYEES} open={open} onOpen={onOpen}>

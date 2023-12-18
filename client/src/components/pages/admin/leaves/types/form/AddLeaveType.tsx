@@ -1,14 +1,10 @@
 import { Form } from "@/components/ui/form";
-
 import { useForm } from "react-hook-form";
-
 import { useLayoutEffect, useRef } from "react";
-
 import { MutationType } from "@/types/common";
-
-import { useLeaveTypeQuery } from "../providers/LeaveTypeQueryProviders";
 import LeaveTypesFields from "./LeaveTypesFields";
 import FormSubmit from "../../../shareable/form-submit";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -21,7 +17,7 @@ function AddLeaveType({ toEditItem }: Props) {
       description: toEditItem ? toEditItem.description : "",
     },
   });
-  const { createMutation } = useLeaveTypeQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

@@ -8,7 +8,6 @@ import MutationSheet from "@/components/ui/btn-add-sheet";
 import { buttonVariants } from "@/components/ui/button";
 import EditEmployee from "../form/employee/EditEmployee";
 import AddEmployee from "../form/employee/AddEmployee";
-import { useEmployeeQuery } from "../providers/EmployeeQueryProvider";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
@@ -18,6 +17,7 @@ import { getDesignations } from "../api/designation.api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPayrollGroups } from "../../payroll/api/payrollGroups.api";
 import { Links } from "@/types/common";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   employeeColumns: ColumnDef<TDataFields>[];
 };
@@ -46,7 +46,7 @@ function EmployeeTable({ employeeColumns }: Props) {
   const payrollGroupData = pgData?.data.data;
 
   // reset page to 1 if data length is less than numOfPages
-  const { createMutation, deleteMutation, editMutation } = useEmployeeQuery();
+  const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const { handleDesignationChange, handleGroupChange } = useFilterParams();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;

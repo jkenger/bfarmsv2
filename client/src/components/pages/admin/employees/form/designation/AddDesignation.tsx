@@ -7,7 +7,7 @@ import { useLayoutEffect, useRef } from "react";
 import FormSubmit from "../../../shareable/form-submit";
 import DesignationFormFields from "./DesignationFormFields";
 import { MutationType } from "@/types/common";
-import { useDesignationQuery } from "../../providers/DesignationQueryProvider";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   toEditItem?: TDataFields;
 };
@@ -20,7 +20,7 @@ function AddDesignation({ toEditItem }: Props) {
       salary: toEditItem ? toEditItem.salary : "",
     },
   });
-  const { createMutation } = useDesignationQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

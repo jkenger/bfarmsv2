@@ -1,12 +1,10 @@
 import DropDownEditSheet from "@/components/ui/dd-edit-sheet";
 import { Form } from "@/components/ui/form";
-
 import { useForm } from "react-hook-form";
 import { MutationType, Tables } from "@/types/common";
-
-import { useLeaveTypeQuery } from "../providers/LeaveTypeQueryProviders";
 import LeaveTypesFields from "./LeaveTypesFields";
 import FormSubmit from "../../../shareable/form-submit";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -29,7 +27,7 @@ function EditLeaveType<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = useLeaveTypeQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>

@@ -10,9 +10,9 @@ import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { getTravelpass } from "../api/travelpass.api";
-import { useTravelpassQuery } from "../providers/TravelpassQueryProvider";
 import EditTravelpass from "../form/travelpass/EditTravelpass";
 import AddTravelpass from "../form/travelpass/AddTravelpass";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -32,7 +32,7 @@ function TravelpassTable({ columns }: Props) {
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
-  const { createMutation, deleteMutation, editMutation } = useTravelpassQuery();
+  const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   const pageTitle = "Travelpass";

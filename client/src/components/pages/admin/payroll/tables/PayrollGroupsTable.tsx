@@ -10,9 +10,9 @@ import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { getPayrollGroups } from "../api/payrollGroups.api";
-import { usePayrollGroupQuery } from "../providers/PayrollGroupProvider";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import AddPayrollGroups from "../form/payrollgroups/AddPayrollGroup";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -32,8 +32,7 @@ function PayrollGroupsTable({ columns }: Props) {
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
   console.log(data);
-  const { createMutation, deleteMutation, editMutation } =
-    usePayrollGroupQuery();
+  const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (

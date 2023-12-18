@@ -11,9 +11,9 @@ import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
 
 import { getDeductions } from "../api/deductions.api";
-import { useDeductionQuery } from "../providers/DeductionsQueryProviders";
 import EditDeduction from "../form/deductions/EditDeduction";
 import AddHoliday from "../../holidays/form/AddHoliday";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   columns: ColumnDef<TDataFields>[];
@@ -34,7 +34,7 @@ function DeductionsTable({ columns }: Props) {
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
-  const { createMutation, deleteMutation, editMutation } = useDeductionQuery();
+  const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   return (

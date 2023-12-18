@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
-import { useHolidayQuery } from "../providers/HolidayQueryProviders";
 import FormSubmit from "../../shareable/form-submit";
 import HolidayFields from "./HolidayFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -22,7 +22,7 @@ function AddHoliday({ toEditItem }: Props) {
       requisiteDate: toEditItem ? toEditItem.requisiteDate : "",
     },
   });
-  const { createMutation } = useHolidayQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

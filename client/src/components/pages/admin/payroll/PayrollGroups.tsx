@@ -7,7 +7,6 @@ import TableFallBack from "@/components/ui/table-fallback";
 import PayrollGroupsTable from "./tables/PayrollGroupsTable";
 import { payrollGroupsColumns } from "./columns/payroll-group.columns";
 import Error from "../../Error";
-import { usePayrollGroupQuery } from "./providers/PayrollGroupProvider";
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
@@ -16,6 +15,7 @@ import { IconProperties } from "@/types/common";
 import AddPayrollGroups from "./form/payrollgroups/AddPayrollGroup";
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -25,7 +25,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function PayrollGroups() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    usePayrollGroupQuery();
+    useQueryProvider();
   return (
     <>
       <Main.Header>

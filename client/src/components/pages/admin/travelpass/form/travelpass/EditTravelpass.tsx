@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
 import TravelpassFields from "./TravelpassFields";
-import { useTravelpassQuery } from "../../providers/TravelpassQueryProvider";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -30,7 +30,7 @@ function EditTravelpass<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = useTravelpassQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.TRAVELPASS} open={open} onOpen={onOpen}>

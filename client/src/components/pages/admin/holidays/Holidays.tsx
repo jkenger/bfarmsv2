@@ -15,11 +15,11 @@ import { IconProperties } from "@/types/common";
 
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
-import { useHolidayQuery } from "./providers/HolidayQueryProviders";
 import { getHolidays } from "./api/holidays.api";
 import HolidaysTable from "./tables/HolidaysTable";
 import { holidaysColumns } from "./columns/holidays.columns";
 import AddHoliday from "./form/AddHoliday";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -29,7 +29,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function Holidays() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useHolidayQuery();
+    useQueryProvider();
   return (
     <>
       <Main.Header>

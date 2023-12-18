@@ -6,8 +6,8 @@ import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
 import FormSubmit from "../../../shareable/form-submit";
-import { useTravelpassQuery } from "../../providers/TravelpassQueryProvider";
 import TravelpassFields from "./TravelpassFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -22,7 +22,7 @@ function AddTravelpass({ toEditItem }: Props) {
       end: toEditItem ? toEditItem.end : "",
     },
   });
-  const { createMutation } = useTravelpassQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

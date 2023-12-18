@@ -1,7 +1,7 @@
 import React from "react";
 
 import DeleteDialog from "@/components/ui/delete-dialog";
-import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   data: TDataFields;
@@ -17,7 +17,7 @@ function DeleteEmployee({
   trigger = true,
   children,
 }: Props) {
-  const { deleteMutation } = useEmployeeQuery();
+  const { deleteMutation } = useQueryProvider();
   function handleDelete() {
     deleteMutation.mutate(data);
   }

@@ -14,8 +14,8 @@ import { IconProperties } from "@/types/common";
 import AddDesignation from "./form/designation/AddDesignation";
 import { SheetTrigger } from "@/components/ui/sheet";
 import DataTableHistory from "@/components/ui/data-table-history";
-import { useDesignationQuery } from "./providers/DesignationQueryProvider";
 import ActivityCard from "./ui/activity-card";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -26,7 +26,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function Designations() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useDesignationQuery();
+    useQueryProvider();
 
   return (
     <>

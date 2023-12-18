@@ -17,11 +17,11 @@ import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
 
 import { getDeductions } from "./api/deductions.api";
-import { useDeductionQuery } from "./providers/DeductionsQueryProviders";
 import DeductionsTable from "./tables/DeductionsTable";
 import { deductionsColumns } from "./columns/deductions.columns";
 
 import AddDeduction from "./form/deductions/AddDeduction";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -31,7 +31,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function Deductions() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useDeductionQuery();
+    useQueryProvider();
   const pageTitle = "Deductions";
   return (
     <>

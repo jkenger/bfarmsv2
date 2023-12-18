@@ -7,8 +7,8 @@ import { useLayoutEffect, useRef } from "react";
 import { MutationType } from "@/types/common";
 import FormSubmit from "../../../shareable/form-submit";
 
-import { useDeductionQuery } from "../../providers/DeductionsQueryProviders";
 import DeductionFields from "./DeductionFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -21,7 +21,7 @@ function AddDeduction({ toEditItem }: Props) {
       amount: toEditItem ? toEditItem.amount : "",
     },
   });
-  const { createMutation } = useDeductionQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

@@ -4,8 +4,8 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
-import { useDeductionQuery } from "../../providers/DeductionsQueryProviders";
 import DeductionFields from "./DeductionFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -28,7 +28,7 @@ function EditDeduction<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = useDeductionQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.TRAVELPASS} open={open} onOpen={onOpen}>

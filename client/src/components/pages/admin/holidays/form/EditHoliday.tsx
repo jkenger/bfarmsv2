@@ -2,10 +2,10 @@ import DropDownEditSheet from "@/components/ui/dd-edit-sheet";
 import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
-import { useHolidayQuery } from "../providers/HolidayQueryProviders";
 import { MutationType, Tables } from "@/types/common";
 import FormSubmit from "../../shareable/form-submit";
 import HolidayFields from "./HolidayFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 type Props<T> = {
   toEditItem?: T;
@@ -30,7 +30,7 @@ function EditHoliday<T extends TDataFields>({
     } as TDataFields,
   });
 
-  const { editMutation } = useHolidayQuery();
+  const { editMutation } = useQueryProvider();
 
   return from === "tableAction" ? (
     <DropDownEditSheet table={Tables.DESIGNATIONS} open={open} onOpen={onOpen}>

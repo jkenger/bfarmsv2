@@ -13,14 +13,14 @@ import { IconProperties } from "@/types/common";
 
 import DataTableHistory from "@/components/ui/data-table-history";
 
-import { useLeaveTypeQuery } from "./providers/LeaveTypeQueryProviders";
 import { getLeaveTypes } from "./api/types.api";
 
-import AddHoliday from "./form/AddLeaveType";
 import ActivityCard from "../../employees/ui/activity-card";
 import LeaveTypesTable from "./tables/LeaveTypesTable";
 import Error from "@/components/pages/Error";
 import { leaveTypesColumns } from "./columns/leave-types.columns";
+import AddLeaveType from "./form/AddLeaveType";
+import { useQueryProvider } from "@/components/context/query-provider";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -30,7 +30,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 function Holidays() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
-    useLeaveTypeQuery();
+    useQueryProvider();
   const titlePage = "Leave Types";
   return (
     <>
@@ -59,7 +59,7 @@ function Holidays() {
               table={titlePage}
             >
               {/* TODO: TO CHANGE */}
-              <AddHoliday />
+              <AddLeaveType />
             </MutationSheet>
           }
         >
@@ -84,7 +84,7 @@ function Holidays() {
             title="Add new data to"
             table={titlePage}
           >
-            <AddHoliday />
+            <AddLeaveType />
           </MutationSheet>
           <DataTableHistory
             render={{

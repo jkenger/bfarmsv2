@@ -17,8 +17,8 @@ import TableFallBack from "@/components/ui/table-fallback";
 import DataTableHistory from "@/components/ui/data-table-history";
 
 import ActivityCard from "./ui/activity-card";
-import { useEmployeeQuery } from "./providers/EmployeeQueryProvider";
 import { SheetTrigger } from "@/components/ui/sheet";
+import { useQueryProvider } from "@/components/context/query-provider";
 // import BreadCrumb from "@/components/wrappers/nav/bread-crumb";
 
 export const loader = (queryClient: QueryClient) => async () => {
@@ -33,7 +33,7 @@ function Employees() {
     designationData: TDataFields;
   };
   const { createdActivities, deletedActivities, editedActivities } =
-    useEmployeeQuery();
+    useQueryProvider();
   return (
     <>
       <Main.Header>

@@ -1,15 +1,9 @@
 import { fetch } from "@/lib/utils";
-import { QueryClient, keepPreviousData } from "@tanstack/react-query";
-import { UseFormReturn } from "react-hook-form";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
-
-type TEmployeeMutation = {
-  queryClient: QueryClient;
-  form?: UseFormReturn<TDataFields, unknown, undefined>;
-};
 
 export type getEmployeeResponse = {
   data: TDataFields[];
@@ -45,7 +39,7 @@ export const getEmployees = ({
   };
 };
 
-export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
+export const createEmployee = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
@@ -73,7 +67,7 @@ export const createEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   };
 };
 
-export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
+export const editEmployee = ({ queryClient, form }: TMutation) => {
   const sheetCloseBtn = document.getElementById("sheetCloseBtn");
   return {
     mutationKey: [QueryKeys.EDIT_EMPLOYEE],
@@ -104,7 +98,7 @@ export const editEmployee = ({ queryClient, form }: TEmployeeMutation) => {
   };
 };
 
-export const deleteEmployee = ({ queryClient }: TEmployeeMutation) => {
+export const deleteEmployee = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {

@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import FormSubmit from "../../../shareable/form-submit";
-import { useEmployeeQuery } from "../../providers/EmployeeQueryProvider";
 import { MutationType } from "@/types/common";
 import EmployeeFormFields from "./EmployeeFormFields";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   toEditItem?: TDataFields;
 };
@@ -24,7 +24,7 @@ function AddEmployee({ toEditItem }: Props) {
       deductions: toEditItem ? toEditItem.deductions : [],
     },
   });
-  const { createMutation } = useEmployeeQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {

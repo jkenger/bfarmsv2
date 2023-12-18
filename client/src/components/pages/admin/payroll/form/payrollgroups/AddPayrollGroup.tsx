@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
-import { usePayrollGroupQuery } from "../../providers/PayrollGroupProvider";
 import PayrollGroupsFields from "./PayrollGroupsFields";
 import FormSubmit from "../../../shareable/form-submit";
+import { useQueryProvider } from "@/components/context/query-provider";
 type Props = {
   toEditItem?: TDataFields;
 };
@@ -20,7 +20,7 @@ function AddPayrollGroups({ toEditItem }: Props) {
       programName: toEditItem ? toEditItem.programName : "",
     },
   });
-  const { createMutation } = usePayrollGroupQuery();
+  const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useLayoutEffect(() => {
