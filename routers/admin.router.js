@@ -51,6 +51,14 @@ import {
 
 const router = express.Router();
 
+// Root
+// @Desc  : Root Route
+// @Method: GET /
+// @Access: Public
+router.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 // Employee Routes
 
 // @Desc    : Read and Create Employees

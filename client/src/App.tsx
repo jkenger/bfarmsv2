@@ -91,6 +91,11 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
+    path: "attendance",
+    element: <Attendance />,
+    errorElement: <Error />,
+  },
+  {
     path: "login",
     element: <Login assign={Roles.EMPLOYEE} />,
     errorElement: <Error />,

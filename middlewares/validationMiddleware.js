@@ -83,6 +83,11 @@ export const validateLeaveTypes = withValidationErrors([
   body("*.description").notEmpty().withMessage("Description must not be empty"),
 ]);
 
+export const validateAttendance = withValidationErrors([
+  body().toArray(),
+  body("*.code").notEmpty().withMessage("Code must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

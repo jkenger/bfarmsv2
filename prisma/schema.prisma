@@ -14,6 +14,23 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+model Attendance {
+  id      String   @id @default(uuid())
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  amTimeIn DateTime?
+  amTimeOut DateTime?
+  pmTimeIn DateTime?
+  pmTimeOut DateTime?
+  isLate  Boolean?
+  lateMinutes Int?
+  isUndertime Boolean?
+  undertimeMinutes Int?
+  isOnTime Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id         String  @id @default(uuid())
   employeeId String  @unique
@@ -29,6 +46,8 @@ model User {
 
   designation   Designation? @relation(fields: [designationId], references: [id])
   designationId String?
+
+  attendances Attendance[]
 
   deductions   Deduction[]
 

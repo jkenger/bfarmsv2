@@ -1,7 +1,11 @@
 // Purpose: Index router for the application
 
 import express from "express";
-import { timeAttendance } from "../controllers/index.controller.js";
+import {
+  createAttendance,
+  timeAttendance,
+} from "../controllers/index.controller.js";
+import { validateAttendance } from "../middlewares/validationMiddleware.js";
 
 const router = express.Router();
 
@@ -9,5 +13,11 @@ const router = express.Router();
 // Method  : GET /
 // Access  : Public
 router.route("/").get(timeAttendance);
+
+// Attendance Route
+// @Desc  : Attendance Routes
+// @Method: GET / POST / PUT / DELETE
+// @Access: Public
+router.route("/attendance").post(validateAttendance, createAttendance);
 
 export default router;

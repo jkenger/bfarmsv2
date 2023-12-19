@@ -1,10 +1,9 @@
 // Purpose: Index controller for the application
 
 // Dependencies
-import { StatusCodes } from "http-status-codes";
+
 import asyncHandler from "express-async-handler";
 
-import { PrismaClient } from "@prisma/client";
 import {
   deductions,
   designation,
@@ -15,41 +14,7 @@ import {
   travelpass,
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
-
-const prisma = new PrismaClient().$extends({
-  query: {
-    user: {
-      async $allOperations({ operation, args, query }) {
-        if (operation === "create") {
-          return await query({
-            ...args,
-            data: {
-              ...args.data,
-              fullName: `${args.data.lastName} ${args.data.firstName} ${
-                args.data.middleName ? args.data.middleName : ""
-              }`,
-            },
-          });
-        }
-        if (operation === "update") {
-          const user = await query(args);
-          return await query({
-            ...args,
-            data: {
-              ...args.data,
-
-              fullName: `${user.lastName} ${user.firstName} ${
-                user.middleName ? user.middleName : ""
-              }`,
-            },
-          });
-        }
-
-        return query(args);
-      },
-    },
-  },
-});
+import prisma from "../prisma/db/db.js";
 
 // Employees
 export const getAllEmployees = asyncHandler(async (req, res) =>
