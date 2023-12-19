@@ -68,8 +68,15 @@ export const createAttendance = asyncHandler(async (req, res) => {
     });
   }
 
+  const currentDayAttendance = attendances.find((attendance) => {
+    const currentDateStart = setDateTime(0, 0, 0);
+    const currentDateEnd = setDateTime(23, 59, 59);
+    const createdAt = setDateTime(0, 0, 0, 0, attendance.createdAt);
+    return createdAt >= currentDateStart && createdAt <= currentDateEnd;
+  });
+
   // If no attendance, create attendance
-  if (!attendances.length) {
+  if (!currentDayAttendance) {
     // AM Time In
     // If between 8 am and 12pm and no am time in, create attendance
     if (currentDateTime < twelvePm) {
@@ -112,13 +119,7 @@ export const createAttendance = asyncHandler(async (req, res) => {
   }
 
   // If there is attendance, update attendance
-  if (attendances.length) {
-    const currentDayAttendance = attendances.find((attendance) => {
-      const currentDateStart = setDateTime(0, 0, 0);
-      const currentDateEnd = setDateTime(23, 59, 59);
-      const createdAt = setDateTime(0, 0, 0, 0, attendance.createdAt);
-      return createdAt >= currentDateStart && createdAt <= currentDateEnd;
-    });
+  if (currentDayAttendance) {
     // If there is am time in and no am time out, update attendance's am time out
     if (currentDateTime < onePm) {
       if (currentDayAttendance.pmTimeIn) {
