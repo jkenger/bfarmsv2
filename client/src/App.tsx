@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Error from "./components/pages/Error";
-import Attendance from "./components/pages/root/Attendance";
+import Attendance from "./components/pages/root/Attendance/Attendance";
 import Login from "./components/pages/root/Login";
 
 import { ThemeProvider } from "./components/context/theme-provider";

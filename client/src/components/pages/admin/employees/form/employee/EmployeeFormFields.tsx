@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Label } from "@radix-ui/react-label";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
 
 import { Links, MutationType } from "@/types/common";
@@ -20,6 +20,7 @@ import { getPayrollGroups } from "../../../payroll/api/payrollGroups.api";
 import PopoverCommandQuery from "@/components/ui/popover-command-query";
 import { getDeductions } from "../../../deductions/api/deductions.api";
 import PopoverCommandQueryMultiple from "@/components/ui/popover-command-query-multiple";
+import onScan from "onscan.js";
 
 type Props = {
   form: UseFormReturn<TDataFields & FieldValues, unknown, undefined>;
@@ -34,6 +35,19 @@ function EmployeeFormFields<T extends TDataFields>({
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    onScan.attachTo(document, {
+      suffixKeyCodes: [13],
+      reactToPaste: true,
+      onScan: function (sCode) {
+        if (inputRef.current) {
+          form.setValue("rfId", sCode);
+        }
+      },
+    });
+    return () => onScan.detachFrom(document);
+  }, [form]);
   return (
     <>
       <FormField
@@ -60,6 +74,24 @@ function EmployeeFormFields<T extends TDataFields>({
             <FormLabel className="text-xs text-foreground">
               Employee Id
             </FormLabel>
+            <FormControl>
+              <Input placeholder="column_data" {...field} ref={inputRef} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name={"rfId" as Path<T & FieldValues>}
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex justify-between">
+              <FormLabel className="text-xs text-foreground uppercase">
+                rfId
+              </FormLabel>
+              <p>Optional</p>
+            </div>
             <FormControl>
               <Input placeholder="column_data" {...field} ref={inputRef} />
             </FormControl>

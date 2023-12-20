@@ -24,6 +24,7 @@ function EditEmployee<T extends TDataFields>({
     values: {
       id: toEditItem ? toEditItem.id : "",
       employeeId: toEditItem ? toEditItem.employeeId : "",
+      rfId: toEditItem ? toEditItem.rfId : "",
       firstName: toEditItem ? toEditItem.firstName : "",
       middleName: toEditItem ? toEditItem.middleName : "",
       lastName: toEditItem ? toEditItem.lastName : "",

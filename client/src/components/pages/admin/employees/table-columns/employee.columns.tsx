@@ -21,6 +21,16 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
+    accessorKey: "rfId",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>RFID</span>
+        </DataTableHeader>
+      );
+    },
+  },
+  {
     accessorKey: "fullName",
     header: ({ column }) => {
       return (

@@ -10,27 +10,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "./button";
-import { useTheme } from "../context/theme-provider";
 
-function PunchInButton() {
-  const { theme } = useTheme();
+function CreateAttendanceBtn({
+  actionButton,
+}: {
+  actionButton: React.ReactNode;
+}) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        {theme === "dark" ? (
-          <Button variant="secondary" className="w-full">
-            Punch in
-          </Button>
-        ) : (
-          <Button
-            variant="outline"
-            type="button"
-            className="bg-white text-secondary-foreground w-full mt-0"
-          >
-            Punch In
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger asChild>{actionButton}</DialogTrigger>
       <DialogContent className="sm:max-w-md bg-primary text-primary-foreground">
         <DialogHeader>
           <DialogTitle>Time in</DialogTitle>
@@ -51,7 +39,7 @@ function PunchInButton() {
         </div>
         <DialogFooter className="sm:justify-end">
           <Button type="button" variant="secondary">
-            Punch in
+            Create
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -59,4 +47,4 @@ function PunchInButton() {
   );
 }
 
-export default PunchInButton;
+export default CreateAttendanceBtn;

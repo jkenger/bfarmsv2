@@ -40,8 +40,7 @@ export const timeAttendance = asyncHandler((req, res) => {
 
 // Attendance
 export const createAttendance = asyncHandler(async (req, res) => {
-  const employeeId = req.body[0].code;
-
+  const id = req.body[0].code;
   // const attendanceType = req.body[0].attendanceType;
 
   // Get 8 AM date time
@@ -58,7 +57,8 @@ export const createAttendance = asyncHandler(async (req, res) => {
   console.log("Current DateTime: ", currentDateTime);
   console.log("8 AM DateTime: ", eightAm);
 
-  const user = await prisma.user.findUserWithEmployeeId(employeeId);
+  const user = await prisma.user.findUserWithId(id);
+  console.log(user);
   const userId = user.id;
   const attendances = user.attendances;
 
@@ -85,7 +85,7 @@ export const createAttendance = asyncHandler(async (req, res) => {
           {
             userId,
             amTimeIn: currentDateTime,
-            // If late, set late to true
+            // If late, set late
             isLate: currentDateTime > eightAm ? true : false,
             lateMinutes:
               differenceInMinutes(currentDateTime, eightAm) < 0
@@ -125,6 +125,12 @@ export const createAttendance = asyncHandler(async (req, res) => {
       if (currentDayAttendance.pmTimeIn) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           message: "Time out will be available after 1 PM",
+        });
+      }
+
+      if (currentDayAttendance.amTimeIn && currentDayAttendance.amTimeOut) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          message: "You have already timed out for the day (AM)",
         });
       }
 

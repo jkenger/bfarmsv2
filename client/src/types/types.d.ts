@@ -25,6 +25,7 @@ type TDesignationForms = {
 type TEmployees = {
   id: string;
   employeeId: string;
+  rfId: string;
   fullName: string;
   firstName: string;
   middleName?: string;

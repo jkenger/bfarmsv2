@@ -16,6 +16,7 @@ function AddEmployee({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
     defaultValues: {
       employeeId: toEditItem ? toEditItem.employeeId : "",
+      rfId: toEditItem ? toEditItem.rfId : "",
       firstName: toEditItem ? toEditItem.firstName : "",
       lastName: toEditItem ? toEditItem.lastName : "",
       age: toEditItem ? toEditItem.age : "",

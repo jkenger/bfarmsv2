@@ -2,10 +2,21 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient().$extends({
   model: {
     user: {
-      async findUserWithEmployeeId(employeeId) {
-        const user = await prisma.user.findUnique({
+      async findUserWithId(id) {
+        const user = await prisma.user.findFirst({
           where: {
-            employeeId,
+            OR: [
+              {
+                rfId: {
+                  contains: id,
+                },
+              },
+              {
+                employeeId: {
+                  contains: id,
+                },
+              },
+            ],
           },
           include: {
             attendances: true,
