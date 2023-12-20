@@ -14,9 +14,9 @@ export const createAttendance = ({ queryClient, form }: TMutation) => {
       toast.success(`Deduction Created`, {
         description: "A new deduction has been successfully addded.",
       });
-      // await queryClient.invalidateQueries({
-      //   queryKey: [QueryKeys.DEDUCTIONS],
-      // });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.ATTENDACE],
+      });
       form?.reset();
     },
     onError: async () => {

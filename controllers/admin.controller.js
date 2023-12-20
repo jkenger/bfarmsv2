@@ -5,6 +5,7 @@
 import asyncHandler from "express-async-handler";
 
 import {
+  attendance,
   deductions,
   designation,
   employee,
@@ -15,6 +16,29 @@ import {
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 import prisma from "../prisma/db/db.js";
+
+// Attendance
+export const getAllAttendance = asyncHandler(async (req, res) =>
+  models.getAllModel(res, prisma.attendance)
+);
+export const getPaginatedAttendance = asyncHandler(async (req, res) =>
+  models.getPaginatedModel(req, res, prisma.attendance, attendance)
+);
+
+export const updateAttendance = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+      };
+    }),
+  ];
+  return models.updateModel(res, req.params.id, data, prisma.attendance);
+});
+
+export const deleteAttendance = asyncHandler(async (req, res) =>
+  models.deleteModel(res, req.params.id, prisma.attendance)
+);
 
 // Employees
 export const getAllEmployees = asyncHandler(async (req, res) =>

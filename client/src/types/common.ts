@@ -75,7 +75,10 @@ export enum QueryKeys {
   CREATE_LEAVE_TYPE = "createLeaveType",
   EDIT_LEAVE_TYPE = "editLeaveType",
 
+  ATTENDACE = "attendance",
   CREATE_ATTENDANCE = "createAttendance",
+  EDIT_ATTENDANCE = "editAttendance",
+  DELETE_ATTENDANCE = "deleteAttendance",
 }
 
 export enum SortType {

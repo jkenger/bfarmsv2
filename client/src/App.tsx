@@ -6,13 +6,11 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Error from "./components/pages/Error";
-import Attendance from "./components/pages/root/Attendance/Attendance";
 import Login from "./components/pages/root/Login";
 
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
 import Navigation from "./components/wrappers/nav/Navigation";
-import AdminDTR from "./components/pages/admin/DailyTimeRecord";
 import AdminEmployees from "./components/pages/admin/employees/Employees";
 import AdminPayroll from "./components/pages/admin/Payroll";
 import AdminHolidays from "./components/pages/admin/holidays/Holidays";
@@ -25,6 +23,9 @@ import { loader as employeesLoader } from "./components/pages/admin/employees/Em
 import { loader as designationsLoader } from "./components/pages/admin/employees/Designations";
 import { loader as holidaysLoader } from "./components/pages/admin/holidays/Holidays";
 import { loader as travelpassLoader } from "./components/pages/admin/travelpass/Travelpass";
+import AdminDailyTyimeRecord, {
+  loader as dtrLoader,
+} from "./components/pages/admin/daily-time-records/DailyTimeRecord";
 import PayrollGroups, {
   loader as payrollGroupLoader,
 } from "./components/pages/admin/payroll/PayrollGroups";
@@ -37,7 +38,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
 import { QueryKeys, Roles } from "./types/common";
-import LeaveTypeQueryProviders from "./components/pages/admin/leaves/types/providers/LeaveTypeQueryProviders";
+
 import QueryProvider from "./components/context/query-provider";
 import {
   createEmployee,
@@ -74,6 +75,12 @@ import {
   deleteLeaveType,
   editLeaveType,
 } from "./components/pages/admin/leaves/types/api/types.api";
+import {
+  createDTR,
+  deleteDTR,
+  editDTR,
+} from "./components/pages/admin/daily-time-records/api/daily-time-records.api";
+import Attendance from "./components/pages/root/attendance/Attendance";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -161,7 +168,23 @@ const router = createBrowserRouter([
           },
           {
             path: "daily-time-records",
-            element: <AdminDTR />,
+            loader: dtrLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createDTR({ queryClient }),
+                  edit: editDTR({ queryClient }),
+                  delete: deleteDTR({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_ATTENDANCE,
+                  edit: QueryKeys.EDIT_ATTENDANCE,
+                  delete: QueryKeys.DELETE_ATTENDANCE,
+                }}
+              >
+                <AdminDailyTyimeRecord />
+              </QueryProvider>
+            ),
           },
           {
             path: "payroll",

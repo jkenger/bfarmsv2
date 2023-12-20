@@ -37,8 +37,13 @@ import {
   getAllLeaveTypes,
   updateLeaveType,
   deleteLeaveType,
+  getAllAttendance,
+  getPaginatedAttendance,
+  updateAttendance,
+  deleteAttendance,
 } from "../controllers/admin.controller.js";
 import {
+  validateAttendance,
   validateDeductions,
   validateDesignation,
   validateEmployee,
@@ -48,6 +53,7 @@ import {
   validatePayrollGroup,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
+import { createAttendance } from "../controllers/index.controller.js";
 
 const router = express.Router();
 
@@ -58,6 +64,24 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+// Attendance Routes
+// @Desc    : Read and Create Attendance
+// @Method  : GET / POST
+// @Access  : Public and Private (Admin)
+router
+  .route("/attendance")
+  .get(getPaginatedAttendance)
+  .post(validateAttendance, createAttendance);
+router.route("/attendance/all").get(getAllAttendance);
+
+// @Desc    : Delete and Update Attendance
+// @Method  : DELETE / POST /
+// @Access  : Private (Admin)
+router
+  .route("/attendance/:id")
+  .put(validateAttendance, updateAttendance)
+  .delete(validateId, deleteAttendance);
 
 // Employee Routes
 
