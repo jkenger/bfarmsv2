@@ -88,6 +88,11 @@ export const validateAttendance = withValidationErrors([
   body("*.code").notEmpty().withMessage("Code must not be empty"),
 ]);
 
+export const validateAdminAttendance = withValidationErrors([
+  body().toArray(),
+  body("*.userId").notEmpty().withMessage("User ID must not be empty"),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

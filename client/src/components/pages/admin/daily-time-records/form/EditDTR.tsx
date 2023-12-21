@@ -4,29 +4,23 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { MutationType, Tables } from "@/types/common";
 import FormSubmit from "../../shareable/form-submit";
-import HolidayFields from "./HolidayFields";
-import { useQueryProvider } from "@/components/context/query-provider";
 
-type Props<T> = {
-  toEditItem?: T;
+import { useQueryProvider } from "@/components/context/query-provider";
+import { dtrStates } from "./form-states";
+import DTRFields from "./DTRFields";
+
+type Props = {
+  toEditItem?: TDataFields;
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   from?: "tableAction" | string;
 };
 
-function EditHoliday<T extends TDataFields>({
-  open,
-  onOpen,
-  toEditItem,
-  from,
-}: Props<T>) {
+function EditDTR({ open, onOpen, toEditItem, from }: Props) {
   const form = useForm<TDataFields>({
     values: {
+      ...dtrStates(toEditItem, "edit"),
       id: toEditItem?.id || "",
-      name: toEditItem?.name || "",
-      description: toEditItem?.description || "",
-      prerequisiteDate: toEditItem?.prerequisiteDate || "",
-      requisiteDate: toEditItem?.requisiteDate || "",
     } as TDataFields,
   });
 
@@ -40,7 +34,7 @@ function EditHoliday<T extends TDataFields>({
           form={form}
           mutationType={MutationType.UPDATE}
         >
-          <HolidayFields form={form} mutationType={MutationType.UPDATE} />
+          <DTRFields form={form} mutationType={MutationType.UPDATE} />
         </FormSubmit>
       </Form>
     </DropDownEditSheet>
@@ -51,10 +45,10 @@ function EditHoliday<T extends TDataFields>({
         form={form}
         mutationType={MutationType.UPDATE}
       >
-        <HolidayFields form={form} mutationType={MutationType.UPDATE} />
+        <DTRFields form={form} mutationType={MutationType.UPDATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default EditHoliday;
+export default EditDTR;

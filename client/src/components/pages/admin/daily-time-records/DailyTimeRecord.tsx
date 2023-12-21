@@ -17,11 +17,12 @@ import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
 
 import { dtrColumns } from "./columns/dtr.columns";
-import AddHoliday from "./form/AddHoliday";
+
 import { useQueryProvider } from "@/components/context/query-provider";
 import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import DTRTable from "./tables/DTRTable";
 import { getDTR } from "./api/daily-time-records.api";
+import AddDTR from "./form/AddDTR";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -32,11 +33,12 @@ function DailyTimeRecord() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
     useQueryProvider();
+  const titlePage = "Daily Time Records";
   return (
     <>
       <Main.Header>
         <Main.Heading
-          title="Daily Time Records"
+          title={titlePage}
           access="admin"
           mobileButton={
             <MutationSheet
@@ -56,9 +58,9 @@ function DailyTimeRecord() {
                 </SheetTrigger>
               }
               title="Add new data to"
-              table="Holidays"
+              table={titlePage}
             >
-              <AddHoliday />
+              <AddDTR />
             </MutationSheet>
           }
         >
@@ -81,9 +83,9 @@ function DailyTimeRecord() {
               </SheetTrigger>
             }
             title="Add new data to"
-            table="Holidays"
+            table={titlePage}
           >
-            <AddHoliday />
+            <AddDTR />
           </MutationSheet>
           <CalendarDateRangePicker />;
           <DataTableHistory

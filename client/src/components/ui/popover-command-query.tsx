@@ -68,7 +68,6 @@ function PopoverCommandQuery({
       ? itemData.find((item: TDataFields) => item.id === selected.value)
       : null
   );
-  console.log(selectedItem);
 
   const detailsSelect = useRef<HTMLSpanElement>(null);
   return (

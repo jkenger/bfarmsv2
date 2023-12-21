@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import DeletePayrollGroup from "../form/payrollgroups/DeletePayrollGroup";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
-import ParseDate from "@/components/ui/ParseDate";
+import ParseDate from "@/components/ui/parse-date";
 
 export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
   {

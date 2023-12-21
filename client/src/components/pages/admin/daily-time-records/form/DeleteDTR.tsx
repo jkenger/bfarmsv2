@@ -11,13 +11,7 @@ type Props = {
   trigger?: boolean;
   children?: React.ReactNode;
 };
-function DeleteHoliday({
-  open,
-  onOpen,
-  data,
-  trigger = true,
-  children,
-}: Props) {
+function DeleteDTR({ open, onOpen, data, trigger = true, children }: Props) {
   const { deleteMutation } = useQueryProvider();
   function handleDelete() {
     deleteMutation.mutate(data);
@@ -35,4 +29,4 @@ function DeleteHoliday({
   );
 }
 
-export default DeleteHoliday;
+export default DeleteDTR;

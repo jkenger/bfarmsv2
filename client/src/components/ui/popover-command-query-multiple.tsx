@@ -73,7 +73,6 @@ function PopoverCommandQueryMultiple({
       : []
   );
 
-  console.log(selectedItems);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <FormControl>

@@ -6,21 +6,18 @@ import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
 import FormSubmit from "../../shareable/form-submit";
-import HolidayFields from "./HolidayFields";
+
 import { useQueryProvider } from "@/components/context/query-provider";
+import DTRFields from "./DTRFields";
+import { dtrStates } from "./form-states";
 
 type Props = {
   toEditItem?: TDataFields;
 };
 
-function AddHoliday({ toEditItem }: Props) {
+function AddDTR({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      description: toEditItem ? toEditItem.description : "",
-      prerequisiteDate: toEditItem ? toEditItem.prerequisiteDate : "",
-      requisiteDate: toEditItem ? toEditItem.requisiteDate : "",
-    },
+    defaultValues: dtrStates(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,10 +32,10 @@ function AddHoliday({ toEditItem }: Props) {
         mutation={createMutation}
         mutationType={MutationType.CREATE}
       >
-        <HolidayFields form={form} mutationType={MutationType.CREATE} />
+        <DTRFields form={form} mutationType={MutationType.CREATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default AddHoliday;
+export default AddDTR;

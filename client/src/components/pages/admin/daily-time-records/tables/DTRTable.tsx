@@ -10,10 +10,11 @@ import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
 
-import EditHoliday from "../form/EditHoliday";
-import AddHoliday from "../form/AddHoliday";
+import EditHoliday from "../form/EditDTR";
+
 import { useQueryProvider } from "@/components/context/query-provider";
 import { getDTR } from "../api/daily-time-records.api";
+import AddDTR from "../form/AddDTR";
 
 type Props = {
   columns: ColumnDef<TDataFields>[];
@@ -91,7 +92,7 @@ function DTRTable({ columns }: Props) {
                 table="Designations"
                 error={createMutationError?.response?.data as string}
               >
-                <AddHoliday toEditItem={createMutation?.variables} />
+                <AddDTR toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
           }}

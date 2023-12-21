@@ -1,4 +1,10 @@
-export const setDateTime = (h, m, s, ms, mDate) => {
+export const setDateTime = (
+  h: number,
+  m: number,
+  s: number,
+  ms?: number,
+  mDate?: string
+) => {
   const hour = h ? h : 0;
   const minute = m ? m : 0;
   const second = s ? s : 0;

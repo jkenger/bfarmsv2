@@ -41,9 +41,10 @@ import {
   getPaginatedAttendance,
   updateAttendance,
   deleteAttendance,
+  createAttendance,
 } from "../controllers/admin.controller.js";
 import {
-  validateAttendance,
+  validateAdminAttendance,
   validateDeductions,
   validateDesignation,
   validateEmployee,
@@ -53,7 +54,6 @@ import {
   validatePayrollGroup,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
-import { createAttendance } from "../controllers/index.controller.js";
 
 const router = express.Router();
 
@@ -72,7 +72,7 @@ router.get("/", (req, res) => {
 router
   .route("/attendance")
   .get(getPaginatedAttendance)
-  .post(validateAttendance, createAttendance);
+  .post(validateAdminAttendance, createAttendance);
 router.route("/attendance/all").get(getAllAttendance);
 
 // @Desc    : Delete and Update Attendance
@@ -80,7 +80,7 @@ router.route("/attendance/all").get(getAllAttendance);
 // @Access  : Private (Admin)
 router
   .route("/attendance/:id")
-  .put(validateAttendance, updateAttendance)
+  .put(validateAdminAttendance, updateAttendance)
   .delete(validateId, deleteAttendance);
 
 // Employee Routes

@@ -25,11 +25,30 @@ export const getPaginatedAttendance = asyncHandler(async (req, res) =>
   models.getPaginatedModel(req, res, prisma.attendance, attendance)
 );
 
+export const createAttendance = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        amTimeIn: item.amTimeIn ? new Date(item.amTimeIn) : null,
+        amTimeOut: item.amTimeOut ? new Date(item.amTimeOut) : null,
+        pmTimeIn: item.pmTimeIn ? new Date(item.pmTimeIn) : null,
+        pmTimeOut: item.pmTimeOut ? new Date(item.pmTimeOut) : null,
+      };
+    }),
+  ];
+  return models.addModel(res, data, prisma.attendance);
+});
+
 export const updateAttendance = asyncHandler(async (req, res) => {
   const data = [
     ...req.body.map((item) => {
       return {
         ...item,
+        amTimeIn: item.amTimeIn ? new Date(item.amTimeIn) : null,
+        amTimeOut: item.amTimeOut ? new Date(item.amTimeOut) : null,
+        pmTimeIn: item.pmTimeIn ? new Date(item.pmTimeIn) : null,
+        pmTimeOut: item.pmTimeOut ? new Date(item.pmTimeOut) : null,
       };
     }),
   ];

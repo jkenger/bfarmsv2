@@ -37,7 +37,6 @@ const QueryProviderContext = React.createContext<TQueryContext>(
 );
 
 function QueryProvider({ children, api, queryKeys }: Props) {
-  console.log(api);
   const createMutation = useMutation(api.create);
   const editMutation = useMutation(api.edit);
   const deleteMutation = useMutation(api.delete);

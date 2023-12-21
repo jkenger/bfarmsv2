@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DeleteDesignation from "../form/designation/DeleteDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
 
-import ParseDate from "@/components/ui/ParseDate";
+import ParseDate from "@/components/ui/parse-date";
 import CountBadge from "@/components/ui/count-badge";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [

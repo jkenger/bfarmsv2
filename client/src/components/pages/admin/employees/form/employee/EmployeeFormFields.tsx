@@ -32,18 +32,17 @@ function EmployeeFormFields<T extends TDataFields>({
   mutationType = MutationType.CREATE,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const rfIdRef = useRef<HTMLInputElement>(null);
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
 
   useEffect(() => {
     onScan.attachTo(document, {
-      suffixKeyCodes: [13],
-      reactToPaste: true,
+      preventDefault: true,
       onScan: function (sCode) {
-        if (inputRef.current) {
-          form.setValue("rfId", sCode);
-        }
+        rfIdRef.current?.focus();
+        form.setValue("rfId", sCode);
       },
     });
     return () => onScan.detachFrom(document);
@@ -90,10 +89,14 @@ function EmployeeFormFields<T extends TDataFields>({
               <FormLabel className="text-xs text-foreground uppercase">
                 rfId
               </FormLabel>
+
               <p>Optional</p>
             </div>
+            <div className="h-8 border border-dashed text-xs flex items-center justify-center text-muted-foreground animate-pulse">
+              Scan to the reader to fill this field
+            </div>
             <FormControl>
-              <Input placeholder="column_data" {...field} ref={inputRef} />
+              <Input placeholder="column_data" {...field} ref={rfIdRef} />
             </FormControl>
             <FormMessage />
           </FormItem>

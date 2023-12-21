@@ -94,7 +94,7 @@ export const deleteDTR = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/holidays/${data.id}`);
+      await fetch.delete(`/admin/attendance/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Attendance Deleted`, {

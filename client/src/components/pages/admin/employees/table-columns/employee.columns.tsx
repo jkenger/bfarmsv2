@@ -4,8 +4,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import DeleteEmployee from "../form/employee/DeleteEmployee";
 import EditEmployee from "../form/employee/EditEmployee";
 import { Badge } from "@/components/ui/badge";
-import ParseDate from "@/components/ui/ParseDate";
-import FormatToFullName from "@/components/ui/format-to-fullname";
+import ParseDate from "@/components/ui/parse-date";
+import EmptyCellBadge from "@/components/ui/empty-cell-badge";
+import logo from "@/assets/bfarlogo.png";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export type TGlobalEmployees = TEmployees;
 
@@ -29,6 +31,13 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      return row.original.rfId ? (
+        <span>{row.original.rfId}</span>
+      ) : (
+        <EmptyCellBadge label="rfid" />
+      );
+    },
   },
   {
     accessorKey: "fullName",
@@ -40,15 +49,20 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      const firstName = row.original.firstName || "";
-      const middleName = row.original.middleName || "";
-      const lastName = row.original.lastName || "";
       return (
-        <FormatToFullName
-          firstName={firstName}
-          middleName={middleName}
-          lastName={lastName}
-        />
+        <div className="flex items-center gap-2">
+          <Avatar>
+            <AvatarFallback>
+              <img
+                src={logo}
+                alt="avatar logo"
+                className="w-8 h-8 rounded-full"
+              />
+            </AvatarFallback>
+            <AvatarImage src={row.original.avatar} alt={row.original.avatar} />
+          </Avatar>
+          <span>{row.original.fullName}</span>
+        </div>
       );
     },
   },
@@ -78,9 +92,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
           {row.original.payrollGroup ? (
             row.original.payrollGroup?.fundCluster
           ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              No fund cluster
-            </Badge>
+            <EmptyCellBadge label="fund cluster" />
           )}
         </span>
       );
@@ -101,9 +113,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
           {row.original.payrollGroup ? (
             row.original.payrollGroup?.name
           ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              No payroll group
-            </Badge>
+            <EmptyCellBadge label="fund cluster" />
           )}
         </div>
       );
@@ -124,9 +134,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
           {row.original.designation ? (
             row.original.designation?.name
           ) : (
-            <Badge variant="outline" className="text-muted-foreground">
-              No designation
-            </Badge>
+            <EmptyCellBadge label="fund cluster" />
           )}
         </span>
       );

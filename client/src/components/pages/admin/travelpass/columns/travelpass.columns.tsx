@@ -2,7 +2,7 @@ import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 
-import ParseDate from "@/components/ui/ParseDate";
+import ParseDate from "@/components/ui/parse-date";
 import DeleteTravelpass from "../form/travelpass/DeleteTravelpass";
 import EditTravelpass from "../form/travelpass/EditTravelpass";
 import FormatToFullName from "@/components/ui/format-to-fullname";
