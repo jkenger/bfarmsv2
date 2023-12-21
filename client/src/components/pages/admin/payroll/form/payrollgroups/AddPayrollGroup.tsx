@@ -8,17 +8,14 @@ import { MutationType } from "@/types/common";
 import PayrollGroupsFields from "./PayrollGroupsFields";
 import FormSubmit from "../../../shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 type Props = {
   toEditItem?: TDataFields;
 };
 
 function AddPayrollGroups({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      fundCluster: toEditItem ? toEditItem.fundCluster : "",
-      programName: toEditItem ? toEditItem.programName : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

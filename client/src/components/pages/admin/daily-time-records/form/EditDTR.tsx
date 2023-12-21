@@ -6,7 +6,7 @@ import { MutationType, Tables } from "@/types/common";
 import FormSubmit from "../../shareable/form-submit";
 
 import { useQueryProvider } from "@/components/context/query-provider";
-import { dtrStates } from "./form-states";
+import { values } from "./form-values";
 import DTRFields from "./DTRFields";
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
 function EditDTR({ open, onOpen, toEditItem, from }: Props) {
   const form = useForm<TDataFields>({
     values: {
-      ...dtrStates(toEditItem, "edit"),
+      ...values(toEditItem, "edit"),
       id: toEditItem?.id || "",
     } as TDataFields,
   });

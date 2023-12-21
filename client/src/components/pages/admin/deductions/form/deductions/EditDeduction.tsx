@@ -6,6 +6,7 @@ import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
 import DeductionFields from "./DeductionFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props<T> = {
   toEditItem?: T;
@@ -22,9 +23,8 @@ function EditDeduction<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
+      ...values(toEditItem),
       id: toEditItem ? toEditItem.id : "",
-      name: toEditItem ? toEditItem.name : "",
-      amount: toEditItem ? toEditItem.amount : "",
     } as TDataFields,
   });
 

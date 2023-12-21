@@ -6,6 +6,7 @@ import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
 import PayrollGroupsFields from "./PayrollGroupsFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props<T> = {
   toEditItem?: T;
@@ -22,10 +23,8 @@ function EditPayrollGroup<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
+      ...values(toEditItem),
       id: toEditItem?.id || "",
-      name: toEditItem?.name || "",
-      fundCluster: toEditItem?.fundCluster || "",
-      programName: toEditItem?.programName || "",
     } as TDataFields,
   });
 

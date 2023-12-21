@@ -8,6 +8,7 @@ import { MutationType } from "@/types/common";
 import FormSubmit from "../../shareable/form-submit";
 import HolidayFields from "./HolidayFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -15,12 +16,7 @@ type Props = {
 
 function AddHoliday({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      description: toEditItem ? toEditItem.description : "",
-      prerequisiteDate: toEditItem ? toEditItem.prerequisiteDate : "",
-      requisiteDate: toEditItem ? toEditItem.requisiteDate : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

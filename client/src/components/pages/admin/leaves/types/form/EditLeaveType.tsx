@@ -5,6 +5,7 @@ import { MutationType, Tables } from "@/types/common";
 import LeaveTypesFields from "./LeaveTypesFields";
 import FormSubmit from "../../../shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props<T> = {
   toEditItem?: T;
@@ -21,9 +22,8 @@ function EditLeaveType<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
+      ...values(toEditItem),
       id: toEditItem?.id || "",
-      name: toEditItem?.name || "",
-      description: toEditItem?.description || "",
     } as TDataFields,
   });
 

@@ -8,6 +8,7 @@ import { MutationType } from "@/types/common";
 import FormSubmit from "../../../shareable/form-submit";
 import TravelpassFields from "./TravelpassFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -15,12 +16,7 @@ type Props = {
 
 function AddTravelpass({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      userId: toEditItem ? toEditItem.userId : "",
-      typeOf: toEditItem ? toEditItem.typeOf : "",
-      start: toEditItem ? toEditItem.start : "",
-      end: toEditItem ? toEditItem.end : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

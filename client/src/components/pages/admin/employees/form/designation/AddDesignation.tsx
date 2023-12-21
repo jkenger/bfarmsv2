@@ -8,17 +8,14 @@ import FormSubmit from "../../../shareable/form-submit";
 import DesignationFormFields from "./DesignationFormFields";
 import { MutationType } from "@/types/common";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 type Props = {
   toEditItem?: TDataFields;
 };
 
 function AddDesignation({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      description: toEditItem ? toEditItem.description : "",
-      salary: toEditItem ? toEditItem.salary : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

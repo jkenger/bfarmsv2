@@ -1,6 +1,6 @@
 import { setDateTime } from "@/lib/helpers";
 
-export const dtrStates = (
+export const values = (
   toEditItem?: TDataFields,
   action = "create"
 ): TDataFields => {

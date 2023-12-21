@@ -8,6 +8,8 @@ import { TableHead } from "@/components/ui/table";
 import ParseTime from "@/components/ui/parse-time";
 import EmptyCellBadge from "@/components/ui/empty-cell-badge";
 import DeleteDTR from "../form/DeleteDTR";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import logo from "@/assets/bfarlogo.png";
 
 export const dtrColumns: ColumnDef<TDataFields>[] = [
   {
@@ -39,11 +41,19 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
-          <img
-            src={row.original.user.avatar}
-            alt={row.original.user.avatar}
-            className="w-8 h-8 rounded-full"
-          />
+          <Avatar>
+            <AvatarFallback>
+              <img
+                src={logo}
+                alt="avatar logo"
+                className="w-8 h-8 rounded-full"
+              />
+            </AvatarFallback>
+            <AvatarImage
+              src={row.original.user.avatar}
+              alt={row.original.user.avatar}
+            />
+          </Avatar>
           <span>{row.original.user.fullName}</span>
         </div>
       );

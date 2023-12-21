@@ -9,7 +9,7 @@ import FormSubmit from "../../shareable/form-submit";
 
 import { useQueryProvider } from "@/components/context/query-provider";
 import DTRFields from "./DTRFields";
-import { dtrStates } from "./form-states";
+import { values } from "./form-values";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -17,7 +17,7 @@ type Props = {
 
 function AddDTR({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: dtrStates(toEditItem),
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

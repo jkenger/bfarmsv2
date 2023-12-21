@@ -8,22 +8,14 @@ import FormSubmit from "../../../shareable/form-submit";
 import { MutationType } from "@/types/common";
 import EmployeeFormFields from "./EmployeeFormFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 type Props = {
   toEditItem?: TDataFields;
 };
 
 function AddEmployee({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      employeeId: toEditItem ? toEditItem.employeeId : "",
-      rfId: toEditItem ? toEditItem.rfId : "",
-      firstName: toEditItem ? toEditItem.firstName : "",
-      lastName: toEditItem ? toEditItem.lastName : "",
-      age: toEditItem ? toEditItem.age : "",
-      designationId: toEditItem ? toEditItem.designationId : "",
-      payrollGroupId: toEditItem ? toEditItem.payrollGroupId : "",
-      deductions: toEditItem ? toEditItem.deductions : [],
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

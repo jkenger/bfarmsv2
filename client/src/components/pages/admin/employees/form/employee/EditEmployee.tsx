@@ -6,7 +6,7 @@ import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
 import EmployeeFormFields from "./EmployeeFormFields";
 import { useQueryProvider } from "@/components/context/query-provider";
-
+import { values } from "./form-values";
 type Props<T> = {
   toEditItem?: T;
   open?: boolean;
@@ -22,16 +22,8 @@ function EditEmployee<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
+      ...values(toEditItem),
       id: toEditItem ? toEditItem.id : "",
-      employeeId: toEditItem ? toEditItem.employeeId : "",
-      rfId: toEditItem ? toEditItem.rfId : "",
-      firstName: toEditItem ? toEditItem.firstName : "",
-      middleName: toEditItem ? toEditItem.middleName : "",
-      lastName: toEditItem ? toEditItem.lastName : "",
-      age: toEditItem ? toEditItem.age : "",
-      designationId: toEditItem ? toEditItem.designationId : "",
-      payrollGroupId: toEditItem ? toEditItem.payrollGroupId : "",
-      deductions: toEditItem ? toEditItem.deductions : "",
     } as TDataFields,
   });
 

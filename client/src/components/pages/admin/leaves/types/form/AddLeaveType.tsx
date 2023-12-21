@@ -5,6 +5,7 @@ import { MutationType } from "@/types/common";
 import LeaveTypesFields from "./LeaveTypesFields";
 import FormSubmit from "../../../shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -12,10 +13,7 @@ type Props = {
 
 function AddLeaveType({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      description: toEditItem ? toEditItem.description : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);

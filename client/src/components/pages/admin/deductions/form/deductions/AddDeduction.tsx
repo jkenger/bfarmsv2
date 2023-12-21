@@ -9,6 +9,7 @@ import FormSubmit from "../../../shareable/form-submit";
 
 import DeductionFields from "./DeductionFields";
 import { useQueryProvider } from "@/components/context/query-provider";
+import { values } from "./form-values";
 
 type Props = {
   toEditItem?: TDataFields;
@@ -16,10 +17,7 @@ type Props = {
 
 function AddDeduction({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
-    defaultValues: {
-      name: toEditItem ? toEditItem.name : "",
-      amount: toEditItem ? toEditItem.amount : "",
-    },
+    defaultValues: values(toEditItem),
   });
   const { createMutation } = useQueryProvider();
   const inputRef = useRef<HTMLInputElement>(null);
