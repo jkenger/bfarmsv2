@@ -31,6 +31,7 @@ export const loader = (queryClient: QueryClient) => async () => {
 };
 function DailyTimeRecord() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
+
   const { createdActivities, deletedActivities, editedActivities } =
     useQueryProvider();
   const titlePage = "Daily Time Records";

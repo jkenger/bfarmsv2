@@ -34,7 +34,7 @@ function DTRTable({ columns }: Props) {
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
-
+  console.log(data);
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;

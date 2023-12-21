@@ -85,12 +85,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
           {
             userId,
             amTimeIn: currentDateTime,
-            // If late, set late
-            isLate: currentDateTime > eightAm ? true : false,
-            lateMinutes:
-              differenceInMinutes(currentDateTime, eightAm) < 0
-                ? 0
-                : differenceInMinutes(currentDateTime, eightAm),
           },
         ];
         await models.addModel(res, data, prisma.attendance);
@@ -105,12 +99,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
           {
             userId,
             pmTimeIn: currentDateTime,
-            // If late, set late to true
-            isLate: currentDateTime > onePm ? true : false,
-            lateMinutes:
-              differenceInMinutes(currentDateTime, onePm) < 0
-                ? 0
-                : differenceInMinutes(currentDateTime, onePm),
           },
         ];
         await models.addModel(res, data, prisma.attendance);
@@ -141,12 +129,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
           {
             ...currentDayAttendance,
             amTimeOut: currentDateTime,
-            // If late, set late to true
-            isUndertime: currentDateTime < twelvePm ? true : false,
-            undertimeMinutes:
-              differenceInMinutes(twelvePm, currentDateTime) < 0
-                ? 0
-                : differenceInMinutes(twelvePm, currentDateTime),
           },
         ];
         await models.updateModel(
@@ -162,13 +144,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
             {
               ...currentDayAttendance,
               pmTimeIn: currentDateTime,
-              // If late, set late to true
-              isLate: currentDateTime > fivePm ? true : false,
-              lateMinutes:
-                differenceInMinutes(currentDateTime, fivePm) < 0
-                  ? 0
-                  : currentDayAttendance.lateMinutes +
-                    differenceInMinutes(currentDateTime, fivePm),
             },
           ];
           await models.updateModel(
