@@ -68,25 +68,34 @@ const prisma = new PrismaClient().$extends({
             ? new Date(args.data.pmTimeOut)
             : null;
 
-          const amLateDifference =
-            differenceInMinutes(amTimeIn, eightAm) > 0
-              ? differenceInMinutes(amTimeIn, eightAm)
-              : 0;
+          const isLate = args.data.isLate ? args.data.isLate : false;
+          const isUndertime = args.data.isUndertime
+            ? args.data.isUndertime
+            : false;
 
-          const pmLateDifference =
-            differenceInMinutes(pmTimeIn, onePm) > 0
+          const amLateDifference = isLate
+            ? differenceInMinutes(amTimeIn, eightAm) > 0
+              ? differenceInMinutes(amTimeIn, eightAm)
+              : 0
+            : 0;
+
+          const pmLateDifference = isLate
+            ? differenceInMinutes(pmTimeIn, onePm) > 0
               ? differenceInMinutes(pmTimeIn, onePm)
-              : 0;
+              : 0
+            : 0;
           let lateMinutes = amLateDifference + pmLateDifference;
 
-          const amUndertimeDifference =
-            differenceInMinutes(twelvePm, amTimeOut) > 0 && amTimeOut
+          const amUndertimeDifference = isUndertime
+            ? differenceInMinutes(twelvePm, amTimeOut) > 0 && amTimeOut
               ? differenceInMinutes(twelvePm, amTimeOut)
-              : 0;
-          const pmUndertimeDifference =
-            differenceInMinutes(fivePm, pmTimeOut) > 0 && pmTimeOut
+              : 0
+            : 0;
+          const pmUndertimeDifference = isUndertime
+            ? differenceInMinutes(fivePm, pmTimeOut) > 0 && pmTimeOut
               ? differenceInMinutes(fivePm, pmTimeOut)
-              : 0;
+              : 0
+            : 0;
 
           let undertimeMinutes = amUndertimeDifference + pmUndertimeDifference;
 

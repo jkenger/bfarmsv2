@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -43,9 +44,11 @@ function CreateAttendanceBtn({
           />
         </div>
         <DialogFooter className="sm:justify-end">
-          <Button type="button" variant="secondary" onClick={onClick}>
-            Create
-          </Button>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" onClick={onClick}>
+              Create
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
