@@ -23,6 +23,7 @@ import { fileURLToPath } from "url";
 
 // Config
 dotenv.config();
+process.env.TZ = "UTC";
 
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
