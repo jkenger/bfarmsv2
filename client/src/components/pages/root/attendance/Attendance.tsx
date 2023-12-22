@@ -3,7 +3,7 @@ import AttendanceTable from "../../../ui/attendance-table";
 
 import Card from "../../../ui/card";
 import CreateAttendanceBtn from "../../../ui/punchin-button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import onScan from "onscan.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ function Attendance() {
   const { mutate, isError, error, isSuccess, isPending } = useMutation(
     createAttendance({ queryClient })
   );
+  const [code, setCode] = useState("");
   const axiosError = error as AxiosError<Error>;
   useEffect(() => {
     onScan.attachTo(document, {
@@ -61,6 +62,8 @@ function Attendance() {
               </p>
 
               <CreateAttendanceBtn
+                onClick={() => mutate(code)}
+                onChange={setCode}
                 actionButton={
                   theme === "dark" ? (
                     <Button

@@ -13,8 +13,12 @@ import { Button } from "./button";
 
 function CreateAttendanceBtn({
   actionButton,
+  onChange,
+  onClick,
 }: {
   actionButton: React.ReactNode;
+  onChange: (code: string) => void;
+  onClick: () => void;
 }) {
   return (
     <Dialog>
@@ -34,11 +38,12 @@ function CreateAttendanceBtn({
             className="bg-secondary text-secondary-foreground"
             id="id"
             defaultValue=""
-            placeholder="00-00"
+            placeholder="0000000000"
+            onChange={(e) => onChange(e.target.value)}
           />
         </div>
         <DialogFooter className="sm:justify-end">
-          <Button type="button" variant="secondary">
+          <Button type="button" variant="secondary" onClick={onClick}>
             Create
           </Button>
         </DialogFooter>

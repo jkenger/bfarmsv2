@@ -23,11 +23,8 @@ function EditTravelpass<T extends TDataFields>({
 }: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
+      ...values(toEditItem),
       id: toEditItem ? toEditItem.id : "",
-      userId: toEditItem ? toEditItem.userId : "",
-      typeOf: toEditItem ? toEditItem.typeOf : "",
-      start: toEditItem ? toEditItem.start : "",
-      end: toEditItem ? toEditItem.end : "",
     } as TDataFields,
   });
 
