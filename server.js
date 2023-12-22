@@ -23,7 +23,8 @@ import { fileURLToPath } from "url";
 
 // Config
 dotenv.config();
-process.env.TZ = "UTC";
+process.env.TZ = "Asia/Singapore";
+console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
