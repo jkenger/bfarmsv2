@@ -5,7 +5,7 @@ type Props = {
 };
 
 function ParseTime({ children }: Props) {
-  return <span>{moment(String(children)).format("LTS")}</span>;
+  return <span>{moment(String(children)).local().format("LTS")}</span>;
 }
 
 export default ParseTime;
