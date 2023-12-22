@@ -5,13 +5,7 @@ type Props = {
 };
 
 function ParseTime({ children }: Props) {
-  return (
-    <span>
-      {new Date(String(children)).toLocaleTimeString("en-PH", {
-        timeZone: "Asia/Manila",
-      })}
-    </span>
-  );
+  return <span>{new Date(String(children)).toLocaleTimeString()}</span>;
 }
 
 export default ParseTime;

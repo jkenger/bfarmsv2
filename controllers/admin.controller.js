@@ -30,10 +30,14 @@ export const createAttendance = asyncHandler(async (req, res) => {
     ...req.body.map((item) => {
       return {
         ...item,
-        amTimeIn: item.amTimeIn ? new Date(item.amTimeIn) : null,
-        amTimeOut: item.amTimeOut ? new Date(item.amTimeOut) : null,
-        pmTimeIn: item.pmTimeIn ? new Date(item.pmTimeIn) : null,
-        pmTimeOut: item.pmTimeOut ? new Date(item.pmTimeOut) : null,
+        amTimeIn: item.amTimeIn ? new Date(item.amTimeIn).toUTCString() : null,
+        amTimeOut: item.amTimeOut
+          ? new Date(item.amTimeOut).toUTCString()
+          : null,
+        pmTimeIn: item.pmTimeIn ? new Date(item.pmTimeIn).toUTCString() : null,
+        pmTimeOut: item.pmTimeOut
+          ? new Date(item.pmTimeOut).toUTCString()
+          : null,
       };
     }),
   ];
@@ -45,10 +49,14 @@ export const updateAttendance = asyncHandler(async (req, res) => {
     ...req.body.map((item) => {
       return {
         ...item,
-        amTimeIn: item.amTimeIn ? new Date(item.amTimeIn) : null,
-        amTimeOut: item.amTimeOut ? new Date(item.amTimeOut) : null,
-        pmTimeIn: item.pmTimeIn ? new Date(item.pmTimeIn) : null,
-        pmTimeOut: item.pmTimeOut ? new Date(item.pmTimeOut) : null,
+        amTimeIn: item.amTimeIn ? new Date(new Date(item.amTimeIn).toUTCString()) : null,
+        amTimeOut: item.amTimeOut
+          ? new Date(new Date(item.amTimeOut).toUTCString())
+          : null,
+        pmTimeIn: item.pmTimeIn ? new Date(new Date(item.pmTimeIn).toUTCString()) : null,
+        pmTimeOut: item.pmTimeOut
+          ? new Date(new Date(item.pmTimeOut).toUTCString())
+          : null,
       };
     }),
   ];

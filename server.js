@@ -23,7 +23,6 @@ import { fileURLToPath } from "url";
 
 // Config
 dotenv.config();
-process.env.TZ = "ASIA/MANILA";
 
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
