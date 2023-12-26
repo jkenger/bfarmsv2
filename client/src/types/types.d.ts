@@ -128,7 +128,12 @@ type TGetQueryOptions = {
 };
 
 type TQueryContext = {
-  createMutation: UseMutationResult<void, Error, TDataFields, unknown>;
+  createMutation: UseMutationResult<
+    AxiosResponse<any, any> | undefined,
+    Error,
+    TDataFields,
+    unknown
+  >;
 
   editMutation: UseMutationResult<void, Error, TDataFields, unknown>;
 

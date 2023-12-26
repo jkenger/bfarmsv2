@@ -43,7 +43,7 @@ export const createDesignation = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_DESIGNATION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/employees/designations", data);
+      return await fetch.post("/admin/employees/designations", data);
     },
     onSuccess: async () => {
       toast.success(`Designation Created`, {

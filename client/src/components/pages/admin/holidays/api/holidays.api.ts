@@ -1,10 +1,10 @@
-import { getDeductions } from "./../../deductions/api/deductions.api";
 import { fetch } from "@/lib/utils";
 import { keepPreviousData } from "@tanstack/react-query";
 
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
+import { AxiosResponse } from "axios";
 
 export type getResponse = {
   data: TDataFields[];
@@ -44,7 +44,7 @@ export const createHoliday = ({ queryClient, form }: TMutation) => {
         ...data,
       });
     },
-    onSuccess: async (data) => {
+    onSuccess: async (data: AxiosResponse) => {
       const { searchParams: holidaysParams } = getSearchParams();
       const searchParams = new URLSearchParams(holidaysParams);
       const newData = {
@@ -57,7 +57,7 @@ export const createHoliday = ({ queryClient, form }: TMutation) => {
 
       queryClient.setQueryData(
         [QueryKeys.HOLIDAYS, searchParams.toString()],
-        (oldData: any) => {
+        (oldData: AxiosResponse) => {
           const oldDataCopy = oldData.data.data;
           return {
             ...oldData,
@@ -68,10 +68,6 @@ export const createHoliday = ({ queryClient, form }: TMutation) => {
           };
         }
       );
-
-      // await queryClient.invalidateQueries({
-      //   queryKey: [QueryKeys.HOLIDAYS],
-      // });
       form?.reset();
     },
     onError: async () => {

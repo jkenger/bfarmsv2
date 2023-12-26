@@ -44,7 +44,7 @@ export const createPayrollGroup = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_PAYROLL_GROUP],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/payrolls/groups", {
+      return await fetch.post("/admin/payrolls/groups", {
         ...data,
       });
     },

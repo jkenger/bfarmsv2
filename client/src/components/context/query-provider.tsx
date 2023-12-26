@@ -2,14 +2,15 @@ import { useMutation, useMutationState } from "@tanstack/react-query";
 import React from "react";
 
 import { QueryKeys } from "@/types/common";
+import { AxiosResponse } from "axios";
 
 type Props = {
   children: React.ReactNode;
   api: {
     create: {
       mutationKey: QueryKeys[];
-      mutationFn: (data: TDataFields) => Promise<void>;
-      onSuccess: () => Promise<void>;
+      mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
+      onSuccess: (data: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
     edit: {

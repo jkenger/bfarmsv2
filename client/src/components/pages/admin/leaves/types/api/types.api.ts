@@ -42,7 +42,7 @@ export const createLeaveType = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_LEAVE_TYPE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/leaves/types", {
+      return await fetch.post("/admin/leaves/types", {
         ...data,
       });
     },

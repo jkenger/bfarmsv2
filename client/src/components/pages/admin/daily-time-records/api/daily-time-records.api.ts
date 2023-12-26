@@ -40,7 +40,7 @@ export const createDTR = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/attendance", {
+      return await fetch.post("/admin/attendance", {
         ...data,
       });
     },

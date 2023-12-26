@@ -43,7 +43,7 @@ export const createEmployee = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/employees", data);
+      return await fetch.post("/admin/employees", data);
     },
     onSuccess: async () => {
       toast.success(`Employee Created`, {

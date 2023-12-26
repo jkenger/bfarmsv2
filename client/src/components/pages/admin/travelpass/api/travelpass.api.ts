@@ -40,7 +40,7 @@ export const createTravelpass = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_TRAVELPASS],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/travelpass", {
+      return await fetch.post("/admin/travelpass", {
         ...data,
       });
     },

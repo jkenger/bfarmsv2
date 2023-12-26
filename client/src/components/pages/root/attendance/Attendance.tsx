@@ -16,15 +16,14 @@ import { Button } from "@/components/ui/button";
 
 function Attendance() {
   const queryClient = useQueryClient();
-  const { mutate, isError, error, isSuccess, isPending } = useMutation(
-    createAttendance({ queryClient })
-  );
+  const { mutate, isError, error, isSuccess, isPending, variables } =
+    useMutation(createAttendance({ queryClient }));
   const [code, setCode] = useState("");
   const axiosError = error as AxiosError<Error>;
   useEffect(() => {
     onScan.attachTo(document, {
       suffixKeyCodes: [13],
-      reactToPaste: true,
+      reactToPaste: false,
       onScan: function (sCode) {
         mutate(sCode);
       },
@@ -97,13 +96,13 @@ function Attendance() {
 
               <div className="border animate-pulse border-dashed text-xs  p-4 h-24 w-full flex items-center justify-center">
                 {isPending && (
-                  <p className="text-center flex gap-2">
+                  <p className="text-center flex gap-1">
                     {" "}
                     <Loader2
                       size={IconProperties.SIZE}
                       className="animate-spin"
                     />
-                    Scanning...
+                    Scanning<span>{variables}</span>
                   </p>
                 )}
                 {!isPending && (

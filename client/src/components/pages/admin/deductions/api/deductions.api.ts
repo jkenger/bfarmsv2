@@ -46,7 +46,7 @@ export const createDeduction = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_DEDUCTION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/deductions", data);
+      return await fetch.post("/admin/deductions", data);
     },
     onSuccess: async () => {
       toast.success(`Deduction Created`, {
