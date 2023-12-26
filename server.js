@@ -24,12 +24,11 @@ import { fileURLToPath } from "url";
 // Config
 dotenv.config();
 process.env.TZ = "Asia/Singapore";
-console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
+// console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
 // Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
-const prisma = new PrismaClient({ log: ["query", "info", "warn"] });
 
 // Middlewares
 

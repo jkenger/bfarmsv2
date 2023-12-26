@@ -60,6 +60,20 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
+    accessorKey: "attendanceDate",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Attendance Date</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.attendanceDate}</ParseDate>;
+    },
+  },
+
+  {
     accessorKey: "amTimeIn",
     header: ({ column }) => {
       return (

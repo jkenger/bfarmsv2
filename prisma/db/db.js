@@ -68,84 +68,42 @@ const prisma = new PrismaClient().$extends({
             ? new Date(args.data.pmTimeOut)
             : null;
 
-          const isLate = args.data.isLate ? args.data.isLate : false;
-          const isUndertime = args.data.isUndertime
-            ? args.data.isUndertime
-            : false;
+          let lateMinutes = 0;
+          let undertimeMinutes = 0;
 
-          const amLateDifference = isLate
-            ? differenceInMinutes(amTimeIn, eightAm) > 0
-              ? differenceInMinutes(amTimeIn, eightAm)
-              : 0
-            : 0;
-
-          const pmLateDifference = isLate
-            ? differenceInMinutes(pmTimeIn, onePm) > 0
-              ? differenceInMinutes(pmTimeIn, onePm)
-              : 0
-            : 0;
-          let lateMinutes = amLateDifference + pmLateDifference;
-
-          const amUndertimeDifference = isUndertime
-            ? differenceInMinutes(twelvePm, amTimeOut) > 0 && amTimeOut
-              ? differenceInMinutes(twelvePm, amTimeOut)
-              : 0
-            : 0;
-          const pmUndertimeDifference = isUndertime
-            ? differenceInMinutes(fivePm, pmTimeOut) > 0 && pmTimeOut
-              ? differenceInMinutes(fivePm, pmTimeOut)
-              : 0
-            : 0;
-
-          let undertimeMinutes = amUndertimeDifference + pmUndertimeDifference;
-
-          if (currentDateTime < twelvePm) {
-            return query({
-              ...args,
-              data: {
-                ...args.data,
-                lateMinutes,
-                undertimeMinutes,
-              },
-            });
-          }
-          if (currentDateTime > twelvePm) {
-            console.log(
-              "currentDateTime",
-              differenceInMinutes(currentDateTime, onePm)
-            );
-            return query({
-              ...args,
-              data: {
-                ...args.data,
-                lateMinutes,
-                undertimeMinutes,
-              },
-            });
+          if (amTimeIn) {
+            lateMinutes =
+              amTimeIn > eightAm ? differenceInMinutes(amTimeIn, eightAm) : 0;
           }
 
-          if (currentDateTime < onePm) {
-            return query({
-              ...args,
-              data: {
-                ...args.data,
-                // If late, set late to true
-                lateMinutes,
-                undertimeMinutes,
-              },
-            });
+          if (amTimeOut) {
+            console.log("amTimeOut", amTimeOut);
+            console.log("twelvePm", twelvePm);
+            undertimeMinutes =
+              amTimeOut < twelvePm
+                ? differenceInMinutes(twelvePm, amTimeOut)
+                : 0;
           }
 
-          if (currentDateTime > onePm) {
-            return query({
-              ...args,
-              data: {
-                ...args.data,
-                lateMinutes,
-                undertimeMinutes,
-              },
-            });
+          if (pmTimeIn) {
+            lateMinutes +=
+              pmTimeIn > onePm ? differenceInMinutes(pmTimeIn, onePm) : 0;
           }
+
+          if (pmTimeOut) {
+            undertimeMinutes +=
+              pmTimeOut < fivePm ? differenceInMinutes(fivePm, pmTimeOut) : 0;
+          }
+          return query({
+            ...args,
+            data: {
+              ...args.data,
+              // If late, set late to true
+              lateMinutes,
+              undertimeMinutes,
+              attendanceDate: amTimeIn || pmTimeIn,
+            },
+          });
         }
         return query(args);
       },

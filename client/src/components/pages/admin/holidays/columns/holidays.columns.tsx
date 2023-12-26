@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import ParseDate from "@/components/ui/parse-date";
 import DeleteHoliday from "../form/DeleteHoliday";
 import EditHoliday from "../form/EditHoliday";
+import { Badge } from "@/components/ui/badge";
 
 export const holidaysColumns: ColumnDef<TDataFields>[] = [
   {
@@ -13,6 +14,18 @@ export const holidaysColumns: ColumnDef<TDataFields>[] = [
         <DataTableHeader column={column}>
           <span>Name</span>
         </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="w-lg max-w-lg space-x-1">
+          <span> {row.original.name} </span>
+          {row.original.status === "new" ? (
+            <Badge className="text-xs">New</Badge>
+          ) : (
+            ""
+          )}
+        </div>
       );
     },
   },

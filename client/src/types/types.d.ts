@@ -101,17 +101,22 @@ type TDailyTimeRecord = {
   id: string;
   user: TEmployees;
   userId: string;
-  amTimeIn: string;
-  amTimeOut: string;
-  pmTimeIn: string;
-  pmTimeOut: string;
-  isLate: boolean;
-  lateMinutes: int;
-  isUnderTime: boolean;
-  undertimeMinutes: int;
-  isOnTime: boolean;
+  attendanceDate?: string;
+  amTimeIn?: string;
+  amTimeOut?: string;
+  pmTimeIn?: string;
+  pmTimeOut?: string;
+  isLate?: boolean;
+  lateMinutes?: int;
+  isUnderTime?: boolean;
+  undertimeMinutes?: int;
+  isOnTime?: boolean;
   createdAt: string;
   updatedAt: string;
+};
+
+type TStatus = {
+  status: string;
 };
 
 type TGetQueryOptions = {
@@ -145,4 +150,5 @@ type TDataFields = TEmployees &
   TTravelpass &
   TDeductions &
   TLeaveTypes &
-  TDailyTimeRecord;
+  TDailyTimeRecord &
+  TStatus;

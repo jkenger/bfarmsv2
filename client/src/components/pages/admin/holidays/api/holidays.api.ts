@@ -1,3 +1,4 @@
+import { getDeductions } from "./../../deductions/api/deductions.api";
 import { fetch } from "@/lib/utils";
 import { keepPreviousData } from "@tanstack/react-query";
 
@@ -13,10 +14,8 @@ export type getResponse = {
 export const getHolidays = ({
   type = GetQueryType.PAGINATED,
 }: TGetQueryOptions) => {
-  console.log(type);
-
-  const { searchParams: payrollGroupParams } = getSearchParams();
-  const searchParams = new URLSearchParams(payrollGroupParams);
+  const { searchParams: holidaysParams } = getSearchParams();
+  const searchParams = new URLSearchParams(holidaysParams);
   // If type is paginated, then add the search params to the query key
   const qKey =
     type === GetQueryType.PAGINATED
@@ -32,7 +31,6 @@ export const getHolidays = ({
     queryFn: async () => {
       return await fetch.get(qFnQuery);
     },
-
     placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   };
@@ -42,17 +40,38 @@ export const createHoliday = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_HOLIDAY],
     mutationFn: async (data: TDataFields) => {
-      await fetch.post("/admin/holidays", {
+      return await fetch.post("/admin/holidays", {
         ...data,
       });
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      const { searchParams: holidaysParams } = getSearchParams();
+      const searchParams = new URLSearchParams(holidaysParams);
+      const newData = {
+        ...data.data.data,
+        status: "new",
+      };
       toast.success(`Holiday Created`, {
         description: "A new holiday has been successfully addded.",
       });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.HOLIDAYS],
-      });
+
+      queryClient.setQueryData(
+        [QueryKeys.HOLIDAYS, searchParams.toString()],
+        (oldData: any) => {
+          const oldDataCopy = oldData.data.data;
+          return {
+            ...oldData,
+            data: {
+              data: [newData, ...oldDataCopy],
+              numOfPages: oldData.data.numOfPages,
+            },
+          };
+        }
+      );
+
+      // await queryClient.invalidateQueries({
+      //   queryKey: [QueryKeys.HOLIDAYS],
+      // });
       form?.reset();
     },
     onError: async () => {

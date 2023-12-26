@@ -38,7 +38,7 @@ function DTRFields({ form, mutationType = MutationType.CREATE }: Props) {
     return regex.test(inputString);
   };
 
-  const timeInputValidate = (value: string) => {
+  const timeInputValidate = (value?: string) => {
     if (value) {
       if (!validateString(value)) {
         return "Invalid time format. Please use mm/dd/YYYY, HH:mm:ss AM/PM format";
