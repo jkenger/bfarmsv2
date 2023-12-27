@@ -23,8 +23,8 @@ export const getDTR = ({ type = GetQueryType.PAGINATED }: TGetQueryOptions) => {
 
   const qFnQuery =
     type === GetQueryType.PAGINATED
-      ? `admin/attendance?${searchParams.toString()}`
-      : `admin/attendance/all`;
+      ? `admin/daily-time-records?${searchParams.toString()}`
+      : `admin/daily-time-records/all`;
   return {
     queryKey: qKey,
     queryFn: async () => {
@@ -40,7 +40,7 @@ export const createDTR = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      return await fetch.post("/admin/attendance", {
+      return await fetch.post("/admin/daily-time-records", {
         ...data,
       });
     },
@@ -67,7 +67,7 @@ export const editDTR = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/attendance/${data.id}`, {
+      await fetch.put(`/admin/daily-time-records/${data.id}`, {
         ...data,
       });
     },
@@ -94,7 +94,7 @@ export const deleteDTR = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/attendance/${data.id}`);
+      await fetch.delete(`/admin/daily-time-records/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Attendance Deleted`, {

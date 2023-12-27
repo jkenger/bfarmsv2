@@ -16,6 +16,7 @@ export interface DataTableProps<TData, TValue> {
   onEditErrorAction?: React.ReactElement;
   onCreateErrorAction?: React.ReactElement;
   facetedFilterButtons?: React.ReactElement;
+  dateRangePicker?: boolean;
 }
 type Props<TData, TValue> = {
   children: React.ReactNode;

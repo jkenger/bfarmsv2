@@ -70,16 +70,16 @@ router.get("/", (req, res) => {
 // @Method  : GET / POST
 // @Access  : Public and Private (Admin)
 router
-  .route("/attendance")
+  .route("/daily-time-records")
   .get(getPaginatedAttendance)
   .post(validateAdminAttendance, createAttendance);
-router.route("/attendance/all").get(getAllAttendance);
+router.route("/daily-time-records/all").get(getAllAttendance);
 
 // @Desc    : Delete and Update Attendance
 // @Method  : DELETE / POST /
 // @Access  : Private (Admin)
 router
-  .route("/attendance/:id")
+  .route("/daily-time-records/:id")
   .put(validateAdminAttendance, updateAttendance)
   .delete(validateId, deleteAttendance);
 

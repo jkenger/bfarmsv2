@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { addDays, format, set } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -10,23 +10,43 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React from "react";
+import React, { useEffect } from "react";
 import DropdownSelect from "./dropdown-select";
+import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 
 enum DateFilter {
+  ALL_TIME = "all",
+  TODAY = "1d",
   SEMI_MONTHLY = "15d",
   MONTHLY = "30d",
 }
 
 export function CalendarDateRangePicker({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+  queryOnChange,
+}: React.HTMLAttributes<HTMLDivElement> & {
+  queryOnChange: boolean;
+}) {
+  const { fromDate, toDate } = getSearchParams();
+  const [range, setRange] = React.useState<DateFilter>(DateFilter.ALL_TIME);
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
+    from: fromDate ? new Date(fromDate) : new Date("01/01/2021"),
+    to: toDate ? new Date(toDate) : new Date(),
   });
 
-  const [range, setRange] = React.useState<DateFilter>(DateFilter.SEMI_MONTHLY);
+  const { handleFromDateChange, handleToDateChange } = useFilterParams();
+
+  useEffect(() => {
+    if (queryOnChange) {
+      setDate({
+        from: fromDate ? new Date(fromDate) : new Date("01/01/2021"),
+        to: toDate ? new Date(toDate) : new Date(),
+      });
+      if (!fromDate && !toDate) {
+        setRange(DateFilter.ALL_TIME);
+      }
+    }
+  }, [fromDate, toDate]);
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -35,6 +55,7 @@ export function CalendarDateRangePicker({
           <Button
             id="date"
             variant={"outline"}
+            size="sm"
             className={cn(
               " justify-start text-left font-normal text-xs",
               !date && "text-muted-foreground"
@@ -61,14 +82,34 @@ export function CalendarDateRangePicker({
               name="range"
               labelText="Select range"
               defaultValue={range}
-              onValueChange={(value) => setRange(value as DateFilter)}
+              onValueChange={(value) => {
+                setRange(value as DateFilter);
+                switch (value) {
+                  case DateFilter.ALL_TIME:
+                    handleFromDateChange(new Date("01/01/2021").toString());
+                    handleToDateChange(new Date().toString());
+                    break;
+                  case DateFilter.TODAY:
+                    handleFromDateChange(new Date().toString());
+                    handleToDateChange(new Date().toString());
+                    break;
+                  case DateFilter.SEMI_MONTHLY:
+                    handleFromDateChange(new Date().toString());
+                    handleToDateChange(addDays(new Date(), 14).toString());
+                    break;
+                  case DateFilter.MONTHLY:
+                    handleFromDateChange(new Date().toString());
+                    handleToDateChange(addDays(new Date(), 29).toString());
+                    break;
+                }
+              }}
               options={Object.values(DateFilter)}
             />
           </div>
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
+            defaultMonth={date?.to}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}

@@ -20,7 +20,7 @@ type Props<A> = {
   children: React.ReactNode;
   onSelectedChange: (value: A) => void;
   options: string[];
-  ifEmptyLink: Links;
+  ifEmptyLink?: Links;
 };
 function FacetedFilterButton<A>({
   children,
@@ -83,15 +83,17 @@ function FacetedFilterButton<A>({
       </PopoverTrigger>
       <PopoverContent align="start" className="p-0 w-auto">
         <Command>
-          <CommandInput placeholder={`Filter by ${children}`} />
+          <CommandInput className="text-xs" placeholder={`Filter by name`} />
           <CommandList>
             <CommandGroup className="">
               {!optionsLength && (
                 <span className="text-xs p-4 flex items-center justify-center w-full">
                   No item found.
-                  <span className="ml-1 text-primary underline">
-                    <Link to={ifEmptyLink}> Add</Link>
-                  </span>
+                  {ifEmptyLink && (
+                    <span className="ml-1 text-primary underline">
+                      <Link to={ifEmptyLink}> Add</Link>
+                    </span>
+                  )}
                 </span>
               )}
               {optionsLength &&

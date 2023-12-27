@@ -32,14 +32,14 @@ function DropdownSelect<T>({
       disabled={disabled}
     >
       <SelectTrigger className="w-full lg:w-auto">
-        <SelectValue placeholder={labelText} />
+        <SelectValue placeholder={labelText} className="text-xs" />
       </SelectTrigger>
       <SelectContent>
         {options.map((listValue) => (
           <SelectItem
             key={listValue as Key}
             value={listValue as string}
-            className="capitalize"
+            className="capitalize text-xs"
           >
             {listValue as string}
           </SelectItem>

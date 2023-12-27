@@ -43,6 +43,7 @@ import {
 } from "./data-table-column-status";
 import { DataTableProps, useDataTable } from "../context/data-table-provider";
 import { Badge } from "./badge";
+import { CalendarDateRangePicker } from "./date-range-picker";
 
 export function DataTable<TData extends TDataFields, TValue>() {
   const [columnVisibility, setColumnVisibility] =
@@ -76,6 +77,7 @@ export function DataTable<TData extends TDataFields, TValue>() {
     onEditErrorAction,
     onCreateErrorAction,
     facetedFilterButtons,
+    dateRangePicker,
   } = useDataTable() as DataTableProps<TData, TValue>;
   const isFetching = isDataFetching;
 
@@ -124,6 +126,8 @@ export function DataTable<TData extends TDataFields, TValue>() {
               handlePageChange(1);
             }, 500)}
           />
+          {/* Date Range Picker */}
+          {dateRangePicker && <CalendarDateRangePicker queryOnChange />}
 
           {/* Faceted Filter Button */}
           {facetedFilterButtons}

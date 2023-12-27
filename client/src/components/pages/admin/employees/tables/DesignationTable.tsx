@@ -13,6 +13,8 @@ import AddDesignation from "../form/designation/AddDesignation";
 import EditDesignation from "../form/designation/EditDesignation";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { useQueryProvider } from "@/components/context/query-provider";
+import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
+import useFilterParams from "@/components/hooks/useFilterParams";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -27,6 +29,8 @@ function DesignationTable({ columns }: Props) {
     error,
     refetch,
   } = useQuery(getDesignations({ type: "paginated" }));
+
+  const { handleDesignationChange } = useFilterParams();
 
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
@@ -91,6 +95,17 @@ function DesignationTable({ columns }: Props) {
               >
                 <AddDesignation toEditItem={createMutation?.variables} />
               </MutationSheet>
+            ),
+            facetedFilterButtons: (
+              <>
+                <FacetedFilterButton
+                  onSelectedChange={handleDesignationChange}
+                  // filter={jobStatusfilter}
+                  options={data.map((item: TDataFields) => item.name)}
+                >
+                  Designations
+                </FacetedFilterButton>
+              </>
             ),
           }}
         >

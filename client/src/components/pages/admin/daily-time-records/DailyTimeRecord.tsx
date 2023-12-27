@@ -19,7 +19,6 @@ import ActivityCard from "../employees/ui/activity-card";
 import { dtrColumns } from "./columns/dtr.columns";
 
 import { useQueryProvider } from "@/components/context/query-provider";
-import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import DTRTable from "./tables/DTRTable";
 import { getDTR } from "./api/daily-time-records.api";
 import AddDTR from "./form/AddDTR";
@@ -88,7 +87,6 @@ function DailyTimeRecord() {
           >
             <AddDTR />
           </MutationSheet>
-          <CalendarDateRangePicker />;
           <DataTableHistory
             render={{
               edited: editedActivities.length ? (

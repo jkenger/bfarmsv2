@@ -69,6 +69,24 @@ const useFilterParams = () => {
     }
   }
 
+  function handleFromDateChange(fromDate?: string) {
+    if (fromDate?.length) {
+      setFilterParams("fromDate", [fromDate]);
+    } else {
+      searchParams.delete("fromDate");
+      setSearchParams(searchParams);
+    }
+  }
+
+  function handleToDateChange(toDate?: string) {
+    if (toDate?.length) {
+      setFilterParams("toDate", [toDate]);
+    } else {
+      searchParams.delete("toDate");
+      setSearchParams(searchParams);
+    }
+  }
+
   function handleResetParams() {
     setSearchParams("");
   }
@@ -89,6 +107,8 @@ const useFilterParams = () => {
     handleGroupChange,
     handleDesignationChange,
     handleSortChange,
+    handleFromDateChange,
+    handleToDateChange,
     handleResetParams,
     handlePageLimit,
     getSortOrder,
@@ -105,6 +125,8 @@ export const getSearchParams = () => {
   const payrollGroup =
     new URLSearchParams(url.search).get("payrollGroup") || "";
   const designation = new URLSearchParams(url.search).get("designation") || "";
+  const fromDate = new URLSearchParams(url.search).get("fromDate") || "";
+  const toDate = new URLSearchParams(url.search).get("toDate") || "";
 
   const searchParams = {
     page,
@@ -113,6 +135,8 @@ export const getSearchParams = () => {
     sp,
     payrollGroup,
     designation,
+    fromDate,
+    toDate,
   };
 
   return {
@@ -121,6 +145,8 @@ export const getSearchParams = () => {
     search,
     sp,
     searchParams,
+    fromDate,
+    toDate,
   };
 };
 

@@ -95,6 +95,7 @@ function DTRTable({ columns }: Props) {
                 <AddDTR toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
+            dateRangePicker: true,
           }}
         >
           <DataTable />
