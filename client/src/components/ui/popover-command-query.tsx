@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 import {
@@ -22,6 +22,7 @@ import { ControllerRenderProps } from "react-hook-form";
 import GroupItem from "./group-item";
 import DataTablePaginationNoBtn from "./data-table-pagination-nobtn";
 import { Link } from "react-router-dom";
+import { Skeleton } from "./skeleton";
 
 type Props = {
   selected: ControllerRenderProps<TDataFields, any>;
@@ -61,36 +62,49 @@ function PopoverCommandQuery({
     getItem({ type: "paginated", customParams: params })
   );
 
-  const itemData = data?.data.data ? data.data.data : [];
-  const numOfPages = data?.data.numOfPages ? data.data.numOfPages : 0;
-  const [selectedItem, setSelectedItem] = useState(
-    selected.value
-      ? itemData.find((item: TDataFields) => item.id === selected.value)
-      : null
+  const itemData = useMemo(
+    () => (data?.data.data ? data.data.data : []),
+    [data?.data.data]
   );
+  const numOfPages = data?.data.numOfPages ? data.data.numOfPages : 0;
+  const [selectedItem, setSelectedItem] = useState<TDataFields>();
+
+  useEffect(() => {
+    if (selected.value) {
+      setSelectedItem(
+        itemData.find((item: TDataFields) => item.id === selected.value)
+      );
+    }
+  }, [selected.value, itemData]);
 
   const detailsSelect = useRef<HTMLSpanElement>(null);
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <FormControl>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            className={cn(
-              " justify-between text-xs ",
-              !selectedItem?.id && "text-muted-foreground"
-            )}
-          >
-            {selectedItem ? (
-              selectedItem[displayField]
-            ) : (
-              <span>Select {label ? label : "Item"}</span>
-            )}
-            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-      </FormControl>
+      {isPending && (
+        <Skeleton className="w-24 h-8" style={{ display: "inline-block" }} />
+      )}
+      {isSuccess && (
+        <FormControl>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              className={cn(
+                " justify-between text-xs ",
+                !selectedItem?.id && "text-muted-foreground"
+              )}
+            >
+              {selectedItem?.id ? (
+                selectedItem[displayField]
+              ) : (
+                <span>Select {label ? label : "Item"}</span>
+              )}
+              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+        </FormControl>
+      )}
+
       <PopoverContent className="p-0 border-0">
         {/* <CommandDialog open={open} onOpenChange={setOpen}>
           <CommandInput placeholder="Type a command or search..." />
