@@ -19,6 +19,7 @@ enum DateFilter {
   TODAY = "1d",
   SEMI_MONTHLY = "15d",
   MONTHLY = "30d",
+  CUSTOM = "custom",
 }
 
 export function CalendarDateRangePicker({
@@ -47,6 +48,13 @@ export function CalendarDateRangePicker({
       }
     }
   }, [fromDate, toDate]);
+
+  useEffect(() => {
+    if (date?.from && date?.to && range === DateFilter.CUSTOM) {
+      handleFromDateChange(date.from.toString());
+      handleToDateChange(date.to.toString());
+    }
+  }, [date]);
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -112,6 +120,9 @@ export function CalendarDateRangePicker({
             defaultMonth={date?.to}
             selected={date}
             onSelect={setDate}
+            onDayClick={() => {
+              setRange(DateFilter.CUSTOM);
+            }}
             numberOfMonths={2}
           />
         </PopoverContent>

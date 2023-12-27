@@ -180,7 +180,7 @@ function PopoverCommandQuery({
                     size="sm"
                     type="button"
                     onClick={() => {
-                      setSelectedItem(null);
+                      setSelectedItem(undefined);
                       selected.onChange(null);
                     }}
                   >
