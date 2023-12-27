@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format, set } from "date-fns";
+import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -24,9 +24,9 @@ enum DateFilter {
 
 export function CalendarDateRangePicker({
   className,
-  queryOnChange,
+  queryOnChange = true,
 }: React.HTMLAttributes<HTMLDivElement> & {
-  queryOnChange: boolean;
+  queryOnChange?: boolean;
 }) {
   const { fromDate, toDate } = getSearchParams();
   const [range, setRange] = React.useState<DateFilter>(DateFilter.ALL_TIME);
