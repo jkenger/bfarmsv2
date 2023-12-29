@@ -39,14 +39,13 @@ function EmployeeFormFields<T extends TDataFields>({
 
   useEffect(() => {
     onScan.attachTo(document, {
-      preventDefault: true,
       onScan: function (sCode) {
         rfIdRef.current?.focus();
         form.setValue("rfId", sCode);
       },
     });
     return () => onScan.detachFrom(document);
-  }, [form]);
+  }, []);
   return (
     <>
       <FormField

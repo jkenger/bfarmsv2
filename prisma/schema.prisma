@@ -46,6 +46,8 @@ model User {
   payrollGroup   PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
   payrollGroupId String?
 
+  receipt Receipt[]
+
   designation   Designation? @relation(fields: [designationId], references: [id])
   designationId String?
 
@@ -71,38 +73,37 @@ model Designation {
   updatedAt   DateTime @updatedAt
 }
 
-
 model Receipt {
-  id        String   @id @default(uuid())
-  payroll   Payroll?
-  prc       String?
-  noOfDays  Int
-  grossAmountEarned Float
-  tax1     Float?
-  tax5     Float?
-  tax10    Float?
-  sss      Float?
-  pagibig  Float?
-  philhealth Float?
-  netAmountDue Float
+  id                   String   @id @default(uuid())
+  payroll              Payroll?
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  prc                  String?
+  noOfDays             Int
+  grossAmountEarned    Float
+  tax1                 Float?
+  tax5                 Float?
+  tax10                Float?
+  sss                  Float?
+  pagibig              Float?
+  philhealth           Float?
+  netAmountDue         Float
   signatureOfRecipient String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
-
 model Payroll {
-  id             String        @id @default(uuid())
+  id             String       @id @default(uuid())
   from           DateTime
   to             DateTime
   payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id])
   payrollGroupId String
-  receipt        Receipt       @relation(fields: [receiptId], references: [id])
-  receiptId      String        @unique
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  receipt        Receipt      @relation(fields: [receiptId], references: [id])
+  receiptId      String       @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
-
 
 model PayrollGroup {
   id          String    @id @default(uuid())

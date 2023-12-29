@@ -176,7 +176,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
         <span>
           {row.original.travelPass.length ? (
             <>
-              <Badge variant="success">In travel</Badge>
+              <Badge>In travel</Badge>
             </>
           ) : (
             <>

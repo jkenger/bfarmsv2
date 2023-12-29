@@ -58,10 +58,9 @@ export const validatePayroll = withValidationErrors([
       }
       return true;
     }),
-  body("payrollGroupId")
+  body("*.payrollGroupId")
     .notEmpty()
     .withMessage("Payroll Group Id must not be empty"),
-  body("receiptId").notEmpty().withMessage("Receipt Id must not be empty"),
 ]);
 
 export const validatePayrollGroup = withValidationErrors([

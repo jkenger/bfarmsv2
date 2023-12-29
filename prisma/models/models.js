@@ -8,19 +8,33 @@ function createExplicitQuery(data, relation, action = "create") {
 
   explicitFields.forEach((field) => {
     if (action === "create") {
-      if (!query[field]) delete query[field];
-      if (query[field]) {
+      if (!query[field] || !query[field].length) delete query[field];
+      console.log(query[field]);
+      if (query[field].length) {
         query[field] = {
-          connect: [...query[field]],
+          connect: [
+            ...query[field].map((item) => {
+              return { id: item.id };
+            }),
+          ],
         };
       }
     }
     if (action === "update") {
       // when updating, when field is empty, return immediately and do not update
-      if (!query[field]) return (query[field] = { set: [] });
+      if (!query[field] || !query[field].length)
+        return (query[field] = { set: [] });
 
-      if (query[field]) query[field] = { set: [...query[field]] };
+      if (query[field].length)
+        query[field] = {
+          set: [
+            ...query[field].map((item) => {
+              return { id: item.id };
+            }),
+          ],
+        };
     }
+    console.log(query[field]);
   });
 
   return query;

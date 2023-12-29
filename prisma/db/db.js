@@ -1,8 +1,37 @@
 import { PrismaClient } from "@prisma/client";
-import { differenceInMinutes } from "date-fns";
-import { setDateTime } from "../../lib/helpers.js";
+import { addDays, differenceInMinutes } from "date-fns";
+import { countWeekdays, setDateTime } from "../../lib/helpers.js";
+import { token } from "morgan";
+import { holiday } from "../../lib/utils.js";
 const prisma = new PrismaClient().$extends({
   model: {
+    holiday: {
+      async getHolidayDates(fromDate, toDate) {
+        const from = new Date(fromDate);
+        const to = new Date(toDate);
+        let holidayDates = [];
+        const holidays = await prisma.holiday.findMany({
+          where: {
+            requisiteDate: {
+              gte: from,
+              lte: to,
+            },
+          },
+          orderBy: { createdAt: "asc" },
+        });
+
+        holidays.map((holiday) => {
+          let date = new Date(holiday.requisiteDate);
+          // if holiday date is within two queried date, add as valid holiday dates.
+          if (from < date && to > date) {
+            // push holiday that is not in holidayDates
+            holidayDates.push(holiday);
+          }
+        });
+        console.log("asdas", holidayDates);
+        return holidayDates;
+      },
+    },
     user: {
       async findUserWithId(id) {
         const user = await prisma.user.findFirst({
@@ -31,14 +60,52 @@ const prisma = new PrismaClient().$extends({
 
         return "No Employee Found with the ID  Provided";
       },
+      async findUsersAttendance(options) {
+        const from = options.range.from;
+        const to = options.range.to;
+
+        // VARIABLES
+        let allEmployees = await prisma.user.findMany();
+        let employees = allEmployees.filter((employee) => {
+          return (
+            employee.attendances.attendanceDate >= from &&
+            employee.attendances.attendanceDate <= to
+          );
+        });
+
+        let employeeCount;
+        let weekDays = countWeekdays(from, to);
+        console.log("weekDays", weekDays);
+        let holidayDates = await prisma.holiday.getHolidayDates(from, to);
+        console.log("holidayDates", holidayDates);
+
+        if (!employees.length) {
+          return {
+            employees: [],
+            employeeCount: 0,
+          };
+        }
+
+        // If range is provided, filter attendances
+
+        employees = employees.map((employee) => {
+          return {
+            ...employee,
+            // Attendance count
+            attendancesCount: employee.attendances.length,
+          };
+        });
+
+        employeeCount = employees.length ? employees.length : 0;
+
+        return { allEmployees, employees, employeeCount };
+      },
     },
   },
   query: {
-    // @todo: attendance late minutes and undertime minutes should always update when time in and time out is updated
     attendance: {
       async $allOperations({ operation, args, query }) {
         if (operation === "create" || operation === "update") {
-          console.log("args data", args.data);
           const currentDateTime = args.data.amTimeIn
             ? new Date(args.data.amTimeIn)
             : args.data.pmTimeIn
@@ -94,6 +161,7 @@ const prisma = new PrismaClient().$extends({
             undertimeMinutes +=
               pmTimeOut < fivePm ? differenceInMinutes(fivePm, pmTimeOut) : 0;
           }
+          const date = amTimeIn || pmTimeIn;
           return query({
             ...args,
             data: {
@@ -101,7 +169,7 @@ const prisma = new PrismaClient().$extends({
               // If late, set late to true
               lateMinutes,
               undertimeMinutes,
-              attendanceDate: amTimeIn || pmTimeIn,
+              attendanceDate: date,
             },
           });
         }

@@ -16,6 +16,7 @@ import {
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 import prisma from "../prisma/db/db.js";
+import { createStartDate, setDateTime } from "../lib/helpers.js";
 
 // Attendance
 export const getAllAttendance = asyncHandler(
@@ -98,7 +99,6 @@ export const createEmployee = asyncHandler(async (req, res) => {
       };
     }),
   ];
-
   await models.addModel(res, data, prisma.user, {
     type: "explicit",
     fields: ["deductions"],
@@ -117,6 +117,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
       };
     }),
   ];
+
   await models.updateModel(res, req.params.id, data, prisma.user, {
     type: "explicit",
     fields: ["deductions"],
@@ -187,15 +188,42 @@ export const createPayroll = asyncHandler(async (req, res) => {
     ...req.body.map((item) => {
       return {
         ...item,
-        from: new Date(item.from),
-        to: new Date(item.to),
+        from: setDateTime(0, 0, 0, 0, item.from),
+        to: setDateTime(23, 59, 59, 999, item.to),
       };
     }),
   ];
+  const payroll = data[0];
 
+  // Employees with attendance from 12/29 to 01/12
+  console.log(payroll.from);
+  console.log(payroll.to);
+  const { employees, employeeCount } = await prisma.user.findUsersAttendance({
+    range: {
+      from: payroll.from,
+      to: payroll.to,
+    },
+  });
+
+  console.log(
+    // employees.map((item) => {
+    //   // select only attendances within the date
+    //   return {
+    //     ...item,
+    //     attendances: item.attendances.filter((attendance) => {
+    //       return (
+    //         attendance.attendanceDate >= payroll.from &&
+    //         attendance.attendanceDate <= payroll.to
+    //       );
+    //     }),
+    //   };
+    // })
+    employees
+  );
+  console.log("empCount:", employeeCount);
   // Create receipt
   // createPayrollReceipt;
-  await models.addModel(res, req.body, prisma.payroll);
+  // await models.addModel(res, req.body, prisma.payroll);
 });
 
 export const deletePayroll = asyncHandler(

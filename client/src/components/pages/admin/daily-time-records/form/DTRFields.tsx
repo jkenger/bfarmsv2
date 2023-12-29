@@ -32,7 +32,7 @@ function DTRFields({ form, mutationType = MutationType.CREATE }: Props) {
   }, []);
 
   const regex =
-    /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}, ([0-9]|1[0-2]):[0-5][0-9]:[0-5][0-9] (AM|PM)$/;
+    /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/\d{4}, ([0-9]|1[0-2]):[0-5][0-9]:[0-5][0-9] (AM|PM)$/;
 
   const validateString = (inputString: string) => {
     return regex.test(inputString);
