@@ -13,6 +13,8 @@ import { getTravelpass } from "../api/travelpass.api";
 import EditTravelpass from "../form/travelpass/EditTravelpass";
 import AddTravelpass from "../form/travelpass/AddTravelpass";
 import { useQueryProvider } from "@/components/context/query-provider";
+import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
+import useFilterParams from "@/components/hooks/useFilterParams";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -33,6 +35,7 @@ function TravelpassTable({ columns }: Props) {
   // reset page to 1 if data length is less than numOfPages
 
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
+  const { handleTravelTypeChange } = useFilterParams();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   const pageTitle = "Travelpass";
@@ -92,6 +95,15 @@ function TravelpassTable({ columns }: Props) {
               >
                 <AddTravelpass toEditItem={createMutation?.variables} />
               </MutationSheet>
+            ),
+            facetedFilterButtons: (
+              <FacetedFilterButton
+                onSelectedChange={handleTravelTypeChange}
+                // filter={jobStatusfilter}
+                options={data.map((travel: TDataFields) => travel.typeOf)}
+              >
+                Travel Type
+              </FacetedFilterButton>
             ),
           }}
         >

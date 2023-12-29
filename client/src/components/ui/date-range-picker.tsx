@@ -94,20 +94,20 @@ export function CalendarDateRangePicker({
                 setRange(value as DateFilter);
                 switch (value) {
                   case DateFilter.ALL_TIME:
-                    handleFromDateChange(new Date("01/01/2021").toString());
-                    handleToDateChange(new Date().toString());
+                    handleFromDateChange(new Date("01/01/2021").toDateString());
+                    handleToDateChange(new Date().toDateString());
                     break;
                   case DateFilter.TODAY:
-                    handleFromDateChange(new Date().toString());
-                    handleToDateChange(new Date().toString());
+                    handleFromDateChange(new Date().toDateString());
+                    handleToDateChange(new Date().toDateString());
                     break;
                   case DateFilter.SEMI_MONTHLY:
-                    handleFromDateChange(new Date().toString());
-                    handleToDateChange(addDays(new Date(), 14).toString());
+                    handleFromDateChange(new Date().toDateString());
+                    handleToDateChange(addDays(new Date(), 14).toDateString());
                     break;
                   case DateFilter.MONTHLY:
-                    handleFromDateChange(new Date().toString());
-                    handleToDateChange(addDays(new Date(), 29).toString());
+                    handleFromDateChange(new Date().toDateString());
+                    handleToDateChange(addDays(new Date(), 29).toDateString());
                     break;
                 }
               }}

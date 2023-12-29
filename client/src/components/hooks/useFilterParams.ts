@@ -60,6 +60,16 @@ const useFilterParams = () => {
       setSearchParams(searchParams);
     }
   }
+
+  function handleTravelTypeChange(travelType: string[]) {
+    if (travelType?.length) {
+      setFilterParams("travelType", travelType);
+    } else {
+      searchParams.delete("travelType");
+      setSearchParams(searchParams);
+    }
+  }
+
   function handlePageLimit(limit: number) {
     if (limit !== 10) {
       setFilterParams("limit", [limit]);
@@ -111,6 +121,7 @@ const useFilterParams = () => {
     handleToDateChange,
     handleResetParams,
     handlePageLimit,
+    handleTravelTypeChange,
     getSortOrder,
   };
 };
@@ -124,6 +135,7 @@ export const getSearchParams = () => {
   const sp = new URLSearchParams(url.search).get("sp") || "";
   const payrollGroup =
     new URLSearchParams(url.search).get("payrollGroup") || "";
+  const travelType = new URLSearchParams(url.search).get("travelType") || "";
   const designation = new URLSearchParams(url.search).get("designation") || "";
   const fromDate = new URLSearchParams(url.search).get("fromDate") || "";
   const toDate = new URLSearchParams(url.search).get("toDate") || "";
@@ -137,6 +149,7 @@ export const getSearchParams = () => {
     designation,
     fromDate,
     toDate,
+    travelType,
   };
 
   return {
@@ -144,9 +157,9 @@ export const getSearchParams = () => {
     limit,
     search,
     sp,
-    searchParams,
     fromDate,
     toDate,
+    searchParams,
   };
 };
 

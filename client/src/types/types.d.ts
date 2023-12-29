@@ -37,7 +37,7 @@ type TEmployees = {
   designationId?: string;
   designation?: TDesignation;
   deductions: TDeductions[];
-  travelpass: TTravelpass[];
+  travelPass: TTravelpass[];
   createdAt: string;
   updatedAt: string;
 };
@@ -52,12 +52,42 @@ type TDesignation = {
   updatedAt: string;
 };
 
+type TReceipt = {
+  id: string;
+  payroll: TPayroll;
+  prc?: string;
+  noOfDays: number;
+  grossAmountEarned: number;
+  tax1?: number;
+  tax5?: number;
+  tax10?: number;
+  sss?: number;
+  pagibig?: number;
+  philhealth?: number;
+  netAmountDue: number;
+  signatureOfRecipient: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type TPayroll = {
+  id: string;
+  from: string;
+  to: string;
+  payrollGroup: TPayrollGroup;
+  payrollGroupId: string;
+  amount: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type TPayrollGroup = {
   id: string;
   name: string;
   fundCluster: string;
   programName: string;
   users: TEmployees[];
+  payrolls: TPayroll[];
   createdAt: string;
   updatedAt: string;
 };
@@ -156,4 +186,6 @@ type TDataFields = TEmployees &
   TDeductions &
   TLeaveTypes &
   TDailyTimeRecord &
+  TPayroll &
+  TReceipt &
   TStatus;

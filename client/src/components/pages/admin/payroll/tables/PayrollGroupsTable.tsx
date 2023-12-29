@@ -13,6 +13,10 @@ import { getPayrollGroups } from "../api/payrollGroups.api";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import AddPayrollGroups from "../form/payrollgroups/AddPayrollGroup";
 import { useQueryProvider } from "@/components/context/query-provider";
+import useFilterParams from "@/components/hooks/useFilterParams";
+import { Links } from "@/types/common";
+
+import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -35,6 +39,8 @@ function PayrollGroupsTable({ columns }: Props) {
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
+
+  const { handleGroupChange } = useFilterParams();
   return (
     <>
       {isSuccess && (
@@ -91,6 +97,30 @@ function PayrollGroupsTable({ columns }: Props) {
               >
                 <AddPayrollGroups toEditItem={createMutation?.variables} />
               </MutationSheet>
+            ),
+            facetedFilterButtons: (
+              <>
+                {
+                  <FacetedFilterButton
+                    onSelectedChange={handleGroupChange}
+                    // filter={jobStatusfilter}
+                    options={data.map((pg: TDataFields) => pg.fundCluster)}
+                    ifEmptyLink={Links.PAYROLL_GROUPS}
+                  >
+                    Fund Clusters
+                  </FacetedFilterButton>
+                }
+                {
+                  <FacetedFilterButton
+                    onSelectedChange={handleGroupChange}
+                    // filter={jobStatusfilter}
+                    options={data.map((pg: TDataFields) => pg.name)}
+                    ifEmptyLink={Links.PAYROLL_GROUPS}
+                  >
+                    Payroll Groups
+                  </FacetedFilterButton>
+                }
+              </>
             ),
           }}
         >

@@ -42,6 +42,11 @@ import {
   updateAttendance,
   deleteAttendance,
   createAttendance,
+  updatePayroll,
+  deletePayroll,
+  createPayroll,
+  getAllPayroll,
+  getPaginatedPayroll,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -51,6 +56,7 @@ import {
   validateHoliday,
   validateId,
   validateLeaveTypes,
+  validatePayroll,
   validatePayrollGroup,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
@@ -119,6 +125,25 @@ router
   .route("/employees/designations/:id")
   .put(validateDesignation, updateDesignation)
   .delete(validateId, deleteDesignation);
+
+// Payroll Routes
+
+// @Desc    : Read and Create Payroll Groups
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router
+  .route("/payrolls")
+  .get(getPaginatedPayroll)
+  .post(validatePayroll, createPayroll);
+router.route("/payrolls/all").get(getAllPayroll);
+
+// @Desc    : Delete and Update Payroll Groups
+// @Method  : DELETE / PUT /
+// @Access  : Private (Admin)
+router
+  .route("/payrolls/:id")
+  .put(validatePayroll, updatePayroll)
+  .delete(validateId, deletePayroll);
 
 // Payroll Groups Routes
 

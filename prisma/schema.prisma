@@ -15,21 +15,21 @@ datasource db {
 }
 
 model Attendance {
-  id      String   @id @default(uuid())
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  attendanceDate DateTime?
-  amTimeIn DateTime?
-  amTimeOut DateTime?
-  pmTimeIn DateTime?
-  pmTimeOut DateTime?
-  isLate  Boolean?
-  lateMinutes Int?
-  isUndertime Boolean?
+  id               String    @id @default(uuid())
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  attendanceDate   DateTime?
+  amTimeIn         DateTime?
+  amTimeOut        DateTime?
+  pmTimeIn         DateTime?
+  pmTimeOut        DateTime?
+  isLate           Boolean?
+  lateMinutes      Int?
+  isUndertime      Boolean?
   undertimeMinutes Int?
-  isOnTime Boolean?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isOnTime         Boolean?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model User {
@@ -51,7 +51,7 @@ model User {
 
   attendances Attendance[]
 
-  deductions   Deduction[]
+  deductions Deduction[]
 
   travelPass Travelpass[]
 
@@ -69,20 +69,50 @@ model Designation {
   salary      Float
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")
 }
 
+
+model Receipt {
+  id        String   @id @default(uuid())
+  payroll   Payroll?
+  prc       String?
+  noOfDays  Int
+  grossAmountEarned Float
+  tax1     Float?
+  tax5     Float?
+  tax10    Float?
+  sss      Float?
+  pagibig  Float?
+  philhealth Float?
+  netAmountDue Float
+  signatureOfRecipient String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Payroll {
+  id             String        @id @default(uuid())
+  from           DateTime
+  to             DateTime
+  payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id])
+  payrollGroupId String
+  receipt        Receipt       @relation(fields: [receiptId], references: [id])
+  receiptId      String        @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+
 model PayrollGroup {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   fundCluster String
   programName String?
-  users       User[] 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")
+  users       User[]
+  payrolls    Payroll[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Holiday {
@@ -93,8 +123,6 @@ model Holiday {
   requisiteDate    DateTime
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")
 }
 
 model Travelpass {
@@ -106,52 +134,21 @@ model Travelpass {
   end       DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")
 }
 
 model Deduction {
   id        String   @id @default(uuid())
   name      String   @unique
-  user      User[] 
+  users     User[]
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")  
 }
 
 model LeaveType {
-  id        String   @id @default(uuid())
-  name      String   @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  // houseOwned House[]  @relation("HouseOwner")
-  // houseBuild House[]  @relation("HouseBuilder")  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
-
-// model UserDeduction {
-//   id            String     @id @default(uuid())
-//   user          User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-//   userId        String
-//   deduction     Deduction? @relation(fields: [deductionId], references: [id], onDelete: Cascade)
-//   deductionId   String
-//   createdAt     DateTime   @default(now())
-//   updatedAt     DateTime   @updatedAt
-//   // houseOwned House[]  @relation("HouseOwner")
-//   // houseBuild House[]  @relation("HouseBuilder")  
-// }
-
-// model House {
-//   id           String   @id @default(uuid())
-//   address      String   @unique
-//   wifiPassword String?
-//   ownerId      String
-//   owner        User     @relation("HouseOwner", fields: [ownerId], references: [id])
-//   builtById    String
-//   builtBy      User     @relation("HouseBuilder", fields: [builtById], references: [id])
-//   createdAt    DateTime @default(now())
-//   updatedAt    DateTime @updatedAt
-// }
-

@@ -31,7 +31,8 @@ export const models = {
     res,
     data,
     prismaModel,
-    relation = { type: "", fields: [] }
+    relation = { type: "", fields: [] },
+    jsonReturn = null
   ) => {
     if (Array.isArray(data)) {
       if (data?.length > 1) {
@@ -52,19 +53,34 @@ export const models = {
       const createQuery = createExplicitQuery(data[0], relation);
 
       const dataAdded = await prismaModel.create({ data: createQuery });
-      return res.status(StatusCodes.OK).json({
-        data: dataAdded,
-      });
+      return res.status(StatusCodes.OK).json(
+        jsonReturn
+          ? jsonReturn
+          : {
+              data: dataAdded,
+            }
+      );
     }
 
     const dataAdded = await prismaModel.create({
       data: data[0],
     });
-    return res.status(StatusCodes.OK).json({
-      data: dataAdded,
-    });
+    return res.status(StatusCodes.OK).json(
+      jsonReturn
+        ? jsonReturn
+        : {
+            data: dataAdded,
+          }
+    );
   },
-  updateModel: async (res, id, data, prismaModel, relation) => {
+  updateModel: async (
+    res,
+    id,
+    data,
+    prismaModel,
+    relation,
+    jsonReturn = null
+  ) => {
     if (relation?.type === "explicit") {
       const updateQuery = createExplicitQuery(data[0], relation, "update");
       const dataUpdated = await prismaModel.update({
@@ -73,9 +89,13 @@ export const models = {
         },
         data: updateQuery,
       });
-      return res.status(StatusCodes.OK).json({
-        message: dataUpdated,
-      });
+      return res.status(StatusCodes.OK).json(
+        jsonReturn
+          ? jsonReturn
+          : {
+              message: dataUpdated,
+            }
+      );
     }
     const dataUpdated = await prismaModel.update({
       where: {
@@ -83,33 +103,51 @@ export const models = {
       },
       data: data[0],
     });
-    return res.status(StatusCodes.OK).json({
-      message: dataUpdated,
-    });
+    return res.status(StatusCodes.OK).json(
+      jsonReturn
+        ? jsonReturn
+        : {
+            message: dataUpdated,
+          }
+    );
   },
-  deleteModel: async (res, id, prismaModel) => {
+  deleteModel: async (res, id, prismaModel, jsonReturn = null) => {
     console.log(id);
     const dataDeleted = await prismaModel.delete({
       where: {
         id: id,
       },
     });
-    return res.status(StatusCodes.OK).json({
-      data: dataDeleted,
-    });
+    return res.status(StatusCodes.OK).json(
+      jsonReturn
+        ? jsonReturn
+        : {
+            data: dataDeleted,
+          }
+    );
   },
-  getAllModel: async (res, prismaModel) => {
+  getAllModel: async (res, prismaModel, jsonReturn = null) => {
     const data = await prismaModel.findMany();
     if (!data || !data.length) {
       return res.status(StatusCodes.OK).json({
         data: [],
       });
     }
-    return res.status(StatusCodes.OK).json({
-      data,
-    });
+    return res.status(StatusCodes.OK).json(
+      jsonReturn
+        ? jsonReturn
+        : {
+            data,
+          }
+    );
   },
-  getPaginatedModel: async (req, res, prismaModel, toQuery) => {
+  getPaginatedModel: async (
+    req,
+    res,
+    prismaModel,
+    toQuery,
+    jsonReturn = null
+  ) => {
     const { queryObject, filter, limit } = createQueryObject(req, toQuery);
 
     const data = await prismaModel.findMany(queryObject);
@@ -122,9 +160,13 @@ export const models = {
         numOfPages: 0,
       });
     }
-    return res.status(StatusCodes.OK).json({
-      data,
-      numOfPages,
-    });
+    return res.status(StatusCodes.OK).json(
+      jsonReturn
+        ? jsonReturn
+        : {
+            data,
+            numOfPages,
+          }
+    );
   },
 };

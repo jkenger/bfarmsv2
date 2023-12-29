@@ -46,6 +46,24 @@ export const validateDesignation = withValidationErrors([
     .withMessage("Salary must be a number"),
 ]);
 
+export const validatePayroll = withValidationErrors([
+  body().toArray(),
+  body("*.from").notEmpty().withMessage("Starting Date must not be empty"),
+  body("*.to")
+    .notEmpty()
+    .withMessage("End Date must not be empty")
+    .custom((value, { req }) => {
+      if (value < req.body.from) {
+        throw new Error("End Date must be ahead than Starting Date");
+      }
+      return true;
+    }),
+  body("payrollGroupId")
+    .notEmpty()
+    .withMessage("Payroll Group Id must not be empty"),
+  body("receiptId").notEmpty().withMessage("Receipt Id must not be empty"),
+]);
+
 export const validatePayrollGroup = withValidationErrors([
   body().toArray(),
   body("*.name").notEmpty().withMessage("Name must not be empty"),

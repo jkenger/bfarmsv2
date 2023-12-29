@@ -167,6 +167,29 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
+    accessorKey: "travelPass",
+    header: () => {
+      return <span className="text-semibold">In Travel</span>;
+    },
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.travelPass.length ? (
+            <>
+              <Badge variant="success">In travel</Badge>
+            </>
+          ) : (
+            <>
+              <Badge variant="outline" className="text-muted-foreground">
+                Not in travel
+              </Badge>
+            </>
+          )}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (

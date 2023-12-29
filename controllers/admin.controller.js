@@ -166,6 +166,48 @@ export const updateDesignation = asyncHandler(async (req, res) => {
   await models.updateModel(res, req.params.id, data, prisma.designation);
 });
 
+// Payroll
+export const getAllPayroll = asyncHandler(
+  async (req, res) => await models.getAllModel(res, prisma.payroll)
+);
+
+export const getPaginatedPayroll = asyncHandler(
+  async (req, res) =>
+    await models.getPaginatedModel(req, res, prisma.payroll, payrollGroups)
+);
+
+export const createPayrollReceipt = asyncHandler(async (data) => {
+  console.log(data);
+  // await models.addModel(res, req.body, prisma.receipt);
+});
+
+export const createPayroll = asyncHandler(async (req, res) => {
+  // Computation and mutation here
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        from: new Date(item.from),
+        to: new Date(item.to),
+      };
+    }),
+  ];
+
+  // Create receipt
+  // createPayrollReceipt;
+  await models.addModel(res, req.body, prisma.payroll);
+});
+
+export const deletePayroll = asyncHandler(
+  async (req, res) =>
+    await models.deleteModel(res, req.params.id, prisma.payroll)
+);
+
+export const updatePayroll = asyncHandler(
+  async (req, res) =>
+    await models.updateModel(res, req.params.id, req.body, prisma.payroll)
+);
+
 // Payroll Groups
 export const getAllPayrollGroups = asyncHandler(
   async (req, res) => await models.getAllModel(res, prisma.payrollGroup)

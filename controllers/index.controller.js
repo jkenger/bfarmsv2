@@ -58,7 +58,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
   console.log("8 AM DateTime: ", eightAm);
 
   const user = await prisma.user.findUserWithId(id);
-  console.log(user);
   const userId = user.id;
   const attendances = user.attendances;
 
