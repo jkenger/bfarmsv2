@@ -11,6 +11,7 @@ import {
   employee,
   holiday,
   leaveTypes,
+  payroll,
   payrollGroups,
   travelpass,
 } from "../lib/utils.js";
@@ -95,10 +96,11 @@ export const createEmployee = asyncHandler(async (req, res) => {
         age: Number(item.age),
         designationId: item.designationId ? item.designationId : null,
         payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
-        deductions: item.deductions.length ? item.deductions : null,
+        deductions: item.deductions?.length ? item.deductions : null,
       };
     }),
   ];
+
   await models.addModel(res, data, prisma.user, {
     type: "explicit",
     fields: ["deductions"],
@@ -174,13 +176,8 @@ export const getAllPayroll = asyncHandler(
 
 export const getPaginatedPayroll = asyncHandler(
   async (req, res) =>
-    await models.getPaginatedModel(req, res, prisma.payroll, payrollGroups)
+    await models.getPaginatedModel(req, res, prisma.payroll, payroll)
 );
-
-export const createPayrollReceipt = asyncHandler(async (data) => {
-  console.log(data);
-  // await models.addModel(res, req.body, prisma.receipt);
-});
 
 export const createPayroll = asyncHandler(async (req, res) => {
   // Computation and mutation here
@@ -194,32 +191,34 @@ export const createPayroll = asyncHandler(async (req, res) => {
     }),
   ];
   const payroll = data[0];
-
-  // Employees with attendance from 12/29 to 01/12
-  console.log(payroll.from);
-  console.log(payroll.to);
   const { employees, employeeCount } = await prisma.user.findUsersAttendance({
+    where: {
+      payrollGroupId: payroll.payrollGroupId,
+    },
     range: {
       from: payroll.from,
       to: payroll.to,
     },
   });
+  const createdPayroll = await prisma.payroll.create({
+    data: {
+      from: payroll.from,
+      to: payroll.to,
+      payrollGroupId: payroll.payrollGroupId,
+    },
+  });
+  if (!createdPayroll) {
+    return res.status(400).json({
+      message: "Error creating payroll",
+    });
+  }
 
-  console.log(
-    // employees.map((item) => {
-    //   // select only attendances within the date
-    //   return {
-    //     ...item,
-    //     attendances: item.attendances.filter((attendance) => {
-    //       return (
-    //         attendance.attendanceDate >= payroll.from &&
-    //         attendance.attendanceDate <= payroll.to
-    //       );
-    //     }),
-    //   };
-    // })
-    employees
+  const createdPayrollReceipt = await createPayrollReceipt(
+    employees,
+    createdPayroll.id
   );
+
+  console.log(createdPayrollReceipt);
   console.log("empCount:", employeeCount);
   // Create receipt
   // createPayrollReceipt;
@@ -230,6 +229,27 @@ export const deletePayroll = asyncHandler(
   async (req, res) =>
     await models.deleteModel(res, req.params.id, prisma.payroll)
 );
+
+export const createPayrollReceipt = asyncHandler(async (data, payrollId) => {
+  const receiptData = data.map((item) => {
+    return {
+      payrollId: payrollId,
+      userId: item.id,
+      noOfDays: item.attendanceData.days.withHolidays,
+      grossAmountEarned: item.totals.gross.amountDue,
+      tax1: item.totals.net.deductions.breakdown.taxes.tax1 || null,
+      tax5: item.totals.net.deductions.breakdown.taxes.tax5 || null,
+      tax10: item.totals.net.deductions.breakdown.taxes.tax10 || null,
+      netAmountDue: item.totals.net.amountDue,
+    };
+  });
+
+  const createdReceipt = await prisma.receipt.createMany({
+    data: receiptData,
+  });
+  return createdReceipt;
+  // await models.addModel(res, req.body, prisma.receipt);
+});
 
 export const updatePayroll = asyncHandler(
   async (req, res) =>

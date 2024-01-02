@@ -8,7 +8,8 @@ function createExplicitQuery(data, relation, action = "create") {
 
   explicitFields.forEach((field) => {
     if (action === "create") {
-      if (!query[field] || !query[field].length) delete query[field];
+      if (!query[field] || !query[field].length) return delete query[field];
+
       console.log(query[field]);
       if (query[field].length) {
         query[field] = {
@@ -49,11 +50,14 @@ export const models = {
     jsonReturn = null
   ) => {
     if (Array.isArray(data)) {
+      console.log("Multiple data adding", data);
       if (data?.length > 1) {
-        console.log("Multiple data adding");
-        const addedData = await prismaModel.createMany({
-          data: data,
-          skipDuplicates: true,
+        let addedData = [];
+        data.forEach(async (item) => {
+          const data = await prismaModel.create({
+            data: item,
+          });
+          addedData.push(data);
         });
         console.log("data added");
         return res.status(StatusCodes.OK).json({

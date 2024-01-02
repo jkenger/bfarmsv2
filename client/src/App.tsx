@@ -12,7 +12,6 @@ import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
 import Navigation from "./components/wrappers/nav/Navigation";
 import AdminEmployees from "./components/pages/admin/employees/Employees";
-import AdminPayroll from "./components/pages/admin/Payroll";
 import AdminHolidays from "./components/pages/admin/holidays/Holidays";
 import AdminTravelPass from "./components/pages/admin/travelpass/Travelpass";
 import AdminDeductions from "./components/pages/admin/deductions/Deductions";
@@ -31,6 +30,7 @@ import PayrollGroups, {
 } from "./components/pages/admin/payroll/PayrollGroups";
 import { loader as deductionsLoader } from "./components/pages/admin/deductions/Deductions";
 import { loader as leaveTypesLoader } from "./components/pages/admin/leaves/types/Types";
+import { loader as payrollLoader } from "./components/pages/admin/payroll/Payroll";
 
 import Designations from "./components/pages/admin/employees/Designations";
 
@@ -81,6 +81,12 @@ import {
   editDTR,
 } from "./components/pages/admin/daily-time-records/api/daily-time-records.api";
 import Attendance from "./components/pages/root/attendance/Attendance";
+import AdminPayroll from "./components/pages/admin/payroll/Payroll";
+import {
+  createPayroll,
+  deletePayroll,
+  editPayroll,
+} from "./components/pages/admin/payroll/api/payroll.api";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -191,7 +197,23 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <AdminPayroll />,
+                loader: payrollLoader(queryClient),
+                element: (
+                  <QueryProvider
+                    api={{
+                      create: createPayroll({ queryClient }),
+                      edit: editPayroll({ queryClient }),
+                      delete: deletePayroll({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_PAYROLL,
+                      edit: QueryKeys.EDIT_PAYROLL,
+                      delete: QueryKeys.DELETE_PAYROLL,
+                    }}
+                  >
+                    <AdminPayroll />
+                  </QueryProvider>
+                ),
               },
               {
                 path: "groups",

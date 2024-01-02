@@ -15,11 +15,11 @@ import DropdownSelect from "./dropdown-select";
 import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 
 enum DateFilter {
-  ALL_TIME = "all",
-  TODAY = "1d",
-  SEMI_MONTHLY = "15d",
-  MONTHLY = "30d",
-  CUSTOM = "custom",
+  ALL_TIME = "All Records",
+  TODAY = "Past 24 hours",
+  SEMI_MONTHLY = "Past 15 days",
+  MONTHLY = "Past 30 days",
+  CUSTOM = "Custom Date",
 }
 
 export function CalendarDateRangePicker({
@@ -51,8 +51,8 @@ export function CalendarDateRangePicker({
 
   useEffect(() => {
     if (date?.from && date?.to && range === DateFilter.CUSTOM) {
-      handleFromDateChange(date.from.toString());
-      handleToDateChange(date.to.toString());
+      handleFromDateChange(date.from.toDateString());
+      handleToDateChange(date.to.toDateString());
     }
   }, [date]);
 
@@ -102,12 +102,16 @@ export function CalendarDateRangePicker({
                     handleToDateChange(new Date().toDateString());
                     break;
                   case DateFilter.SEMI_MONTHLY:
-                    handleFromDateChange(new Date().toDateString());
-                    handleToDateChange(addDays(new Date(), 14).toDateString());
+                    handleFromDateChange(
+                      addDays(new Date(), -14).toDateString()
+                    );
+                    handleToDateChange(new Date().toDateString());
                     break;
                   case DateFilter.MONTHLY:
-                    handleFromDateChange(new Date().toDateString());
-                    handleToDateChange(addDays(new Date(), 29).toDateString());
+                    handleFromDateChange(
+                      addDays(new Date(), -29).toDateString()
+                    );
+                    handleToDateChange(new Date().toDateString());
                     break;
                 }
               }}

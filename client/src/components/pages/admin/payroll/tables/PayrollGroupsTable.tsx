@@ -39,7 +39,7 @@ function PayrollGroupsTable({ columns }: Props) {
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
-
+  const titlePage = "Payroll Groups";
   const { handleGroupChange } = useFilterParams();
   return (
     <>
@@ -71,7 +71,7 @@ function PayrollGroupsTable({ columns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Designations"
+                table={titlePage}
                 error={editMutationError?.response?.data as string}
               >
                 <EditPayrollGroup toEditItem={editMutation?.variables} />
@@ -92,7 +92,7 @@ function PayrollGroupsTable({ columns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Designations"
+                table={titlePage}
                 error={createMutationError?.response?.data as string}
               >
                 <AddPayrollGroups toEditItem={createMutation?.variables} />

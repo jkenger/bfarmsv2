@@ -1,7 +1,7 @@
 export const values = (toEditItem?: TDataFields): TDataFields => {
   return {
-    name: toEditItem ? toEditItem.name : "",
-    fundCluster: toEditItem ? toEditItem.fundCluster : "",
-    programName: toEditItem ? toEditItem.programName : "",
+    from: toEditItem ? toEditItem.from : "",
+    to: toEditItem ? toEditItem.to : "",
+    payrollGroupId: toEditItem ? toEditItem.payrollGroupId : "",
   } as TDataFields;
 };

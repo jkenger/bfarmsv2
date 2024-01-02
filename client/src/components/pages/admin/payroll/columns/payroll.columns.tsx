@@ -3,10 +3,12 @@ import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 // import DeleteDesignation from "../form/designation/DeleteDesignation";
 // import EditDesignation from "../form/designation/EditDesignation";
-import { Badge } from "@/components/ui/badge";
+
 import DeletePayrollGroup from "../form/payrollgroups/DeletePayrollGroup";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import ParseDate from "@/components/ui/parse-date";
+import { Badge } from "@/components/ui/badge";
+import { differenceInDays } from "date-fns";
 
 export const payrollColumns: ColumnDef<TDataFields>[] = [
   {
@@ -20,12 +22,32 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
     },
     cell: ({ row }) => {
       return (
-        <div>
+        <div className="space-x-1">
           <ParseDate>{row.original.from}</ParseDate>
-          to
+          <span>to</span>
           <ParseDate>{row.original.to}</ParseDate>
+          <Badge variant="outline">
+            {differenceInDays(
+              new Date(row.original.to),
+              new Date(row.original.from)
+            ) + 1}{" "}
+            days
+          </Badge>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "fundCluster",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Fund Cluster</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return <div>{row.original.payrollGroup.fundCluster}</div>;
     },
   },
   {
@@ -38,10 +60,11 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="w-lg max-w-lg">{row.original.name} </div>;
+      return (
+        <div className="w-lg max-w-lg">{row.original.payrollGroup.name} </div>
+      );
     },
   },
-
   {
     accessorKey: "programName",
     header: ({ column }) => {
@@ -51,23 +74,8 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
-  },
-  {
-    accessorKey: "users",
-    header: ({ column }) => {
-      return (
-        <DataTableHeader column={column}>
-          <span>Users</span>
-        </DataTableHeader>
-      );
-    },
-
     cell: ({ row }) => {
-      return row.original.users.length > 0 ? (
-        <span> {row.original.users.length} Employees </span>
-      ) : (
-        <Badge variant="outline">No employee</Badge>
-      );
+      return <div>{row.original.payrollGroup.programName}</div>;
     },
   },
 

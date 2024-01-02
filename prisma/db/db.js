@@ -28,7 +28,6 @@ const prisma = new PrismaClient().$extends({
             holidayDates.push(holiday);
           }
         });
-        console.log("asdas", holidayDates);
         return holidayDates;
       },
     },
@@ -65,19 +64,41 @@ const prisma = new PrismaClient().$extends({
         const to = options.range.to;
 
         // VARIABLES
-        let allEmployees = await prisma.user.findMany();
+        let allEmployees = await prisma.user.findMany({
+          where: {
+            ...options.where,
+          },
+          include: {
+            attendances: true,
+            designation: true,
+            deductions: true,
+          },
+        });
         let employees = allEmployees.filter((employee) => {
-          return (
-            employee.attendances.attendanceDate >= from &&
-            employee.attendances.attendanceDate <= to
-          );
+          return employee.attendances.some((attendance) => {
+            return (
+              attendance.attendanceDate >= from &&
+              attendance.attendanceDate <= to
+            );
+          });
         });
 
         let employeeCount;
-        let weekDays = countWeekdays(from, to);
-        console.log("weekDays", weekDays);
+        const calendarDays =
+          countWeekdays(from, to) < 10
+            ? countWeekdays(from, new Date(addDays(from, 14)))
+            : countWeekdays(from, to);
+        console.log("calendarDays", calendarDays);
+
         let holidayDates = await prisma.holiday.getHolidayDates(from, to);
-        console.log("holidayDates", holidayDates);
+
+        let taxCompensationRange = {
+          tax_1: { r1: 10417, r2: 16666, prcnt: 0.02 }, //2%
+          tax_2: { r1: 16667, r2: 33332, prcnt: 0.05 }, //5%
+          tax_3: { r1: 33333, r2: 83332, prcnt: 0.1 }, //10%
+        };
+
+        console.log(holidayDates);
 
         if (!employees.length) {
           return {
@@ -86,13 +107,248 @@ const prisma = new PrismaClient().$extends({
           };
         }
 
-        // If range is provided, filter attendances
+        const toCalendarDays = (count) => {
+          return count > calendarDays ? calendarDays : count;
+        };
 
+        // If range is provided, filter attendances
         employees = employees.map((employee) => {
+          // salary
+          const monthlySalary = employee.designation?.salary || 0;
+          const salary = {
+            monthly: {
+              total: monthlySalary,
+              daily: +(monthlySalary / calendarDays).toFixed(2) || 0,
+            },
+            semiMonth: {
+              total: +(monthlySalary / 2).toFixed(2) || 0,
+              daily: +(monthlySalary / 2 / calendarDays).toFixed(2) || 0,
+            },
+          };
+
+          // holiday data
+          const attendanceMatchedHolidays = holidayDates.filter((holiday) => {
+            return employee.attendances.some(
+              (att) =>
+                setDateTime(0, 0, 0, 0, att.attendanceDate).toString() ===
+                setDateTime(0, 0, 0, 0, holiday.prerequisiteDate).toString()
+            );
+          });
+          const missingAttendanceMatchedHolidays = holidayDates.filter(
+            (holiday) => {
+              return !employee.attendances.some(
+                (att) =>
+                  setDateTime(0, 0, 0, 0, att.attendanceDate).toString() ===
+                  setDateTime(0, 0, 0, 0, holiday.prerequisiteDate).toString()
+              );
+            }
+          );
+          const holidaysCount = attendanceMatchedHolidays.length;
+          const deductedHolidaysCount =
+            attendanceMatchedHolidays.length === 0
+              ? holidayDates.length
+              : holidayDates.length - attendanceMatchedHolidays.length < 0
+              ? 0
+              : attendanceMatchedHolidays.length === 0
+              ? holidayDates.length
+              : holidayDates.length - attendanceMatchedHolidays.length;
+          const holidayData = {
+            dates: {
+              all: holidayDates,
+              matched: attendanceMatchedHolidays,
+              missing: missingAttendanceMatchedHolidays,
+            },
+            additional: {
+              count: holidaysCount,
+              amount: salary.semiMonth.daily * attendanceMatchedHolidays.length,
+            },
+            deduction: {
+              count: deductedHolidaysCount,
+              amount: salary.semiMonth.daily * deductedHolidaysCount,
+            },
+          };
+
+          const employeeDeductions = employee.deductions.map((deduction) => {
+            return {
+              name: deduction.name,
+              amount: deduction.amount,
+            };
+          });
+
+          // attendance data
+          const attendanceWithHalfDay = employee.attendances.filter(
+            (attendance) => attendance.isHalfDay
+          );
+
+          const daysCount = employee.attendances
+            ? toCalendarDays(employee.attendances.length)
+            : 0;
+          const daysWithHalfDay = toCalendarDays(
+            daysCount - attendanceWithHalfDay.length / 2
+          );
+          const daysWithHolidays = toCalendarDays(
+            holidaysCount
+              ? daysWithHalfDay + holidaysCount
+              : deductedHolidaysCount
+              ? daysWithHalfDay - deductedHolidaysCount
+              : daysWithHalfDay
+          );
+
+          const undertime = employee.attendances
+            .filter((attendance) => attendance.undertimeMinutes > 0)
+            .reduce(
+              (acc, attendance) => acc + attendance.undertimeMinutes, // minutes
+              0
+            );
+          const late = employee.attendances
+
+            .filter((attendance) => attendance.lateMinutes > 0)
+            .reduce(
+              (acc, attendance) => acc + attendance.lateMinutes, // minutes
+              0
+            );
+          const attendanceData = {
+            attendances: employee.attendances,
+            days: employee.attendances.length,
+            days: {
+              days: daysCount,
+              calendarDays: calendarDays,
+              withHalfDays: daysWithHalfDay,
+              withHolidays: daysWithHolidays,
+            },
+          };
+
+          const gross = {
+            absents: {
+              days: calendarDays - daysWithHolidays,
+              amount:
+                (calendarDays - daysWithHolidays) * salary.semiMonth.daily,
+            },
+            undertime: {
+              minutes: undertime,
+              amount: +((salary.semiMonth.daily / 8 / 60) * undertime).toFixed(
+                2
+              ),
+            },
+            late: {
+              minutes: late,
+              amount: +((salary.semiMonth.daily / 8 / 60) * late).toFixed(2),
+            },
+          };
+
+          const adtlDeductions = {
+            deductions: employeeDeductions,
+            amount: employeeDeductions.reduce(
+              (acc, deduction) => acc + deduction.amount,
+              0
+            ),
+          };
+
+          const net = {
+            // map and return deduction name and amount
+            taxes: {
+              tax1:
+                salary.semiMonth.total < taxCompensationRange.tax_1.r1
+                  ? 0
+                  : salary.semiMonth.total > taxCompensationRange.tax_1.r1 &&
+                    salary.semiMonth.total <= taxCompensationRange.tax_1.r2
+                  ? +(
+                      (salary.semiMonth.total - 10417) *
+                      taxCompensationRange.tax_1.prcnt
+                    ).toFixed(2)
+                  : 0,
+              tax5:
+                salary.semiMonth.total < taxCompensationRange.tax_2.r1
+                  ? 0
+                  : salary.semiMonth.total > taxCompensationRange.tax_2.r1 &&
+                    salary.semiMonth.total <= taxCompensationRange.tax_2.r2
+                  ? +(
+                      (salary.semiMonth.total - 10417) *
+                      taxCompensationRange.tax_2.prcnt
+                    ).toFixed(2)
+                  : 0,
+              tax10:
+                salary.semiMonth.total < taxCompensationRange.tax_3.r1
+                  ? 0
+                  : salary.semiMonth.total > taxCompensationRange.tax_3.r1 &&
+                    salary.semiMonth.total <= taxCompensationRange.tax_3.r2
+                  ? +(
+                      (salary.semiMonth.total - 10417) *
+                      taxCompensationRange.tax_3.prcnt
+                    ).toFixed(2)
+                  : 0,
+            },
+            adtl: adtlDeductions,
+          };
+
+          const totals = {
+            gross: {
+              amountDue: +(
+                salary.semiMonth.total -
+                (gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount)
+              ).toFixed(2),
+              deductions: {
+                total: +(
+                  gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount
+                ),
+                breakdown: {
+                  ...gross,
+                  holiday: {
+                    ...holidayData.dates,
+                    ...holidayData.deduction,
+                  },
+                },
+              },
+              earned: {
+                total: +holidayData.additional.amount,
+                breakdown: {
+                  holiday: {
+                    ...holidayData.dates,
+                    ...holidayData.additional,
+                  },
+                },
+              },
+            },
+            net: {
+              amountDue: +(
+                salary.semiMonth.total -
+                (gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount) -
+                (net.taxes.tax1 + net.taxes.tax5 + net.taxes.tax10) -
+                net.adtl.amount
+              ).toFixed(2),
+              deductions: {
+                total: +(
+                  net.taxes.tax1 +
+                  net.taxes.tax5 +
+                  net.taxes.tax10 +
+                  net.adtl.amount
+                ).toFixed(2),
+                breakdown: {
+                  taxes: {
+                    ...net.taxes,
+                  },
+                  adtl: {
+                    ...net.adtl,
+                  },
+                },
+              },
+            },
+          };
+          // DELETE DUPLICATE FIELDS
+          delete employee.attendances;
           return {
             ...employee,
             // Attendance count
-            attendancesCount: employee.attendances.length,
+            salary,
+            holidayData,
+            attendanceData,
+            totals,
           };
         });
 
@@ -105,7 +361,7 @@ const prisma = new PrismaClient().$extends({
   query: {
     attendance: {
       async $allOperations({ operation, args, query }) {
-        if (operation === "create" || operation === "update") {
+        if (operation.includes("create") || operation === "update") {
           const currentDateTime = args.data.amTimeIn
             ? new Date(args.data.amTimeIn)
             : args.data.pmTimeIn
@@ -137,6 +393,7 @@ const prisma = new PrismaClient().$extends({
 
           let lateMinutes = 0;
           let undertimeMinutes = 0;
+          let isHalfDay = false;
 
           if (amTimeIn) {
             lateMinutes =
@@ -150,6 +407,7 @@ const prisma = new PrismaClient().$extends({
               amTimeOut < twelvePm
                 ? differenceInMinutes(twelvePm, amTimeOut)
                 : 0;
+            isHalfDay = !pmTimeIn && !pmTimeOut ? true : false;
           }
 
           if (pmTimeIn) {
@@ -160,6 +418,7 @@ const prisma = new PrismaClient().$extends({
           if (pmTimeOut) {
             undertimeMinutes +=
               pmTimeOut < fivePm ? differenceInMinutes(fivePm, pmTimeOut) : 0;
+            isHalfDay = !amTimeIn && !amTimeOut ? true : false;
           }
           const date = amTimeIn || pmTimeIn;
           return query({
@@ -170,6 +429,7 @@ const prisma = new PrismaClient().$extends({
               lateMinutes,
               undertimeMinutes,
               attendanceDate: date,
+              isHalfDay,
             },
           });
         }

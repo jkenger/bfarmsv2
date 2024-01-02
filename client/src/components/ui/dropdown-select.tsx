@@ -31,8 +31,8 @@ function DropdownSelect<T>({
       onValueChange={onValueChange}
       disabled={disabled}
     >
-      <SelectTrigger className="w-full lg:w-auto">
-        <SelectValue placeholder={labelText} className="text-xs" />
+      <SelectTrigger className="w-full lg:w-auto text-xs">
+        <SelectValue placeholder={labelText} />
       </SelectTrigger>
       <SelectContent>
         {options.map((listValue) => (

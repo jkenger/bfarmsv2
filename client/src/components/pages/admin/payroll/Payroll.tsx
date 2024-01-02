@@ -4,8 +4,6 @@ import { Await, defer, useLoaderData } from "react-router-dom";
 import { getPayrollGroups } from "./api/payrollGroups.api";
 import { Suspense } from "react";
 import TableFallBack from "@/components/ui/table-fallback";
-import PayrollGroupsTable from "./tables/PayrollGroupsTable";
-import { payrollGroupsColumns } from "./columns/payroll-group.columns";
 import Error from "../../Error";
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { SheetTrigger } from "@/components/ui/sheet";
@@ -16,6 +14,8 @@ import AddPayrollGroups from "./form/payrollgroups/AddPayrollGroup";
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
 import { useQueryProvider } from "@/components/context/query-provider";
+import PayrollTable from "./tables/PayrollTable";
+import { payrollColumns } from "./columns/payroll.columns";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -30,7 +30,7 @@ function PayrollGroups() {
     <>
       <Main.Header>
         <Main.Heading
-          title="Payroll Groups"
+          title="Payroll"
           access="admin"
           mobileButton={
             <MutationSheet
@@ -50,7 +50,7 @@ function PayrollGroups() {
                 </SheetTrigger>
               }
               title="Add new data to"
-              table="Payroll Groups"
+              table="Payroll"
             >
               <AddPayrollGroups />
             </MutationSheet>
@@ -75,7 +75,7 @@ function PayrollGroups() {
               </SheetTrigger>
             }
             title="Add new data to"
-            table="Payroll Groups"
+            table="Payroll"
           >
             <AddPayrollGroups />
           </MutationSheet>
@@ -128,7 +128,7 @@ function PayrollGroups() {
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
           <Await resolve={initialData} errorElement={<Error />}>
-            <PayrollGroupsTable columns={payrollGroupsColumns} />
+            <PayrollTable columns={payrollColumns} />
           </Await>
         </Suspense>
       </Main.Content>

@@ -4,7 +4,7 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
-import PayrollGroupsFields from "./PayrollGroupsFields";
+import PayrollGroupsFields from "./PayrollFields";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { values } from "./form-values";
 
@@ -15,7 +15,7 @@ type Props<T> = {
   from?: "tableAction" | string;
 };
 
-function EditPayrollGroup<T extends TDataFields>({
+function EditPayroll<T extends TDataFields>({
   open,
   onOpen,
   toEditItem,
@@ -38,10 +38,7 @@ function EditPayrollGroup<T extends TDataFields>({
           form={form}
           mutationType={MutationType.UPDATE}
         >
-          <PayrollGroupsFields<TDataFields>
-            form={form}
-            mutationType={MutationType.UPDATE}
-          />
+          <PayrollGroupsFields form={form} mutationType={MutationType.UPDATE} />
         </FormSubmit>
       </Form>
     </DropDownEditSheet>
@@ -52,13 +49,10 @@ function EditPayrollGroup<T extends TDataFields>({
         form={form}
         mutationType={MutationType.UPDATE}
       >
-        <PayrollGroupsFields<TDataFields>
-          form={form}
-          mutationType={MutationType.UPDATE}
-        />
+        <PayrollGroupsFields form={form} mutationType={MutationType.UPDATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default EditPayrollGroup;
+export default EditPayroll;

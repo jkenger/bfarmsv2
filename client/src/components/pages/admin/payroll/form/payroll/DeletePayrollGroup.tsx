@@ -9,7 +9,7 @@ type Props = {
   trigger?: boolean;
   children?: React.ReactNode;
 };
-function DeletePayrollGroup({
+function DeletePayroll({
   open,
   onOpen,
   data,
@@ -33,4 +33,4 @@ function DeletePayrollGroup({
   );
 }
 
-export default DeletePayrollGroup;
+export default DeletePayroll;
