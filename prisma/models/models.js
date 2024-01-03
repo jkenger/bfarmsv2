@@ -130,7 +130,6 @@ export const models = {
     );
   },
   deleteModel: async (res, id, prismaModel, jsonReturn = null) => {
-    console.log(id);
     const dataDeleted = await prismaModel.delete({
       where: {
         id: id,

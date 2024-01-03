@@ -11,6 +11,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import DropdownSelect from "./dropdown-select";
+
+enum DateFilter {
+  ALL_TIME = "All Records",
+  TODAY = "Past 24 hours",
+  SEMI_MONTHLY = "Past 15 days",
+  MONTHLY = "Past 30 days",
+  CUSTOM = "Custom Date",
+}
 
 export function FormDateRangePicker({
   className,
@@ -18,9 +27,12 @@ export function FormDateRangePicker({
 }: React.HTMLAttributes<HTMLDivElement> & {
   form: any;
 }) {
+  const [range, setRange] = React.useState<DateFilter>(DateFilter.ALL_TIME);
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(form.getValues("from")) || new Date(2022, 0, 20),
-    to: new Date(form.getValues("to")) || addDays(new Date(2022, 0, 20), 20),
+    from: form.getValues("from")
+      ? new Date(form.getValues("from"))
+      : new Date(addDays(new Date(), -14)),
+    to: form.getValues("to") ? new Date(form.getValues("to")) : new Date(),
   });
 
   React.useEffect(() => {
@@ -28,8 +40,10 @@ export function FormDateRangePicker({
       form.setValue("from", date.from);
       form.setValue("to", date.to);
     }
+    if (!date?.from && !date?.to) {
+      setRange(DateFilter.ALL_TIME);
+    }
   }, [date, form]);
-
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -38,7 +52,7 @@ export function FormDateRangePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
@@ -58,6 +72,47 @@ export function FormDateRangePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
+          <div className="p-4">
+            <DropdownSelect
+              name="range"
+              labelText="Select range"
+              defaultValue={range}
+              onValueChange={(value) => {
+                setRange(value as DateFilter);
+                switch (value) {
+                  case DateFilter.ALL_TIME:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: new Date("01/01/2021"),
+                      to: new Date(),
+                    }));
+                    break;
+                  case DateFilter.TODAY:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: new Date(),
+                      to: new Date(),
+                    }));
+                    break;
+                  case DateFilter.SEMI_MONTHLY:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: new Date(addDays(new Date(), -14)),
+                      to: new Date(),
+                    }));
+                    break;
+                  case DateFilter.MONTHLY:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: new Date(addDays(new Date(), -29)),
+                      to: new Date(),
+                    }));
+                    break;
+                }
+              }}
+              options={Object.values(DateFilter)}
+            />
+          </div>
           <Calendar
             initialFocus
             mode="range"

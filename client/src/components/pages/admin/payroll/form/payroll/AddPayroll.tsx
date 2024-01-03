@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
-import PayrollGroupsFields from "./PayrollFields";
 import FormSubmit from "../../../shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { values } from "./form-values";
+import PayrollFields from "./PayrollFields";
 type Props = {
   toEditItem?: TDataFields;
 };
@@ -30,7 +30,7 @@ function AddPayroll({ toEditItem }: Props) {
         mutation={createMutation}
         mutationType={MutationType.CREATE}
       >
-        <PayrollGroupsFields form={form} mutationType={MutationType.CREATE} />
+        <PayrollFields form={form} mutationType={MutationType.CREATE} />
       </FormSubmit>
     </Form>
   );

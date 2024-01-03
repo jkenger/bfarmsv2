@@ -91,11 +91,11 @@ function PopoverCommandQuery({
               role="combobox"
               className={cn(
                 " justify-between text-xs ",
-                !selectedItem?.id && "text-muted-foreground"
+                !selected.value && "text-muted-foreground"
               )}
             >
-              {selectedItem?.id ? (
-                selectedItem[displayField]
+              {selected.value ? (
+                selectedItem?.[displayField]
               ) : (
                 <span>Select {label ? label : "Item"}</span>
               )}

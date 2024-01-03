@@ -49,6 +49,7 @@ function PayrollFields({ form, mutationType = MutationType.CREATE }: Props) {
       <FormField
         control={form.control}
         name="payrollGroupId"
+        rules={{ required: "This field is required" }}
         render={({ field }) => {
           return (
             <FormItem>

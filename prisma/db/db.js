@@ -65,8 +65,16 @@ const prisma = new PrismaClient().$extends({
 
         // VARIABLES
         let allEmployees = await prisma.user.findMany({
+          include: {
+            attendances: true,
+            designation: true,
+            deductions: true,
+          },
+        });
+
+        let employeesInPayrollGroup = await prisma.user.findMany({
           where: {
-            ...options.where,
+            payrollGroupId: options.where.payrollGroupId,
           },
           include: {
             attendances: true,
@@ -74,6 +82,8 @@ const prisma = new PrismaClient().$extends({
             deductions: true,
           },
         });
+
+        console.log("employeesInPayrollGroup", employeesInPayrollGroup);
         let employees = allEmployees.filter((employee) => {
           return employee.attendances.some((attendance) => {
             return (
@@ -112,7 +122,7 @@ const prisma = new PrismaClient().$extends({
         };
 
         // If range is provided, filter attendances
-        employees = employees.map((employee) => {
+        employees = await employees.map((employee) => {
           // salary
           const monthlySalary = employee.designation?.salary || 0;
           const salary = {

@@ -37,7 +37,7 @@ function DataTableColumnStatusAddingFails({
   action?: React.ReactNode;
 }) {
   const error = mutation?.error as AxiosError;
-  console.log(error);
+
   return (
     <DataTableColumnStatus>
       <Badge variant="destructive" className="hover:cursor-default space-x-2">

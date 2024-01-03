@@ -28,9 +28,12 @@ import AdminDailyTyimeRecord, {
 import PayrollGroups, {
   loader as payrollGroupLoader,
 } from "./components/pages/admin/payroll/PayrollGroups";
+
 import { loader as deductionsLoader } from "./components/pages/admin/deductions/Deductions";
 import { loader as leaveTypesLoader } from "./components/pages/admin/leaves/types/Types";
-import { loader as payrollLoader } from "./components/pages/admin/payroll/Payroll";
+import AdminPayroll, {
+  loader as payrollLoader,
+} from "./components/pages/admin/payroll/Payroll";
 
 import Designations from "./components/pages/admin/employees/Designations";
 
@@ -81,7 +84,6 @@ import {
   editDTR,
 } from "./components/pages/admin/daily-time-records/api/daily-time-records.api";
 import Attendance from "./components/pages/root/attendance/Attendance";
-import AdminPayroll from "./components/pages/admin/payroll/Payroll";
 import {
   createPayroll,
   deletePayroll,

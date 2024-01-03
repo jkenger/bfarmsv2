@@ -78,7 +78,7 @@ model Receipt {
   id                   String   @id @default(uuid())
   payroll              Payroll @relation(fields: [payrollId], references: [id], onDelete: Cascade,  onUpdate: Cascade)
   payrollId            String
-  user                 User  @relation(fields: [userId], references: [id])
+  user                 User  @relation(fields: [userId], references: [id] , onDelete: Cascade,  onUpdate: Cascade)
   userId               String 
   prc                  String?
   noOfDays             Int
@@ -99,7 +99,7 @@ model Payroll {
   id             String       @id @default(uuid())
   from           DateTime
   to             DateTime
-  payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id])
+  payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id] , onDelete: Cascade,  onUpdate: Cascade)
   payrollGroupId String
   receipts       Receipt[]       
   createdAt      DateTime     @default(now())

@@ -1,7 +1,6 @@
 import Main from "@/components/wrappers/Main";
 import { QueryClient } from "@tanstack/react-query";
 import { Await, defer, useLoaderData } from "react-router-dom";
-import { getPayrollGroups } from "./api/payrollGroups.api";
 import { Suspense } from "react";
 import TableFallBack from "@/components/ui/table-fallback";
 import Error from "../../Error";
@@ -10,19 +9,20 @@ import { SheetTrigger } from "@/components/ui/sheet";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { IconProperties } from "@/types/common";
-import AddPayrollGroups from "./form/payrollgroups/AddPayrollGroup";
 import DataTableHistory from "@/components/ui/data-table-history";
 import ActivityCard from "../employees/ui/activity-card";
 import { useQueryProvider } from "@/components/context/query-provider";
 import PayrollTable from "./tables/PayrollTable";
 import { payrollColumns } from "./columns/payroll.columns";
+import AddPayroll from "./form/payroll/AddPayroll";
+import { getPayroll } from "./api/payroll.api";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
-    data: queryClient.ensureQueryData(getPayrollGroups({ type: "paginated" })),
+    data: queryClient.ensureQueryData(getPayroll({ type: "paginated" })),
   });
 };
-function PayrollGroups() {
+function Payroll() {
   const { data: initialData } = useLoaderData() as { data: TDataFields };
   const { createdActivities, deletedActivities, editedActivities } =
     useQueryProvider();
@@ -52,7 +52,7 @@ function PayrollGroups() {
               title="Add new data to"
               table="Payroll"
             >
-              <AddPayrollGroups />
+              <AddPayroll />
             </MutationSheet>
           }
         >
@@ -77,7 +77,7 @@ function PayrollGroups() {
             title="Add new data to"
             table="Payroll"
           >
-            <AddPayrollGroups />
+            <AddPayroll />
           </MutationSheet>
           <DataTableHistory
             render={{
@@ -136,4 +136,4 @@ function PayrollGroups() {
   );
 }
 
-export default PayrollGroups;
+export default Payroll;

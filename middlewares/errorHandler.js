@@ -14,6 +14,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       .status(StatusCodes.NOT_FOUND)
       .json("Data you are trying to retrieve/delete is not found");
   }
+
   return res.status(statusCode).json(message);
 };
 

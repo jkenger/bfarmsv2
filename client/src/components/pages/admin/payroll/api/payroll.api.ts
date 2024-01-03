@@ -4,6 +4,8 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
+import { AxiosResponse } from "axios";
+import { performOptimisticUpdate } from "@/lib/helpers";
 
 export type getResponse = {
   data: TDataFields[];
@@ -48,13 +50,61 @@ export const createPayroll = ({ queryClient, form }: TMutation) => {
         ...data,
       });
     },
-    onSuccess: async () => {
+    // onMutate: async (data: AxiosResponse) => {
+    //   const { searchParams } = getSearchParams();
+    //   const params = new URLSearchParams(searchParams);
+
+    //   await queryClient.cancelQueries({
+    //     queryKey: [QueryKeys.PAYROLLS, params.toString()],
+    //   });
+
+    //   const axiosQueryData = queryClient.getQueryData([
+    //     QueryKeys.PAYROLLS,
+    //     params.toString(),
+    //   ]);
+
+    //   const previousData = axiosQueryData?.data.data;
+
+    //   const sampleData = {
+    //     ...data.data,
+    //     payrollGroup: {
+    //       name: "Creating project name...",
+    //       fundCluster: "Creating fund cluster...",
+    //       programName: "Creating program name...",
+    //     },
+    //   };
+
+    //   queryClient.setQueryData(
+    //     [QueryKeys.PAYROLLS, params.toString()],
+    //     (oldData: AxiosResponse) => {
+    //       const oldDataCopy = oldData.data.data;
+    //       return {
+    //         ...oldData,
+    //         data: {
+    //           data: [sampleData, ...oldDataCopy],
+    //           numOfPages: oldData.data.numOfPages,
+    //         },
+    //       };
+    //     }
+    //   );
+    //   return { previousData };
+    // },
+    onSuccess: async (data: AxiosResponse) => {
+      // get path
+      const { paramStrings } = getSearchParams();
+      const newData = {
+        ...data.data,
+        status: "new",
+      };
       toast.success(`Payroll Created`, {
         description: "A new payroll has been successfully addded.",
       });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PAYROLLS],
+      performOptimisticUpdate({
+        queryClient,
+        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
+        data: newData,
       });
+
       form?.reset();
     },
     onError: async () => {
@@ -71,24 +121,33 @@ export const editPayroll = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_PAYROLL],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/payrolls/groups/${data.id}`, {
+      return await fetch.put(`/admin/payrolls/${data.id}`, {
         ...data,
+        action: "update",
       });
     },
-    onSuccess: async () => {
-      toast.success(`Payroll Group Updated`, {
-        description: "Changes to the payroll group details have been saved.",
+    onSuccess: async (data: AxiosResponse) => {
+      const { paramStrings } = getSearchParams();
+      const newData = {
+        ...data.data.data,
+        status: "new",
+      };
+      performOptimisticUpdate({
+        queryClient,
+        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
+        data: newData,
+        action: "update",
       });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PAYROLLS],
+      toast.success(`Payroll Updated`, {
+        description: "Changes to the payroll details have been saved.",
       });
       sheetCloseBtn?.click();
       form?.reset();
     },
     onError: async () => {
-      toast.error(`Failed to Update Payroll Group`, {
+      toast.error(`Failed to Update Payroll`, {
         description:
-          "Changes to the payroll group details could not be saved. Please retry.",
+          "Changes to the payroll details could not be saved. Please retry.",
       });
     },
   };
@@ -96,25 +155,32 @@ export const editPayroll = ({ queryClient, form }: TMutation) => {
 
 export const deletePayroll = ({ queryClient }: TMutation) => {
   return {
-    mutationKey: [QueryKeys.DELETE_PAYROLL_GROUP],
+    mutationKey: [QueryKeys.DELETE_PAYROLL],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/payrolls/groups/${data.id}`);
+      return await fetch.delete(`/admin/payrolls/${data.id}`);
     },
-    onSuccess: async () => {
-      toast.warning(`Payroll Group Deleted`, {
-        className: "bg-primary",
-        description:
-          "Payroll Group selected has been removed from the records.",
+    onSuccess: async (data: AxiosResponse) => {
+      const { paramStrings } = getSearchParams();
+      const newData = {
+        ...data.data.data,
+        status: "new",
+      };
+      performOptimisticUpdate({
+        queryClient,
+        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
+        data: newData,
+        action: "delete",
       });
-      await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.PAYROLLS],
+      toast.warning(`Payroll Deleted`, {
+        className: "bg-primary",
+        description: "Payroll selected has been removed from the records.",
       });
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.EMPLOYEES] });
     },
     onError: async () => {
-      toast.error("Failed to Delete Payroll Group", {
+      toast.error("Failed to Delete Payroll", {
         description:
-          "Payroll Group selected could not be removed due to an issue. Please try again.",
+          "Payroll selected could not be removed due to an issue. Please try again.",
       });
     },
   };

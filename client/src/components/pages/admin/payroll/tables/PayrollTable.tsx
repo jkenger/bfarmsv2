@@ -9,11 +9,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
-import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
-import AddPayrollGroups from "../form/payrollgroups/AddPayrollGroup";
 import { useQueryProvider } from "@/components/context/query-provider";
 // import useFilterParams from "@/components/hooks/useFilterParams";
 import { getPayroll } from "../api/payroll.api";
+import EditPayroll from "../form/payroll/EditPayroll";
+import AddPayroll from "../form/payroll/AddPayroll";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -32,8 +32,9 @@ function PayrollTable({ columns }: Props) {
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
-  console.log(data);
+
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
+
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
   const titlePage = "Payroll";
@@ -71,7 +72,7 @@ function PayrollTable({ columns }: Props) {
                 table={titlePage}
                 error={editMutationError?.response?.data as string}
               >
-                <EditPayrollGroup toEditItem={editMutation?.variables} />
+                <EditPayroll toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -92,7 +93,7 @@ function PayrollTable({ columns }: Props) {
                 table={titlePage}
                 error={createMutationError?.response?.data as string}
               >
-                <AddPayrollGroups toEditItem={createMutation?.variables} />
+                <AddPayroll toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
             dateRangePicker: true,

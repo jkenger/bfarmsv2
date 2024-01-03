@@ -93,7 +93,6 @@ export function DataTable<TData extends TDataFields, TValue>() {
       },
     },
   });
-
   // Set column visibility on mount
   useLayoutEffect(() => {
     if (!columnVisibility.length) {

@@ -152,6 +152,8 @@ export const getSearchParams = () => {
     travelType,
   };
 
+  const paramStrings = new URLSearchParams(searchParams).toString();
+
   return {
     page,
     limit,
@@ -160,6 +162,7 @@ export const getSearchParams = () => {
     fromDate,
     toDate,
     searchParams,
+    paramStrings,
   };
 };
 
