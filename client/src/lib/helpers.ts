@@ -1,7 +1,7 @@
+import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { QueryKeys } from "@/types/common";
 import { QueryClient } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-
 export const setDateTime = (
   h: number,
   m: number,
@@ -26,31 +26,46 @@ export const performOptimisticUpdate = ({
 }: {
   queryClient: QueryClient;
   queryKeys: QueryKeys[] | string[];
-  data: TDataFields;
+  data: AxiosResponse;
   action?: "create" | "update" | "delete";
 }) => {
-  queryClient.setQueryData(queryKeys, (oldData: AxiosResponse) => {
-    let oldDataCopy = oldData.data.data;
-    if (action === "update") {
-      oldDataCopy = oldDataCopy.map((item: TDataFields) => {
-        if (item.id === data.id) {
-          return data;
-        }
-        return item;
-      });
+  const { paramStrings } = getSearchParams();
+  const newData: TDataFields = {
+    // change this to the correct shape of your data from the api
+    ...data.data.data,
+    //
+
+    // add the status property to the data, use it to display the status of the data win the ui
+    status: action === "create" ? "new" : "updated",
+  };
+  queryClient.setQueryData(
+    [...queryKeys, paramStrings],
+    (oldData: AxiosResponse) => {
+      // change this to the correct shape of your data from the api
+      let oldDataCopy = oldData.data.data;
+      //
+      if (action === "update") {
+        oldDataCopy = oldDataCopy.map((item: TDataFields) => {
+          if (item.id === newData.id) {
+            return newData;
+          }
+          return item;
+        });
+      }
+      if (action === "delete") {
+        oldDataCopy = oldDataCopy.filter((item: TDataFields) => {
+          return item.id !== newData.id;
+        });
+      }
+
+      return {
+        ...oldData,
+        data: {
+          data:
+            action === "create" ? [newData, ...oldDataCopy] : [...oldDataCopy],
+          numOfPages: oldData.data.numOfPages,
+        },
+      };
     }
-    if (action === "delete") {
-      oldDataCopy = oldDataCopy.filter((item: TDataFields) => {
-        return item.id !== data.id;
-      });
-      console.log(oldDataCopy);
-    }
-    return {
-      ...oldData,
-      data: {
-        data: action === "create" ? [data, ...oldDataCopy] : [...oldDataCopy],
-        numOfPages: oldData.data.numOfPages,
-      },
-    };
-  });
+  );
 };

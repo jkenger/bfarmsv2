@@ -60,8 +60,15 @@ const prisma = new PrismaClient().$extends({
         return "No Employee Found with the ID  Provided";
       },
       async findUsersAttendance(options) {
+        let error;
         const from = options.range.from;
         const to = options.range.to;
+
+        if (!from || !to) {
+          error = new Error("Please provide a valid date range");
+          error.statusCode = 400;
+          throw error;
+        }
 
         // VARIABLES
         let allEmployees = await prisma.user.findMany({
@@ -71,7 +78,6 @@ const prisma = new PrismaClient().$extends({
             deductions: true,
           },
         });
-
         let employeesInPayrollGroup = await prisma.user.findMany({
           where: {
             payrollGroupId: options.where.payrollGroupId,
@@ -80,25 +86,36 @@ const prisma = new PrismaClient().$extends({
             attendances: true,
             designation: true,
             deductions: true,
+            payrollGroup: true,
           },
         });
 
-        console.log("employeesInPayrollGroup", employeesInPayrollGroup);
-        let employees = allEmployees.filter((employee) => {
+        if (!employeesInPayrollGroup.length) {
+          error = new Error("No employees found in the payroll group");
+          error.statusCode = 404;
+          throw error;
+        }
+
+        let employees = employeesInPayrollGroup.filter((employee) => {
           return employee.attendances.some((attendance) => {
             return (
-              attendance.attendanceDate >= from &&
+              attendance.attendanceDate > from &&
               attendance.attendanceDate <= to
             );
           });
         });
+        if (!employees.length) {
+          error = new Error(
+            "No attendance found from employees in the payroll group"
+          );
+          error.statusCode = 404;
+          throw error;
+        }
 
-        let employeeCount;
         const calendarDays =
           countWeekdays(from, to) < 10
             ? countWeekdays(from, new Date(addDays(from, 14)))
             : countWeekdays(from, to);
-        console.log("calendarDays", calendarDays);
 
         let holidayDates = await prisma.holiday.getHolidayDates(from, to);
 
@@ -108,15 +125,6 @@ const prisma = new PrismaClient().$extends({
           tax_3: { r1: 33333, r2: 83332, prcnt: 0.1 }, //10%
         };
 
-        console.log(holidayDates);
-
-        if (!employees.length) {
-          return {
-            employees: [],
-            employeeCount: 0,
-          };
-        }
-
         const toCalendarDays = (count) => {
           return count > calendarDays ? calendarDays : count;
         };
@@ -124,7 +132,18 @@ const prisma = new PrismaClient().$extends({
         // If range is provided, filter attendances
         employees = await employees.map((employee) => {
           // salary
+          if (!employee.designationId) {
+            let error = new Error(
+              "No designation found on employee " +
+                employee.id +
+                " " +
+                employee.fullName
+            );
+            error.statusCode = 404;
+            throw error;
+          }
           const monthlySalary = employee.designation?.salary || 0;
+
           const salary = {
             monthly: {
               total: monthlySalary,
@@ -362,9 +381,9 @@ const prisma = new PrismaClient().$extends({
           };
         });
 
-        employeeCount = employees.length ? employees.length : 0;
+        const allEmployeesCount = allEmployees.length;
 
-        return { allEmployees, employees, employeeCount };
+        return { allEmployees, allEmployeesCount, employees };
       },
     },
   },
@@ -461,6 +480,50 @@ const prisma = new PrismaClient().$extends({
         }
 
         return query(args);
+      },
+    },
+    payroll: {
+      async create({ model, args, query }) {
+        const payroll = await query({
+          ...args,
+          include: { payrollGroup: true },
+        });
+        if (payroll) {
+          return await prisma.payroll.update({
+            where: { id: payroll.id },
+            data: {
+              payrollNumber: `PAY-${payroll.id}`,
+              fundCluster: payroll.payrollGroup.fundCluster,
+              projectName: payroll.payrollGroup.name,
+              programName: payroll.payrollGroup.programName,
+            },
+          });
+        }
+
+        // Delete created payroll if no payroll is created
+        return await prisma.payroll.delete({ where: { id: payroll.id } });
+      },
+    },
+
+    // Receipt operations
+    receipt: {
+      async create({ args, query }) {
+        const receipt = await query({
+          ...args,
+          include: { user: { include: { designation: true } } },
+        });
+        if (receipt) {
+          return await prisma.receipt.update({
+            where: { id: receipt.id },
+            data: {
+              name: receipt.user.fullName,
+              designation: receipt.user.designation.name,
+              salary: receipt.user.designation.salary,
+            },
+          });
+        }
+        // Delete created receipt if no receipt is created
+        return await prisma.receipt.delete({ where: { id: receipt.id } });
       },
     },
   },

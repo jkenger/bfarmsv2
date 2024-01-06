@@ -14,6 +14,8 @@ import { useQueryProvider } from "@/components/context/query-provider";
 import { getPayroll } from "../api/payroll.api";
 import EditPayroll from "../form/payroll/EditPayroll";
 import AddPayroll from "../form/payroll/AddPayroll";
+import { Link } from "react-router-dom";
+import { Links } from "@/types/common";
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
@@ -41,6 +43,29 @@ function PayrollTable({ columns }: Props) {
   // const { handleGroupChange } = useFilterParams();
   return (
     <>
+      <div className="pb-2">
+        <span className="text-xs text-yellow-500">
+          Warning: Payroll accuracy relies on complete data for{" "}
+          <Link to={Links.PAYROLL_GROUPS} className="underline">
+            Payroll Group
+          </Link>
+          ,{" "}
+          <Link to={Links.DESIGNATIONS} className="underline">
+            Designation
+          </Link>
+          ,{" "}
+          <Link to={Links.EMPLOYEES} className="underline">
+            Employee
+          </Link>
+          , and{" "}
+          <Link to={Links.DAILY_TIME_RECORDS} className="underline">
+            Daily Time Records
+          </Link>
+          . Ensure all fields in the respective tables are filled accurately to
+          enable precise payroll calculations based on comprehensive daily time
+          records.
+        </span>
+      </div>
       {isSuccess && (
         <DataTableProvider<TDataFields, string>
           value={{

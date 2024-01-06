@@ -4,8 +4,6 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
-import { AxiosResponse } from "axios";
-import { performOptimisticUpdate } from "@/lib/helpers";
 
 export type getResponse = {
   data: TDataFields[];
@@ -89,20 +87,14 @@ export const createPayroll = ({ queryClient, form }: TMutation) => {
     //   );
     //   return { previousData };
     // },
-    onSuccess: async (data: AxiosResponse) => {
+    onSuccess: async () => {
       // get path
-      const { paramStrings } = getSearchParams();
-      const newData = {
-        ...data.data,
-        status: "new",
-      };
+
       toast.success(`Payroll Created`, {
         description: "A new payroll has been successfully addded.",
       });
-      performOptimisticUpdate({
-        queryClient,
-        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
-        data: newData,
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLLS],
       });
 
       form?.reset();
@@ -126,17 +118,9 @@ export const editPayroll = ({ queryClient, form }: TMutation) => {
         action: "update",
       });
     },
-    onSuccess: async (data: AxiosResponse) => {
-      const { paramStrings } = getSearchParams();
-      const newData = {
-        ...data.data.data,
-        status: "new",
-      };
-      performOptimisticUpdate({
-        queryClient,
-        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
-        data: newData,
-        action: "update",
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLLS],
       });
       toast.success(`Payroll Updated`, {
         description: "Changes to the payroll details have been saved.",
@@ -159,17 +143,9 @@ export const deletePayroll = ({ queryClient }: TMutation) => {
     mutationFn: async (data: TDataFields) => {
       return await fetch.delete(`/admin/payrolls/${data.id}`);
     },
-    onSuccess: async (data: AxiosResponse) => {
-      const { paramStrings } = getSearchParams();
-      const newData = {
-        ...data.data.data,
-        status: "new",
-      };
-      performOptimisticUpdate({
-        queryClient,
-        queryKeys: [QueryKeys.PAYROLLS, paramStrings],
-        data: newData,
-        action: "delete",
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.PAYROLLS],
       });
       toast.warning(`Payroll Deleted`, {
         className: "bg-primary",

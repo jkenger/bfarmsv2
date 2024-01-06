@@ -111,7 +111,7 @@ export const models = {
         jsonReturn
           ? jsonReturn
           : {
-              message: dataUpdated,
+              data: dataUpdated,
             }
       );
     }
@@ -125,7 +125,7 @@ export const models = {
       jsonReturn
         ? jsonReturn
         : {
-            message: dataUpdated,
+            data: dataUpdated,
           }
     );
   },
@@ -167,7 +167,9 @@ export const models = {
   ) => {
     const { queryObject, filter, limit } = createQueryObject(req, toQuery);
 
-    const data = await prismaModel.findMany(queryObject);
+    const data = await prismaModel.findMany({
+      ...queryObject,
+    });
 
     const dataCount = await prismaModel.count(filter);
     const numOfPages = Math.ceil(dataCount / limit);

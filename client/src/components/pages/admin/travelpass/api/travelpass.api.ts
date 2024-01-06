@@ -67,7 +67,7 @@ export const editTravelpass = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_TRAVELPASS],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/travelpass/${data.id}`, {
+      return await fetch.put(`/admin/travelpass/${data.id}`, {
         ...data,
       });
     },
@@ -100,7 +100,7 @@ export const deleteTravelpass = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_TRAVELPASS],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/travelpass/${data.id}`);
+      return await fetch.delete(`/admin/travelpass/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Travelpass Deleted`, {

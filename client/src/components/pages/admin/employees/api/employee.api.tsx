@@ -72,7 +72,7 @@ export const editEmployee = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/employees/${data.id}`, data);
+      return await fetch.put(`/admin/employees/${data.id}`, data);
     },
     onSuccess: async () => {
       toast.success(`Employee Updated`, {
@@ -102,7 +102,7 @@ export const deleteEmployee = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_EMPLOYEE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/employees/${data.id}`);
+      return await fetch.delete(`/admin/employees/${data.id}`);
     },
     onSuccess: async () => {
       toast.success(`Employee Deleted`, {

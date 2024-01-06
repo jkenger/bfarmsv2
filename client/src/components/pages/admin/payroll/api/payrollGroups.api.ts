@@ -55,6 +55,7 @@ export const createPayrollGroup = ({ queryClient, form }: TMutation) => {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PAYROLL_GROUPS],
       });
+
       form?.reset();
     },
     onError: async () => {
@@ -71,7 +72,7 @@ export const editPayrollGroup = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_PAYROLL_GROUP],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/payrolls/groups/${data.id}`, {
+      return await fetch.put(`/admin/payrolls/groups/${data.id}`, {
         ...data,
       });
     },
@@ -101,7 +102,7 @@ export const deletePayrollGroup = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_PAYROLL_GROUP],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/payrolls/groups/${data.id}`);
+      return await fetch.delete(`/admin/payrolls/groups/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Payroll Group Deleted`, {

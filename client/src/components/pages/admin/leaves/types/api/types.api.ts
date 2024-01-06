@@ -69,7 +69,7 @@ export const editLeaveType = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_LEAVE_TYPE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/leaves/types/${data.id}`, {
+      return await fetch.put(`/admin/leaves/types/${data.id}`, {
         ...data,
       });
     },
@@ -96,7 +96,7 @@ export const deleteLeaveType = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_LEAVE_TYPE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/leaves/types/${data.id}`);
+      return await fetch.delete(`/admin/leaves/types/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Leave Type Deleted`, {

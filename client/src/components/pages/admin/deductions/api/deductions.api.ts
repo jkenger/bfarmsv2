@@ -71,7 +71,7 @@ export const editDeduction = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_DEDUCTION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/deductions/${data.id}`, {
+      return await fetch.put(`/admin/deductions/${data.id}`, {
         ...data,
       });
     },
@@ -101,7 +101,7 @@ export const deleteDeduction = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_TRAVELPASS],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/deductions/${data.id}`);
+      return await fetch.delete(`/admin/deductions/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Deduction Deleted`, {

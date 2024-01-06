@@ -11,7 +11,7 @@ import EditPayroll from "../form/payroll/EditPayroll";
 import DeletePayroll from "../form/payroll/DeletePayroll";
 import IsNew from "@/components/ui/isnew";
 import { CalendarRange } from "lucide-react";
-import { IconProperties } from "@/types/common";
+import { IconProperties, Links } from "@/types/common";
 
 export const payrollColumns: ColumnDef<TDataFields>[] = [
   {
@@ -64,7 +64,7 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span>{row.original.payrollGroup.fundCluster}</span>;
+      return <span>{row.original.fundCluster}</span>;
     },
   },
   {
@@ -77,9 +77,7 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <div className="w-lg max-w-lg">{row.original.payrollGroup.name} </div>
-      );
+      return <div className="w-lg max-w-lg">{row.original.projectName} </div>;
     },
   },
   {
@@ -92,7 +90,7 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.original.payrollGroup.programName}</div>;
+      return <div>{row.original.programName}</div>;
     },
   },
 
@@ -114,18 +112,17 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
     header: "",
     cell: ({ row }) => {
       return (
-        <>
-          <DataTableActions
-            key={row.original.id}
-            deleteElement={
-              <DeletePayroll data={row.original} trigger={false} />
-            }
-            editElement={
-              // @TOCHANGE
-              <EditPayroll toEditItem={row.original} from="tableAction" />
-            }
-          />
-        </>
+        <DataTableActions
+          key={row.original.id}
+          navigateElement={{
+            to: `${Links.PAYROLL}/${row.original.id}/receipt`,
+          }}
+          deleteElement={<DeletePayroll data={row.original} trigger={false} />}
+          editElement={
+            // @TOCHANGE
+            <EditPayroll toEditItem={row.original} from="tableAction" />
+          }
+        />
       );
     },
   },

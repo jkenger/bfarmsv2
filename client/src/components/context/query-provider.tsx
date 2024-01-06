@@ -10,19 +10,19 @@ type Props = {
     create: {
       mutationKey: QueryKeys[];
       mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
-      onSuccess: (data: AxiosResponse) => Promise<void>;
+      onSuccess: (data?: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
     edit: {
       mutationKey: QueryKeys[];
-      mutationFn: (data: TDataFields) => Promise<void>;
-      onSuccess: () => Promise<void>;
+      mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
+      onSuccess: (data?: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
     delete: {
       mutationKey: QueryKeys[];
-      mutationFn: (data: TDataFields) => Promise<void>;
-      onSuccess: () => Promise<void>;
+      mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
+      onSuccess: (data?: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
   };

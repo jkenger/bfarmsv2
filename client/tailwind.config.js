@@ -9,6 +9,9 @@ module.exports = {
     "./src/**/*.{ts,tsx}",
   ],
   theme: {
+    fontFamily: {
+      serif: ["Times New Roman", "Times", "serif"],
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -17,6 +20,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        cam: ["Cambria", "serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -68,7 +68,7 @@ export const editDesignation = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_DESIGNATION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/employees/designations/${data.id}`, data);
+      return await fetch.put(`/admin/employees/designations/${data.id}`, data);
     },
     onSuccess: async () => {
       toast.success(`Designation Updated`, {
@@ -96,7 +96,7 @@ export const deleteDesignation = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_DESIGNATION],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/employees/designations/${data.id}`);
+      return await fetch.delete(`/admin/employees/designations/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Designation Deleted`, {

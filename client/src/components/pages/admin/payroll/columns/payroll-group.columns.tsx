@@ -54,8 +54,8 @@ export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
     },
 
     cell: ({ row }) => {
-      return row.original.users.length > 0 ? (
-        <span> {row.original.users.length} Employees </span>
+      return row.original.users?.length > 0 ? (
+        <span> {row.original.users?.length} Employees </span>
       ) : (
         <Badge variant="outline">No employee</Badge>
       );

@@ -1,20 +1,22 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { DataTable } from "@/components/ui/data-table";
 
 import MutationSheet from "@/components/ui/btn-add-sheet";
 import { buttonVariants } from "@/components/ui/button";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
 import { getPayrollGroups } from "../api/payrollGroups.api";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import AddPayrollGroups from "../form/payrollgroups/AddPayrollGroup";
 import { useQueryProvider } from "@/components/context/query-provider";
-import useFilterParams from "@/components/hooks/useFilterParams";
-import { Links } from "@/types/common";
+import useFilterParams, {
+  getSearchParams,
+} from "@/components/hooks/useFilterParams";
+import { Links, QueryKeys } from "@/types/common";
 
 import FacetedFilterButton from "@/components/ui/data-table-faceted-filter";
 type Props = {
@@ -23,14 +25,15 @@ type Props = {
 
 function PayrollGroupsTable({ columns }: Props) {
   // useQuery for fetching employee is needed here
-  const {
-    data: res,
-    isFetching,
-    isError,
-    isSuccess,
-    error,
-    refetch,
-  } = useQuery(getPayrollGroups({ type: "paginated" }));
+  const queryClient = useQueryClient();
+  const { isFetching, isError, isSuccess, error, refetch } = useQuery(
+    getPayrollGroups({ type: "paginated" })
+  );
+  const { paramStrings } = getSearchParams();
+  const res = queryClient.getQueryData([
+    QueryKeys.PAYROLL_GROUPS,
+    paramStrings,
+  ]) as AxiosResponse;
 
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;

@@ -4,7 +4,6 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { GetQueryType, QueryKeys } from "@/types/common";
 import { getSearchParams } from "@/components/hooks/useFilterParams";
 import { toast } from "sonner";
-import { AxiosResponse } from "axios";
 
 export type getResponse = {
   data: TDataFields[];
@@ -44,30 +43,11 @@ export const createHoliday = ({ queryClient, form }: TMutation) => {
         ...data,
       });
     },
-    onSuccess: async (data: AxiosResponse) => {
-      const { searchParams: holidaysParams } = getSearchParams();
-      const searchParams = new URLSearchParams(holidaysParams);
-      const newData = {
-        ...data.data.data,
-        status: "new",
-      };
-      toast.success(`Holiday Created`, {
-        description: "A new holiday has been successfully addded.",
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.HOLIDAYS],
       });
 
-      queryClient.setQueryData(
-        [QueryKeys.HOLIDAYS, searchParams.toString()],
-        (oldData: AxiosResponse) => {
-          const oldDataCopy = oldData.data.data;
-          return {
-            ...oldData,
-            data: {
-              data: [newData, ...oldDataCopy],
-              numOfPages: oldData.data.numOfPages,
-            },
-          };
-        }
-      );
       form?.reset();
     },
     onError: async () => {
@@ -84,7 +64,7 @@ export const editHoliday = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_HOLIDAY],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/holidays/${data.id}`, {
+      return await fetch.put(`/admin/holidays/${data.id}`, {
         ...data,
       });
     },
@@ -111,7 +91,7 @@ export const deleteHoliday = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_HOLIDAY],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/holidays/${data.id}`);
+      return await fetch.delete(`/admin/holidays/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Holiday Deleted`, {

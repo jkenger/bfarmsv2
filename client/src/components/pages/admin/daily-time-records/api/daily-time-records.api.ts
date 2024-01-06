@@ -67,7 +67,7 @@ export const editDTR = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.put(`/admin/daily-time-records/${data.id}`, {
+      return await fetch.put(`/admin/daily-time-records/${data.id}`, {
         ...data,
       });
     },
@@ -94,7 +94,7 @@ export const deleteDTR = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_ATTENDANCE],
     mutationFn: async (data: TDataFields) => {
-      await fetch.delete(`/admin/daily-time-records/${data.id}`);
+      return await fetch.delete(`/admin/daily-time-records/${data.id}`);
     },
     onSuccess: async () => {
       toast.warning(`Attendance Deleted`, {

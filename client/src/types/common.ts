@@ -11,6 +11,7 @@ export enum Links {
   DAILY_TIME_RECORDS = "/admin/daily-time-records",
 
   PAYROLL = "/admin/payroll",
+  PAYROLL_RECEIPTS = "/admin/payroll/",
   PAYROLL_GROUPS = "/admin/payroll/groups",
 
   HOLIDAYS = "/admin/holidays",
@@ -49,6 +50,8 @@ export enum QueryKeys {
   DELETE_PAYROLL = "deletePayroll",
   CREATE_PAYROLL = "createPayroll",
   EDIT_PAYROLL = "editPayroll",
+
+  RECEIPTS = "receipts",
 
   PAYROLL_GROUPS = "payrollGroups",
   DELETE_PAYROLL_GROUP = "deletePayrollGroup",

@@ -58,6 +58,7 @@ function PopoverCommandQuery({
     setPage(page.toString());
   }
   const params = { page, search };
+
   const { data, isPending, isSuccess } = useQuery(
     getItem({ type: "paginated", customParams: params })
   );
@@ -76,6 +77,10 @@ function PopoverCommandQuery({
       );
     }
   }, [selected.value, itemData]);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   const detailsSelect = useRef<HTMLSpanElement>(null);
   return (

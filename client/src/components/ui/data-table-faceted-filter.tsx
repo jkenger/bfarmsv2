@@ -31,7 +31,7 @@ function FacetedFilterButton<A>({
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const filterCount = selectedValues.length || 0;
   const [searchParams] = useSearchParams();
-  const optionsLength = options.length ? true : false;
+  const optionsLength = options?.length ? true : false;
 
   // Set State on mount
   useEffect(() => {

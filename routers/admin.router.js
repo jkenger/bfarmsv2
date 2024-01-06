@@ -47,6 +47,8 @@ import {
   createPayroll,
   getAllPayroll,
   getPaginatedPayroll,
+  getPaginatedReceipts,
+  getAllReceipts,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -144,6 +146,14 @@ router
   .route("/payrolls/:id")
   .put(validatePayroll, updatePayroll)
   .delete(validateId, deletePayroll);
+
+// Receipts Routes
+
+// @Desc    : Read Receipts
+// @Method  : GET
+// @Access  : Private (Admin)
+router.route("/payrolls/:id/receipt").get(getPaginatedReceipts);
+router.route("/payrolls/:id/receipt/all").get(getAllReceipts);
 
 // Payroll Groups Routes
 

@@ -43,14 +43,15 @@ model User {
   lastName   String
   age        Int
   avatar     String?
+  
 
   payrollGroup   PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
   payrollGroupId String?
 
-  receipt Receipt[]
-
-  designation   Designation? @relation(fields: [designationId], references: [id])
+  designation   Designation? @relation(fields: [designationId], references: [id] )
   designationId String?
+
+  receipts Receipt[]
 
   attendances Attendance[]
 
@@ -78,8 +79,11 @@ model Receipt {
   id                   String   @id @default(uuid())
   payroll              Payroll @relation(fields: [payrollId], references: [id], onDelete: Cascade,  onUpdate: Cascade)
   payrollId            String
-  user                 User  @relation(fields: [userId], references: [id] , onDelete: Cascade,  onUpdate: Cascade)
-  userId               String 
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId               String
+  name                 String?
+  designation          String?
+  salary               Float?
   prc                  String?
   noOfDays             Int
   grossAmountEarned    Float
@@ -99,8 +103,12 @@ model Payroll {
   id             String       @id @default(uuid())
   from           DateTime
   to             DateTime
-  payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id] , onDelete: Cascade,  onUpdate: Cascade)
+  payrollGroup   PayrollGroup @relation(fields: [payrollGroupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   payrollGroupId String
+  payrollNumber  String?
+  fundCluster    String?
+  projectName    String?
+  programName    String?
   receipts       Receipt[]       
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -111,7 +119,7 @@ model PayrollGroup {
   name        String
   fundCluster String
   programName String?
-  users       User[]
+  users       User[] 
   payrolls    Payroll[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

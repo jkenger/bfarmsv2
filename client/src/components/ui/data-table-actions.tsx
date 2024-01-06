@@ -1,23 +1,33 @@
 import React, { cloneElement } from "react";
-import { Delete, MoreVertical } from "lucide-react";
+import { Delete, File, MoreVertical } from "lucide-react";
 
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
-import { IconProperties } from "@/types/common";
+import { IconProperties, Links } from "@/types/common";
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Separator } from "./separator";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   deleteElement: React.ReactNode;
   editElement: React.ReactNode;
+  navigateElement?: {
+    to: Links | string;
+  };
 };
 
-function DataTableActions({ deleteElement, editElement }: Props) {
+function DataTableActions({
+  deleteElement,
+  editElement,
+  navigateElement,
+}: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,6 +42,21 @@ function DataTableActions({ deleteElement, editElement }: Props) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
+        {navigateElement && (
+          <>
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between gap-2"
+                onClick={() => navigate(navigateElement.to)}
+              >
+                View <File size={IconProperties.SIZE_ICON} />
+              </Button>
+            </DropdownMenuItem>
+            <Separator orientation="horizontal" />
+          </>
+        )}
         <DropdownMenuItem className="p-0">
           <Button
             variant="ghost"

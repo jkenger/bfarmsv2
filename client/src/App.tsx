@@ -89,6 +89,8 @@ import {
   deletePayroll,
   editPayroll,
 } from "./components/pages/admin/payroll/api/payroll.api";
+import Receipt from "./components/pages/admin/payroll/Receipt";
+import { loader as payrollReceiptLoader } from "./components/pages/admin/payroll/Receipt";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -236,6 +238,11 @@ const router = createBrowserRouter([
                     <PayrollGroups />
                   </QueryProvider>
                 ),
+              },
+              {
+                path: ":id/receipt",
+                loader: payrollReceiptLoader(queryClient),
+                element: <Receipt />,
               },
             ],
           },

@@ -13,11 +13,16 @@ import {
   leaveTypes,
   payroll,
   payrollGroups,
+  receipt,
   travelpass,
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 import prisma from "../prisma/db/db.js";
-import { createStartDate, setDateTime } from "../lib/helpers.js";
+import {
+  createPayrollReceipts,
+  createStartDate,
+  setDateTime,
+} from "../lib/helpers.js";
 import { StatusCodes } from "http-status-codes";
 
 // Attendance
@@ -191,30 +196,38 @@ export const createPayroll = asyncHandler(async (req, res) => {
       };
     }),
   ];
+
+  if (!data.length) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("No information to be created was received. Please try again.");
+  }
+
   const payroll = data[0];
 
-  const { employees, employeeCount } = await prisma.user.findUsersAttendance({
-    where: {
-      payrollGroupId: payroll.payrollGroupId,
-    },
-    range: {
-      from: payroll.from,
-      to: payroll.to,
-    },
-  });
+  // Create employee payroll data
+  const { employees, allEmployeesCount } =
+    await prisma.user.findUsersAttendance({
+      where: {
+        payrollGroupId: payroll.payrollGroupId,
+      },
+      range: {
+        from: payroll.from,
+        to: payroll.to,
+      },
+    });
   console.log("asdas", employees);
-  if (!employeeCount) {
+
+  // Check if there are employees
+  if (!allEmployeesCount) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .json(
-        `No employees found from ${new Date(
-          payroll.from
-        ).toDateString()} to ${new Date(
-          payroll.to
-        ).toDateString()}. Please check the dates.`
+        "No employees found. Please check the employee's page if there is any existing employee."
       );
   }
 
+  // Create payroll
   const createdPayroll = await prisma.payroll.create({
     data: {
       from: payroll.from,
@@ -225,35 +238,39 @@ export const createPayroll = asyncHandler(async (req, res) => {
       payrollGroup: true,
     },
   });
+  // Check if payroll was created
   if (!createdPayroll) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json("Error creating payroll. Please try again.");
   }
 
-  const createdPayrollReceipt = await mutatePayrollReceipt(
+  // Create payroll receipt
+  const createdPayrollReceipt = await createPayrollReceipts(
+    prisma,
     employees,
     createdPayroll.id
   );
   console.log("createdPayrollReceipt", createdPayrollReceipt);
+  // Check if payroll receipt was created
   if (!createdPayrollReceipt) {
+    await prisma.payroll.delete({
+      where: {
+        id: createdPayroll.id,
+      },
+    });
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json("Error creating payroll receipt. Please try again.");
   }
   if (createdPayrollReceipt) {
-    return res.status(StatusCodes.OK).json(createdPayroll);
+    return res.status(StatusCodes.OK).json({ data: createdPayroll });
   }
 
   // Create receipt
   // createPayrollReceipt;
   // await models.addModel(res, req.body, prisma.payroll);
 });
-
-export const deletePayroll = asyncHandler(
-  async (req, res) =>
-    await models.deleteModel(res, req.params.id, prisma.payroll)
-);
 
 export const updatePayroll = asyncHandler(async (req, res) => {
   const data = [
@@ -308,7 +325,7 @@ export const updatePayroll = asyncHandler(async (req, res) => {
   }
 
   // @TODO: CREATE A NEW UPDATE PAYROLL RECEIPT FUNCTION
-  const createdPayrollReceipt = await mutatePayrollReceipt(
+  const createdPayrollReceipt = await createPayrollReceipts(
     employees,
     updatedPayroll.id
   );
@@ -318,60 +335,24 @@ export const updatePayroll = asyncHandler(async (req, res) => {
       .json("Error updating payroll receipt. Please try again.");
   }
   if (createdPayrollReceipt) {
-    return res.status(StatusCodes.OK).json(updatedPayroll);
+    return res.status(StatusCodes.OK).json({ data: updatedPayroll });
   }
 
   // await models.updateModel(res, req.params.id, data, prisma.payroll);
 });
+export const deletePayroll = asyncHandler(
+  async (req, res) =>
+    await models.deleteModel(res, req.params.id, prisma.payroll)
+);
 
-export const mutatePayrollReceipt = asyncHandler(async (data, payrollId) => {
-  const receiptData = data.map((item) => {
-    return {
-      payrollId: payrollId,
-      userId: item.id,
-      noOfDays: item.attendanceData.days.withHolidays,
-      grossAmountEarned: item.totals.gross.amountDue,
-      tax1: item.totals.net.deductions.breakdown.taxes.tax1 || null,
-      tax5: item.totals.net.deductions.breakdown.taxes.tax5 || null,
-      tax10: item.totals.net.deductions.breakdown.taxes.tax10 || null,
-      netAmountDue: item.totals.net.amountDue,
-    };
-  });
-  const inserts = receiptData.map((item) =>
-    prisma.receipt.create({
-      data: item,
-    })
-  );
-  const createdReceipt = await prisma.$transaction(inserts);
-  console.log("createdReceipt", createdReceipt);
-  if (!createdReceipt.length) {
-    return {
-      count: 0,
-    };
-  }
-  if (createdReceipt.length) {
-    const updatePayroll = await prisma.payroll.update({
-      where: {
-        id: payrollId,
-      },
-      data: {
-        receipts: {
-          set: createdReceipt.map((item) => {
-            return {
-              id: item.id,
-            };
-          }),
-        },
-      },
-    });
-    console.log(updatePayroll);
-    return updatePayroll;
-  }
+export const getAllReceipts = asyncHandler(
+  async (req, res) => await models.getAllModel(res, prisma.receipt)
+);
 
-  // console.log(createdReceipt);
-
-  // await models.addModel(res, req.body, prisma.receipt);
-});
+export const getPaginatedReceipts = asyncHandler(
+  async (req, res) =>
+    await models.getPaginatedModel(req, res, prisma.receipt, receipt)
+);
 
 // Payroll Groups
 export const getAllPayrollGroups = asyncHandler(

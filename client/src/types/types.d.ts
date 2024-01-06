@@ -55,6 +55,9 @@ type TDesignation = {
 type TReceipt = {
   id: string;
   payroll: TPayroll;
+  name: string;
+  designation: string;
+  salary: number;
   prc?: string;
   noOfDays: number;
   grossAmountEarned: number;
@@ -76,6 +79,9 @@ type TPayroll = {
   to: string;
   payrollGroup: TPayrollGroup;
   payrollGroupId: string;
+  fundCluster: string;
+  projectName: string;
+  programName: string;
   amount: string;
   createdAt: string;
   updatedAt: string;
