@@ -3,11 +3,11 @@ import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
 import ParseDate from "@/components/ui/parse-date";
 
-import EditHoliday from "../form/EditDTR";
+import EditHoliday from "../form/dtr/EditDTR";
 import { TableHead } from "@/components/ui/table";
 import ParseTime from "@/components/ui/parse-time";
 import EmptyCellBadge from "@/components/ui/empty-cell-badge";
-import DeleteDTR from "../form/DeleteDTR";
+import DeleteDTR from "../form/dtr/DeleteDTR";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/bfarlogo.png";
 

@@ -9,6 +9,7 @@ export enum Links {
   DESIGNATIONS = "/admin/employees/designations",
 
   DAILY_TIME_RECORDS = "/admin/daily-time-records",
+  TIME_CARDS = "/admin/daily-time-records/time-cards",
 
   PAYROLL = "/admin/payroll",
   PAYROLL_RECEIPTS = "/admin/payroll/:id/receipt",
@@ -82,6 +83,11 @@ export enum QueryKeys {
   CREATE_ATTENDANCE = "createAttendance",
   EDIT_ATTENDANCE = "editAttendance",
   DELETE_ATTENDANCE = "deleteAttendance",
+
+  TIME_CARDS = "timeCards",
+  CREATE_TIME_CARD = "createTimeCard",
+  EDIT_TIME_CARD = "editTimeCard",
+  DELETE_TIME_CARD = "deleteTimeCard",
 }
 
 export enum SortType {

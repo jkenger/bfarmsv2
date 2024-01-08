@@ -3,6 +3,7 @@ import {
   ArrowDownToDot,
   Boxes,
   Calendar,
+  CalendarClock,
   Caravan,
   CircleDollarSign,
   Contact,
@@ -125,16 +126,30 @@ function Lists() {
           handleOnClick={handleDailyTimeRecordState}
         />
         {dailyTimeRecordState && (
-          <SubLink
-            to={Links.DAILY_TIME_RECORDS}
-            icon={
-              <Calendar
-                size={IconProperties.SIZE}
-                strokeWidth={IconProperties.STROKE_WIDTH}
-              />
-            }
-            title="All Records"
-          />
+          <>
+            <div className="absolute h-[35px] w-[1.5px] bg-muted-foreground/20 top-[3.3rem] left-[1.95rem] z-0"></div>
+            <SubLink
+              to={Links.DAILY_TIME_RECORDS}
+              icon={
+                <Calendar
+                  size={IconProperties.SIZE}
+                  strokeWidth={IconProperties.STROKE_WIDTH}
+                />
+              }
+              title="All Records"
+              end
+            />
+            <SubLink
+              to={Links.TIME_CARDS}
+              icon={
+                <CalendarClock
+                  size={IconProperties.SIZE}
+                  strokeWidth={IconProperties.STROKE_WIDTH}
+                />
+              }
+              title="Time Cards"
+            />
+          </>
         )}
       </List>
       <List>
@@ -156,9 +171,6 @@ function Lists() {
                 />
               }
               title="All Records"
-              cn={`${
-                path.includes("/admin/payrolls/*/receipt") ? "active" : ""
-              } `}
             />
             <SubLink
               to={Links.PAYROLL_GROUPS}

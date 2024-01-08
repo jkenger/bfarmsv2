@@ -33,6 +33,32 @@ model Attendance {
   updatedAt        DateTime  @updatedAt
 }
 
+model TimeCard {
+  id             String       @id @default(uuid())
+  from           DateTime
+  to             DateTime
+  name           String?
+  cards          Card[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Card {
+  id             String       @id @default(uuid())
+  amTimeIn        DateTime?
+  amTimeOut       DateTime?
+  pmTimeIn        DateTime?
+  pmTimeOut       DateTime?
+  lateMinutes     Int?
+  undertimeMinutes Int?
+  regularDays    Int?
+  saturdays      Int?
+  timeCard       TimeCard     @relation(fields: [timeCardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  timeCardId     String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
 model User {
   id         String  @id @default(uuid())
   employeeId String  @unique

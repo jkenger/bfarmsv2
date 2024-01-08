@@ -5,17 +5,15 @@ import { useForm } from "react-hook-form";
 import { useLayoutEffect, useRef } from "react";
 
 import { MutationType } from "@/types/common";
-import FormSubmit from "../../shareable/form-submit";
-
+import FormSubmit from "../../../shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
-import DTRFields from "./DTRFields";
 import { values } from "./form-values";
-
+import TimeCardFields from "./TimeCardFields";
 type Props = {
   toEditItem?: TDataFields;
 };
 
-function AddDTR({ toEditItem }: Props) {
+function AddTimeCard({ toEditItem }: Props) {
   const form = useForm<TDataFields>({
     defaultValues: values(toEditItem),
   });
@@ -32,10 +30,10 @@ function AddDTR({ toEditItem }: Props) {
         mutation={createMutation}
         mutationType={MutationType.CREATE}
       >
-        <DTRFields form={form} mutationType={MutationType.CREATE} />
+        <TimeCardFields form={form} mutationType={MutationType.CREATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default AddDTR;
+export default AddTimeCard;

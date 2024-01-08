@@ -91,6 +91,14 @@ import {
 } from "./components/pages/admin/payroll/api/payroll.api";
 import Receipt from "./components/pages/admin/payroll/Receipt";
 import { loader as payrollReceiptLoader } from "./components/pages/admin/payroll/Receipt";
+import TimeCards, {
+  loader as timeCardLoader,
+} from "./components/pages/admin/daily-time-records/TimeCards";
+import {
+  createTimeCard,
+  deleteTimeCard,
+  editTimeCard,
+} from "./components/pages/admin/daily-time-records/api/time-cards.api";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -178,23 +186,48 @@ const router = createBrowserRouter([
           },
           {
             path: "daily-time-records",
-            loader: dtrLoader(queryClient),
-            element: (
-              <QueryProvider
-                api={{
-                  create: createDTR({ queryClient }),
-                  edit: editDTR({ queryClient }),
-                  delete: deleteDTR({ queryClient }),
-                }}
-                queryKeys={{
-                  create: QueryKeys.CREATE_ATTENDANCE,
-                  edit: QueryKeys.EDIT_ATTENDANCE,
-                  delete: QueryKeys.DELETE_ATTENDANCE,
-                }}
-              >
-                <AdminDailyTyimeRecord />
-              </QueryProvider>
-            ),
+            children: [
+              {
+                index: true,
+                loader: dtrLoader(queryClient),
+                element: (
+                  <QueryProvider
+                    api={{
+                      create: createDTR({ queryClient }),
+                      edit: editDTR({ queryClient }),
+                      delete: deleteDTR({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_ATTENDANCE,
+                      edit: QueryKeys.EDIT_ATTENDANCE,
+                      delete: QueryKeys.DELETE_ATTENDANCE,
+                    }}
+                  >
+                    <AdminDailyTyimeRecord />
+                  </QueryProvider>
+                ),
+              },
+              {
+                path: "time-cards",
+                loader: timeCardLoader(queryClient),
+                element: (
+                  <QueryProvider
+                    api={{
+                      create: createTimeCard({ queryClient }),
+                      edit: editTimeCard({ queryClient }),
+                      delete: deleteTimeCard({ queryClient }),
+                    }}
+                    queryKeys={{
+                      create: QueryKeys.CREATE_TIME_CARD,
+                      edit: QueryKeys.EDIT_TIME_CARD,
+                      delete: QueryKeys.DELETE_TIME_CARD,
+                    }}
+                  >
+                    <TimeCards />
+                  </QueryProvider>
+                ),
+              },
+            ],
           },
           {
             path: "payroll",

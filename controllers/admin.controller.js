@@ -14,13 +14,14 @@ import {
   payroll,
   payrollGroups,
   receipt,
+  timeCard,
   travelpass,
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 import prisma from "../prisma/db/db.js";
 import {
+  createCards,
   createPayrollReceipts,
-  createStartDate,
   setDateTime,
 } from "../lib/helpers.js";
 import { StatusCodes } from "http-status-codes";
@@ -83,6 +84,112 @@ export const updateAttendance = asyncHandler(async (req, res) => {
 export const deleteAttendance = asyncHandler(
   async (req, res) =>
     await models.deleteModel(res, req.params.id, prisma.attendance)
+);
+
+// Time Card
+export const getAllTimeCards = asyncHandler(
+  async (req, res) => await models.getAllModel(res, prisma.timeCard)
+);
+
+export const getPaginatedTimeCard = asyncHandler(
+  async (req, res) =>
+    await models.getPaginatedModel(req, res, prisma.timeCard, timeCard)
+);
+
+export const createTimeCard = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        from: setDateTime(0, 0, 0, 0, item.from),
+        to: setDateTime(23, 59, 59, 999, item.to),
+      };
+    }),
+  ];
+  if (!data.length) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("No information to be created was received. Please try again.");
+  }
+
+  const timeCard = data[0];
+  const employeeId = timeCard.employeeId;
+  const isAllEmployees = timeCard.isAllEmployees;
+
+  const { employees, allEmployeesCount } =
+    await prisma.user.findUsersAttendance({
+      where: {
+        id: employeeId,
+      },
+      range: {
+        from: timeCard.from,
+        to: timeCard.to,
+      },
+    });
+
+  if (!allEmployeesCount) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        "No employees found. Please check the employee's page if there is any existing employee."
+      );
+  }
+
+  if (!employees.length) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        `No employee found with id ${employeeId}. Please check the employee's page if there is any existing employee.`
+      );
+  }
+
+  // Create timecard
+  const timeCardObj = !isAllEmployees
+    ? {
+        name: employees[0].name,
+        from: timeCard.from,
+        to: timeCard.to,
+      }
+    : {
+        from: timeCard.from,
+        to: timeCard.to,
+        name: "All Employee",
+      };
+  const createdTimeCard = await prisma.timeCard.create({
+    data: timeCardObj,
+  });
+
+  if (!createdTimeCard) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("Error creating time card. Please try again.");
+  }
+
+  // // Create time record card
+  // const createdTimeRecordCard = await createCards(
+  //   prisma,
+  //   employees,
+  //   createdTimeCard.id
+  // );
+
+  // if (!createdTimeRecordCard) {
+  //   await prisma.timeCard.delete({
+  //     where: {
+  //       id: createdTimeRecordCard.id,
+  //     },
+  //   });
+  //   return res
+  //     .status(StatusCodes.BAD_REQUEST)
+  //     .json("Error creating time card. Please try again.");
+  // }
+  // if (createdTimeRecordCard) {
+  //   return res.status(StatusCodes.OK).json({ data: createdTimeRecordCard });
+  // }
+});
+
+export const deleteTimeCard = asyncHandler(
+  async (req, res) =>
+    await models.deleteModel(res, req.params.id, prisma.timeCard)
 );
 
 // Employees

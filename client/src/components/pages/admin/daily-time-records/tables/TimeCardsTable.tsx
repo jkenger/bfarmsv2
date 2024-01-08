@@ -9,18 +9,16 @@ import { buttonVariants } from "@/components/ui/button";
 import { AxiosError } from "axios";
 import DataTableProvider from "@/components/context/data-table-provider";
 import { SheetTrigger } from "@/components/ui/sheet";
-
-import EditHoliday from "../form/dtr/EditDTR";
-
 import { useQueryProvider } from "@/components/context/query-provider";
-import { getDTR } from "../api/daily-time-records.api";
-import AddDTR from "../form/dtr/AddDTR";
+import { getTimeCards } from "../api/time-cards.api";
+import AddTimeCard from "../form/time-cards/AddTimeCard";
+// import useFilterParams from "@/components/hooks/useFilterParams";
 
 type Props = {
   columns: ColumnDef<TDataFields>[];
 };
 
-function DTRTable({ columns }: Props) {
+function PayrollTable({ columns }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
@@ -29,17 +27,43 @@ function DTRTable({ columns }: Props) {
     isSuccess,
     error,
     refetch,
-  } = useQuery(getDTR({ type: "paginated" }));
+  } = useQuery(getTimeCards({ type: "paginated" }));
 
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
   // reset page to 1 if data length is less than numOfPages
 
   const { createMutation, deleteMutation, editMutation } = useQueryProvider();
+
   const editMutationError = editMutation?.error as AxiosError;
   const createMutationError = createMutation?.error as AxiosError;
+  const titlePage = "Payroll";
+  // const { handleGroupChange } = useFilterParams();
   return (
     <>
+      {/* <div className="pb-2">
+        <span className="text-xs text-yellow-500">
+          Warning: Payroll accuracy relies on complete data for{" "}
+          <Link to={Links.PAYROLL_GROUPS} className="underline">
+            Payroll Group
+          </Link>
+          ,{" "}
+          <Link to={Links.DESIGNATIONS} className="underline">
+            Designation
+          </Link>
+          ,{" "}
+          <Link to={Links.EMPLOYEES} className="underline">
+            Employee
+          </Link>
+          , and{" "}
+          <Link to={Links.DAILY_TIME_RECORDS} className="underline">
+            Daily Time Records
+          </Link>
+          . Ensure all fields in the respective tables are filled accurately to
+          enable precise payroll calculations based on comprehensive daily time
+          records.
+        </span>
+      </div> */}
       {isSuccess && (
         <DataTableProvider<TDataFields, string>
           value={{
@@ -68,10 +92,10 @@ function DTRTable({ columns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Designations"
+                table={titlePage}
                 error={editMutationError?.response?.data as string}
               >
-                <EditHoliday toEditItem={editMutation?.variables} />
+                {/* <EditPayroll toEditItem={editMutation?.variables} /> */}
               </MutationSheet>
             ),
             onCreateErrorAction: (
@@ -89,13 +113,37 @@ function DTRTable({ columns }: Props) {
                   </SheetTrigger>
                 }
                 title="Update data in"
-                table="Designations"
+                table={titlePage}
                 error={createMutationError?.response?.data as string}
               >
-                <AddDTR toEditItem={createMutation?.variables} />
+                <AddTimeCard toEditItem={createMutation?.variables} />
               </MutationSheet>
             ),
             dateRangePicker: true,
+            // facetedFilterButtons: (
+            //   <>
+            //     {
+            //       <FacetedFilterButton
+            //         onSelectedChange={handleGroupChange}
+            //         // filter={jobStatusfilter}
+            //         options={data.map((pg: TDataFields) => pg.fundCluster)}
+            //         ifEmptyLink={Links.PAYROLL_GROUPS}
+            //       >
+            //         Fund Clusters
+            //       </FacetedFilterButton>
+            //     }
+            //     {
+            //       <FacetedFilterButton
+            //         onSelectedChange={handleGroupChange}
+            //         // filter={jobStatusfilter}
+            //         options={data.map((pg: TDataFields) => pg.name)}
+            //         ifEmptyLink={Links.PAYROLL_GROUPS}
+            //       >
+            //         Payroll Groups
+            //       </FacetedFilterButton>
+            //     }
+            //   </>
+            // ),
           }}
         >
           <DataTable />
@@ -106,4 +154,4 @@ function DTRTable({ columns }: Props) {
   );
 }
 
-export default DTRTable;
+export default PayrollTable;

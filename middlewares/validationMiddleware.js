@@ -110,6 +110,20 @@ export const validateAdminAttendance = withValidationErrors([
   body("*.userId").notEmpty().withMessage("User ID must not be empty"),
 ]);
 
+export const validateTimeCard = withValidationErrors([
+  body().toArray(),
+  body("*.from").notEmpty().withMessage("Starting Date must not be empty"),
+  body("*.to")
+    .notEmpty()
+    .withMessage("End Date must not be empty")
+    .custom((value, { req }) => {
+      if (value < req.body.from) {
+        throw new Error("End Date must be ahead than Starting Date");
+      }
+      return true;
+    }),
+]);
+
 export const validateId = withValidationErrors([
   param("id").notEmpty().withMessage("Field ID must not be empty"),
 ]);

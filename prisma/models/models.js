@@ -146,7 +146,7 @@ export const models = {
   getAllModel: async (res, prismaModel, jsonReturn = null) => {
     const data = await prismaModel.findMany();
     if (!data || !data.length) {
-      return res.status(StatusCodes.OK).json({
+      return res.status(StatusCodes.NOT_FOUND).json({
         data: [],
       });
     }
@@ -174,7 +174,7 @@ export const models = {
     const dataCount = await prismaModel.count(filter);
     const numOfPages = Math.ceil(dataCount / limit);
     if (!data || !data.length) {
-      return res.status(StatusCodes.OK).json({
+      return res.status(StatusCodes.NOT_FOUND).json({
         data: [],
         numOfPages: 0,
       });

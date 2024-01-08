@@ -151,6 +151,33 @@ type TDailyTimeRecord = {
   updatedAt: string;
 };
 
+type TTimeCard = {
+  id: string;
+  from: string;
+  to: string;
+  name?: string;
+  isAllEmployees: boolean;
+  cards: TCards[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+type TCards = {
+  id: string;
+  amTimeIn?: string;
+  amTimeOut?: string;
+  pmTimeIn?: string;
+  pmTimeOut?: string;
+  lateMinutes?: int;
+  undertimeMinutes?: int;
+  regularDays?: int;
+  saturdays?: int;
+  timeCard: TTimeCard;
+  timeCardId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type TStatus = {
   status: string;
 };
@@ -192,6 +219,8 @@ type TDataFields = TEmployees &
   TDeductions &
   TLeaveTypes &
   TDailyTimeRecord &
+  TTimeCard &
+  TCards &
   TPayroll &
   TReceipt &
   TStatus;

@@ -248,7 +248,10 @@ const prisma = new PrismaClient().$extends({
             );
           const attendanceData = {
             attendances: employee.attendances,
+            from: from,
+            to: to,
             days: employee.attendances.length,
+            regularDays: daysCount,
             days: {
               days: daysCount,
               calendarDays: calendarDays,

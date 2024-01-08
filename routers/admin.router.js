@@ -49,6 +49,10 @@ import {
   getPaginatedPayroll,
   getPaginatedReceipts,
   getAllReceipts,
+  getPaginatedTimeCard,
+  createTimeCard,
+  getAllTimeCards,
+  deleteTimeCard,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -60,6 +64,7 @@ import {
   validateLeaveTypes,
   validatePayroll,
   validatePayrollGroup,
+  validateTimeCard,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
 
@@ -90,6 +95,24 @@ router
   .route("/daily-time-records/:id")
   .put(validateAdminAttendance, updateAttendance)
   .delete(validateId, deleteAttendance);
+
+// Time Cards Routes
+// @Desc    : Read and Create Time Cards
+// @Method  : GET / POST
+// @Access  : Private (Admin)
+router
+  .route("/time-cards")
+  .get(getPaginatedTimeCard)
+  .post(validateTimeCard, createTimeCard);
+router.route("/time-cards/all").get(getAllTimeCards);
+
+// @Desc    : Delete and Update Time Cards
+// @Method  : DELETE / POST /
+// @Access  : Private (Admin)
+router
+  .route("/time-cards/:id")
+  .put(validateTimeCard, updateAttendance) // to change
+  .delete(validateId, deleteTimeCard);
 
 // Employee Routes
 

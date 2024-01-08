@@ -2,24 +2,28 @@ import DropDownEditSheet from "@/components/ui/dd-edit-sheet";
 import { Form } from "@/components/ui/form";
 
 import { useForm } from "react-hook-form";
+import FormSubmit from "../../../shareable/form-submit";
 import { MutationType, Tables } from "@/types/common";
-import FormSubmit from "../../shareable/form-submit";
-
+import PayrollGroupsFields from "./TimeCardFields";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { values } from "./form-values";
-import DTRFields from "./DTRFields";
 
-type Props = {
-  toEditItem?: TDataFields;
+type Props<T> = {
+  toEditItem?: T;
   open?: boolean;
   onOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   from?: "tableAction" | string;
 };
 
-function EditDTR({ open, onOpen, toEditItem, from }: Props) {
+function EditPayroll<T extends TDataFields>({
+  open,
+  onOpen,
+  toEditItem,
+  from,
+}: Props<T>) {
   const form = useForm<TDataFields>({
     values: {
-      ...values(toEditItem, "edit"),
+      ...values(toEditItem),
       id: toEditItem?.id || "",
     } as TDataFields,
   });
@@ -34,7 +38,7 @@ function EditDTR({ open, onOpen, toEditItem, from }: Props) {
           form={form}
           mutationType={MutationType.UPDATE}
         >
-          <DTRFields form={form} mutationType={MutationType.UPDATE} />
+          <PayrollGroupsFields form={form} mutationType={MutationType.UPDATE} />
         </FormSubmit>
       </Form>
     </DropDownEditSheet>
@@ -45,10 +49,10 @@ function EditDTR({ open, onOpen, toEditItem, from }: Props) {
         form={form}
         mutationType={MutationType.UPDATE}
       >
-        <DTRFields form={form} mutationType={MutationType.UPDATE} />
+        <PayrollGroupsFields form={form} mutationType={MutationType.UPDATE} />
       </FormSubmit>
     </Form>
   );
 }
 
-export default EditDTR;
+export default EditPayroll;

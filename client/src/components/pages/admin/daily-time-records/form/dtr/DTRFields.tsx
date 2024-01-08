@@ -15,7 +15,7 @@ import { UseFormReturn } from "react-hook-form";
 
 import { Links, MutationType } from "@/types/common";
 
-import { getEmployees } from "../../employees/api/employee.api";
+import { getEmployees } from "../../../employees/api/employee.api";
 import FormatToFullName from "@/components/ui/format-to-fullname";
 import PopoverCommandQuery from "@/components/ui/popover-command-query";
 
