@@ -13,5 +13,5 @@ export function useLocalStorageState<T>(initialState: T[], key: string) {
     [value, key]
   );
 
-  return [value, setValue];
+  return [value, setValue] as [T, React.Dispatch<React.SetStateAction<T>>];
 }

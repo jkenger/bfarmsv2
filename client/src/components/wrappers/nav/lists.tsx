@@ -43,6 +43,8 @@ function Lists() {
     strokeWidth: 2,
   };
 
+  const path = window.location.pathname;
+  console.log(path);
   return (
     <>
       <List>
@@ -154,6 +156,9 @@ function Lists() {
                 />
               }
               title="All Records"
+              cn={`${
+                path.includes("/admin/payrolls/*/receipt") ? "active" : ""
+              } `}
             />
             <SubLink
               to={Links.PAYROLL_GROUPS}

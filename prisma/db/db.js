@@ -96,14 +96,24 @@ const prisma = new PrismaClient().$extends({
           throw error;
         }
 
-        let employees = employeesInPayrollGroup.filter((employee) => {
-          return employee.attendances.some((attendance) => {
-            return (
-              attendance.attendanceDate > from &&
-              attendance.attendanceDate <= to
-            );
-          });
-        });
+        // let employees = employeesInPayrollGroup.filter((employee) => {
+        //   return employee.attendances.some((attendance) => {
+        //     return (
+        //       attendance.attendanceDate > from &&
+        //       attendance.attendanceDate <= to
+        //     );
+        //   });
+        // });
+
+        let employees = employeesInPayrollGroup.map((employee) => ({
+          ...employee,
+          attendances: employee.attendances.filter((attendance) => {
+            const attendanceDate = new Date(attendance.attendanceDate);
+            return attendanceDate >= from && attendanceDate <= to;
+          }),
+        }));
+
+        console.log("employees attendances", employees);
         if (!employees.length) {
           error = new Error(
             "No attendance found from employees in the payroll group"

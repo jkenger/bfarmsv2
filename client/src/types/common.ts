@@ -11,7 +11,7 @@ export enum Links {
   DAILY_TIME_RECORDS = "/admin/daily-time-records",
 
   PAYROLL = "/admin/payroll",
-  PAYROLL_RECEIPTS = "/admin/payroll/",
+  PAYROLL_RECEIPTS = "/admin/payroll/:id/receipt",
   PAYROLL_GROUPS = "/admin/payroll/groups",
 
   HOLIDAYS = "/admin/holidays",

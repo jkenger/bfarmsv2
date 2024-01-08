@@ -1,12 +1,11 @@
 import DataTableActions from "@/components/ui/data-table-actions";
 import DataTableHeader from "@/components/ui/data-table-header";
 import { ColumnDef } from "@tanstack/react-table";
-// import DeleteDesignation from "../form/designation/DeleteDesignation";
-// import EditDesignation from "../form/designation/EditDesignation";
-import { Badge } from "@/components/ui/badge";
+
 import DeletePayrollGroup from "../form/payrollgroups/DeletePayrollGroup";
 import EditPayrollGroup from "../form/payrollgroups/EditPayrollGroup";
 import ParseDate from "@/components/ui/parse-date";
+import EmptyCellBadge from "@/components/ui/empty-cell-badge";
 
 export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
   {
@@ -57,7 +56,7 @@ export const payrollGroupsColumns: ColumnDef<TDataFields>[] = [
       return row.original.users?.length > 0 ? (
         <span> {row.original.users?.length} Employees </span>
       ) : (
-        <Badge variant="outline">No employee</Badge>
+        <EmptyCellBadge label="Employees Assigned"></EmptyCellBadge>
       );
     },
   },

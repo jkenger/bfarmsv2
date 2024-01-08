@@ -156,11 +156,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
                 .toString()}{" "}
             </>
           ) : (
-            <>
-              <Badge variant="outline" className="text-muted-foreground">
-                No salary
-              </Badge>
-            </>
+            <EmptyCellBadge label="salary" />
           )}
         </span>
       );
@@ -179,11 +175,7 @@ export const employeeColumns: ColumnDef<TDataFields>[] = [
               <Badge>In travel</Badge>
             </>
           ) : (
-            <>
-              <Badge variant="outline" className="text-muted-foreground">
-                Not in travel
-              </Badge>
-            </>
+            <EmptyCellBadge fullLabel="Not in travel"></EmptyCellBadge>
           )}
         </span>
       );

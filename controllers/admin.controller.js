@@ -216,8 +216,6 @@ export const createPayroll = asyncHandler(async (req, res) => {
         to: payroll.to,
       },
     });
-  console.log("asdas", employees);
-
   // Check if there are employees
   if (!allEmployeesCount) {
     return res

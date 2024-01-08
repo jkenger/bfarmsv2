@@ -7,7 +7,7 @@ type Props = {
 
 function EmptyCellBadge({ label, fullLabel }: Props) {
   return (
-    <Badge variant="outline" className="text-muted-foreground">
+    <Badge variant="outline" className="text-red-400 border-red-400">
       {fullLabel ? fullLabel : "No " + label}
     </Badge>
   );

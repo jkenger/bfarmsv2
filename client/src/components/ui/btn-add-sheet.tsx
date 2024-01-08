@@ -14,6 +14,15 @@ type Props = {
   description?: string;
   error?: string;
   children?: React.ReactNode;
+  side?:
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "mutationRight"
+    | "largeRight"
+    | null
+    | undefined;
 };
 
 function MutationSheet({
@@ -22,12 +31,13 @@ function MutationSheet({
   table = "",
   description = "",
   error = "",
+  side = "mutationRight",
   children,
 }: Props) {
   return (
     <Sheet>
       {triggerElement}
-      <SheetContent side="mutationRight" className="bg-card px-0">
+      <SheetContent side={side} className="bg-card px-0">
         <SheetHeader className="px-6">
           <SheetTitle className="flex items-center gap-3">
             <span>{title}</span>

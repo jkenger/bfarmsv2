@@ -6,6 +6,7 @@ import EditDesignation from "../form/designation/EditDesignation";
 
 import ParseDate from "@/components/ui/parse-date";
 import CountBadge from "@/components/ui/count-badge";
+import EmptyCellBadge from "@/components/ui/empty-cell-badge";
 
 export const designationColumns: ColumnDef<TDataFields>[] = [
   {
@@ -38,7 +39,12 @@ export const designationColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
-    cell: ({ row }) => <CountBadge length={row.original.users.length} />,
+    cell: ({ row }) =>
+      row.original.users.length ? (
+        <CountBadge length={row.original.users.length} />
+      ) : (
+        <EmptyCellBadge label="employees assigned" />
+      ),
   },
   {
     accessorKey: "salary",
