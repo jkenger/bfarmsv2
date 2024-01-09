@@ -111,6 +111,7 @@ router.route("/time-cards/all").get(getAllTimeCards);
 // @Access  : Private (Admin)
 router
   .route("/time-cards/:id")
+  .get(getPaginatedTimeCard)
   .put(validateTimeCard, updateAttendance) // to change
   .delete(validateId, deleteTimeCard);
 

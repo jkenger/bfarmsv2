@@ -45,6 +45,9 @@ model TimeCard {
 
 model Card {
   id             String       @id @default(uuid())
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId          String
+  name            String
   amTimeIn        DateTime?
   amTimeOut       DateTime?
   pmTimeIn        DateTime?
@@ -71,22 +74,24 @@ model User {
   avatar     String?
   
 
-  payrollGroup   PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
-  payrollGroupId String?
+  payrollGroup    PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
+  payrollGroupId  String?
 
-  designation   Designation? @relation(fields: [designationId], references: [id] )
-  designationId String?
+  designation     Designation? @relation(fields: [designationId], references: [id] )
+  designationId   String?
 
-  receipts Receipt[]
+  receipts        Receipt[]
 
-  attendances Attendance[]
+  attendances     Attendance[]
 
-  deductions Deduction[]
+  deductions      Deduction[]
 
-  travelPass Travelpass[]
+  travelPass      Travelpass[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  cards           Card[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
 }

@@ -116,11 +116,10 @@ export const createTimeCard = asyncHandler(async (req, res) => {
   const employeeId = timeCard.employeeId;
   const isAllEmployees = timeCard.isAllEmployees;
 
+  const whereObj = !isAllEmployees ? { id: employeeId } : {};
   const { employees, allEmployeesCount } =
     await prisma.user.findUsersAttendance({
-      where: {
-        id: employeeId,
-      },
+      where: whereObj,
       range: {
         from: timeCard.from,
         to: timeCard.to,
@@ -146,9 +145,9 @@ export const createTimeCard = asyncHandler(async (req, res) => {
   // Create timecard
   const timeCardObj = !isAllEmployees
     ? {
-        name: employees[0].name,
         from: timeCard.from,
         to: timeCard.to,
+        name: employees[0].name,
       }
     : {
         from: timeCard.from,
@@ -166,25 +165,28 @@ export const createTimeCard = asyncHandler(async (req, res) => {
   }
 
   // // Create time record card
-  // const createdTimeRecordCard = await createCards(
-  //   prisma,
-  //   employees,
-  //   createdTimeCard.id
-  // );
+  const createdTimeRecordCard = await createCards(
+    prisma,
+    employees,
+    createdTimeCard.id
+  );
 
-  // if (!createdTimeRecordCard) {
-  //   await prisma.timeCard.delete({
-  //     where: {
-  //       id: createdTimeRecordCard.id,
-  //     },
-  //   });
-  //   return res
-  //     .status(StatusCodes.BAD_REQUEST)
-  //     .json("Error creating time card. Please try again.");
-  // }
-  // if (createdTimeRecordCard) {
-  //   return res.status(StatusCodes.OK).json({ data: createdTimeRecordCard });
-  // }
+  console.log("createdTimeRecordCard", createdTimeRecordCard);
+  if (!createdTimeRecordCard) {
+    await prisma.timeCard.delete({
+      where: {
+        id: createdTimeCard.id,
+      },
+    });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json(
+        "Time card was created but error creating time record card. Check the date range or check if there is any existing attendance from your employees."
+      );
+  }
+  if (createdTimeRecordCard) {
+    return res.status(StatusCodes.OK).json({ data: createdTimeRecordCard });
+  }
 });
 
 export const deleteTimeCard = asyncHandler(
