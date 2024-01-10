@@ -153,6 +153,13 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      row.original.noOfHoursWorked ? (
+        <span>{row.original.noOfHoursWorked}</span>
+      ) : (
+        <EmptyCellBadge label="hours of worked" />
+      );
+    },
   },
   {
     accessorKey: "undertime",
@@ -164,10 +171,10 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <EmptyCellBadge label="undertime">
-          <span>{row.original.undertime}</span>
-        </EmptyCellBadge>
+      row.original.undertime ? (
+        <span>{row.original.undertime}</span>
+      ) : (
+        <EmptyCellBadge label="undertime" />
       );
     },
   },

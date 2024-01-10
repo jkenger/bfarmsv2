@@ -143,11 +143,7 @@ type TDailyTimeRecord = {
   pmTimeIn?: string;
   pmTimeOut?: string;
   undertime?: string;
-  isLate?: boolean;
-  lateMinutes?: int;
-  isUnderTime?: boolean;
-  undertimeMinutes?: int;
-  isOnTime?: boolean;
+  noOfHoursWorked?: string;
   createdAt: string;
   updatedAt: string;
 };
