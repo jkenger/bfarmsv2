@@ -145,26 +145,32 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
-    accessorKey: "lateMinutes",
+    accessorKey: "noOfHoursWorked",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Late in Minutes</span>
+          <span>No. of Hours Worked</span>
         </DataTableHeader>
       );
     },
   },
   {
-    accessorKey: "undertimeMinutes",
+    accessorKey: "undertime",
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>Undertime in Minutes</span>
+          <span>Undertime</span>
         </DataTableHeader>
       );
     },
+    cell: ({ row }) => {
+      return (
+        <EmptyCellBadge label="undertime">
+          <span>{row.original.undertime}</span>
+        </EmptyCellBadge>
+      );
+    },
   },
-
   {
     accessorKey: "createdAt",
     header: ({ column }) => {

@@ -142,6 +142,7 @@ type TDailyTimeRecord = {
   amTimeOut?: string;
   pmTimeIn?: string;
   pmTimeOut?: string;
+  undertime?: string;
   isLate?: boolean;
   lateMinutes?: int;
   isUnderTime?: boolean;
@@ -157,25 +158,30 @@ type TTimeCard = {
   to: string;
   name?: string;
   isAllEmployees: boolean;
-  cards: TCards[];
+  sheets: TSheet[];
   createdAt: string;
   updatedAt: string;
 };
 
-type TCards = {
+type TSheet = {
   id: string;
-  amTimeIn?: string;
-  amTimeOut?: string;
-  pmTimeIn?: string;
-  pmTimeOut?: string;
-  lateMinutes?: int;
-  undertimeMinutes?: int;
-  regularDays?: int;
-  saturdays?: int;
+  from: string;
+  to: string;
+  name: string;
+  attendances: TSheetAttendances[];
   timeCard: TTimeCard;
   timeCardId: string;
   createdAt: string;
   updatedAt: string;
+};
+
+type TSheetAttendances = {
+  attendanceDate: string;
+  amTimeIn?: string;
+  amTimeOut?: string;
+  pmTimeIn?: string;
+  pmTimeOut?: string;
+  undertime?: int;
 };
 
 type TStatus = {

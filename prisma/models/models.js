@@ -143,10 +143,25 @@ export const models = {
           }
     );
   },
-  getAllModel: async (res, prismaModel, jsonReturn = null) => {
-    const data = await prismaModel.findMany();
+  getAllModel: async (
+    req,
+    res,
+    prismaModel,
+    toQuery = null,
+    jsonReturn = null
+  ) => {
+    const id = req.params.id;
+    const obj = toQuery
+      ? {
+          where: {
+            ...toQuery(null, id).where,
+          },
+          ...toQuery(null, id).select,
+        }
+      : {};
+    const data = await prismaModel.findMany(obj);
     if (!data || !data.length) {
-      return res.json({
+      return res.status(StatusCodes.OK).json({
         data: [],
       });
     }
@@ -174,7 +189,7 @@ export const models = {
     const dataCount = await prismaModel.count(filter);
     const numOfPages = Math.ceil(dataCount / limit);
     if (!data || !data.length) {
-      return res.json({
+      return res.status(StatusCodes.OK).json({
         data: [],
         numOfPages: 0,
       });

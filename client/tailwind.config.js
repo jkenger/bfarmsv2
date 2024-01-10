@@ -21,7 +21,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        cam: ["Cambria", "serif"],
+        calibri: ["Calibri", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

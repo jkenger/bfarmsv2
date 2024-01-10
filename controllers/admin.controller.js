@@ -5,6 +5,7 @@
 import asyncHandler from "express-async-handler";
 
 import {
+  allTimeCard,
   attendance,
   deductions,
   designation,
@@ -14,21 +15,22 @@ import {
   payroll,
   payrollGroups,
   receipt,
+  sheet,
   timeCard,
   travelpass,
 } from "../lib/utils.js";
 import { models } from "../prisma/models/models.js";
 import prisma from "../prisma/db/db.js";
 import {
-  createCards,
   createPayrollReceipts,
+  createSheet,
   setDateTime,
 } from "../lib/helpers.js";
 import { StatusCodes } from "http-status-codes";
 
 // Attendance
 export const getAllAttendance = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.attendance)
+  async (req, res) => await models.getAllModel(req, res, prisma.attendance)
 );
 export const getPaginatedAttendance = asyncHandler(
   async (req, res) =>
@@ -86,9 +88,20 @@ export const deleteAttendance = asyncHandler(
     await models.deleteModel(res, req.params.id, prisma.attendance)
 );
 
+// Card
+export const getAllSheets = asyncHandler(
+  async (req, res) => await models.getAllModel(req, res, prisma.sheet, sheet)
+);
+
+export const getPaginatedSheets = asyncHandler(
+  async (req, res) =>
+    await models.getPaginatedModel(req, res, prisma.sheet, sheet)
+);
+
 // Time Card
 export const getAllTimeCards = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.timeCard)
+  async (req, res) =>
+    await models.getAllModel(req, res, prisma.timeCard, allTimeCard)
 );
 
 export const getPaginatedTimeCard = asyncHandler(
@@ -117,6 +130,7 @@ export const createTimeCard = asyncHandler(async (req, res) => {
   const isAllEmployees = timeCard.isAllEmployees;
 
   const whereObj = !isAllEmployees ? { id: employeeId } : {};
+  console.log("whereObj", whereObj);
   const { employees, allEmployeesCount } =
     await prisma.user.findUsersAttendance({
       where: whereObj,
@@ -147,7 +161,7 @@ export const createTimeCard = asyncHandler(async (req, res) => {
     ? {
         from: timeCard.from,
         to: timeCard.to,
-        name: employees[0].name,
+        name: employees[0].fullName,
       }
     : {
         from: timeCard.from,
@@ -164,15 +178,9 @@ export const createTimeCard = asyncHandler(async (req, res) => {
       .json("Error creating time card. Please try again.");
   }
 
-  // // Create time record card
-  const createdTimeRecordCard = await createCards(
-    prisma,
-    employees,
-    createdTimeCard.id
-  );
+  const createdSheets = await createSheet(prisma, employees, createdTimeCard);
 
-  console.log("createdTimeRecordCard", createdTimeRecordCard);
-  if (!createdTimeRecordCard) {
+  if (!createdSheets) {
     await prisma.timeCard.delete({
       where: {
         id: createdTimeCard.id,
@@ -184,8 +192,8 @@ export const createTimeCard = asyncHandler(async (req, res) => {
         "Time card was created but error creating time record card. Check the date range or check if there is any existing attendance from your employees."
       );
   }
-  if (createdTimeRecordCard) {
-    return res.status(StatusCodes.OK).json({ data: createdTimeRecordCard });
+  if (createdSheets) {
+    return res.status(StatusCodes.OK).json({ data: createdSheets });
   }
 });
 
@@ -196,7 +204,7 @@ export const deleteTimeCard = asyncHandler(
 
 // Employees
 export const getAllEmployees = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.user)
+  async (req, res) => await models.getAllModel(req, res, prisma.user)
 );
 export const getPaginatedEmployees = asyncHandler(
   async (req, res) =>
@@ -248,7 +256,7 @@ export const deleteEmployee = asyncHandler(
 /// Employees/Designation
 
 export const getAllDesignations = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.designation)
+  async (req, res) => await models.getAllModel(req, res, prisma.designation)
 );
 
 export const getPaginatedDesignations = asyncHandler(
@@ -286,7 +294,7 @@ export const updateDesignation = asyncHandler(async (req, res) => {
 
 // Payroll
 export const getAllPayroll = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.payroll)
+  async (req, res) => await models.getAllModel(req, res, prisma.payroll)
 );
 
 export const getPaginatedPayroll = asyncHandler(
@@ -453,7 +461,7 @@ export const deletePayroll = asyncHandler(
 );
 
 export const getAllReceipts = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.receipt)
+  async (req, res) => await models.getAllModel(req, res, prisma.receipt)
 );
 
 export const getPaginatedReceipts = asyncHandler(
@@ -463,7 +471,7 @@ export const getPaginatedReceipts = asyncHandler(
 
 // Payroll Groups
 export const getAllPayrollGroups = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.payrollGroup)
+  async (req, res) => await models.getAllModel(req, res, prisma.payrollGroup)
 );
 
 export const getPaginatedPayrollGroups = asyncHandler(
@@ -487,7 +495,7 @@ export const updatePayrollGroup = asyncHandler(
 
 // Holidays Controller
 export const getAllHolidays = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.holiday)
+  async (req, res) => await models.getAllModel(req, res, prisma.holiday)
 );
 export const getPaginatedHolidays = asyncHandler(
   async (req, res) =>
@@ -527,7 +535,7 @@ export const updateHoliday = asyncHandler(async (req, res) => {
 
 // Travelpass Controller
 export const getAllTravelpass = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.travelpass)
+  async (req, res) => await models.getAllModel(req, res, prisma.travelpass)
 );
 export const getPaginatedTravelpass = asyncHandler(
   async (req, res) =>
@@ -559,7 +567,7 @@ export const updateTravelpass = asyncHandler(
 
 // Deductions Controller
 export const getAllDeductions = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.deduction)
+  async (req, res) => await models.getAllModel(req, res, prisma.deduction)
 );
 export const getPaginatedDeductions = asyncHandler(
   async (req, res) =>
@@ -597,7 +605,7 @@ export const updateDeductions = asyncHandler(async (req, res) => {
 
 // Leave Types Controller
 export const getAllLeaveTypes = asyncHandler(
-  async (req, res) => await models.getAllModel(res, prisma.leaveType)
+  async (req, res) => await models.getAllModel(req, res, prisma.leaveType)
 );
 export const getPaginatedLeaveTypes = asyncHandler(
   async (req, res) =>

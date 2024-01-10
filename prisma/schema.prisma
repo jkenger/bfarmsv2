@@ -23,6 +23,8 @@ model Attendance {
   amTimeOut        DateTime?
   pmTimeIn         DateTime?
   pmTimeOut        DateTime?
+  noOfHoursWorked  Float?
+  undertime        Float?  
   isLate           Boolean?
   lateMinutes      Int?
   isUndertime      Boolean?
@@ -38,29 +40,41 @@ model TimeCard {
   from           DateTime
   to             DateTime
   name           String?
-  cards          Card[]
+  sheets         Sheet[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
 
-model Card {
+model Sheet {
   id             String       @id @default(uuid())
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId          String
-  name            String
-  amTimeIn        DateTime?
-  amTimeOut       DateTime?
-  pmTimeIn        DateTime?
-  pmTimeOut       DateTime?
-  lateMinutes     Int?
-  undertimeMinutes Int?
-  regularDays    Int?
-  saturdays      Int?
+  from           DateTime
+  to             DateTime
+  name           String?
   timeCard       TimeCard     @relation(fields: [timeCardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   timeCardId     String
+  userId         String
+  attendances    Json[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
+
+// model Card {
+//   id             String       @id @default(uuid())
+//   name            String
+//   attendanceDate  DateTime?
+//   amTimeIn        DateTime?
+//   amTimeOut       DateTime?
+//   pmTimeIn        DateTime?
+//   pmTimeOut       DateTime?
+//   undertime        Float? 
+//   regularDays    Int?
+//   saturdays      Int?
+//   userId         String?
+//   timeCard       TimeCard     @relation(fields: [timeCardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   timeCardId     String
+//   createdAt      DateTime     @default(now())
+//   updatedAt      DateTime     @updatedAt
+// }
 
 model User {
   id         String  @id @default(uuid())
@@ -88,7 +102,6 @@ model User {
 
   travelPass      Travelpass[]
 
-  cards           Card[]
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

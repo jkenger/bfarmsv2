@@ -126,11 +126,17 @@ const useFilterParams = () => {
   };
 };
 
-export const getSearchParams = () => {
+type TGetSearchParams = {
+  setLimitDefault?: string;
+};
+
+export const getSearchParams = ({
+  setLimitDefault = "10",
+}: TGetSearchParams = {}) => {
   const request = new Request(window.location.href);
   const url = new URL(request.url);
   const page = new URLSearchParams(url.search).get("page") || "1";
-  const limit = new URLSearchParams(url.search).get("limit") || "10";
+  const limit = new URLSearchParams(url.search).get("limit") || setLimitDefault;
   const search = new URLSearchParams(url.search).get("search") || "";
   const sp = new URLSearchParams(url.search).get("sp") || "";
   const payrollGroup =

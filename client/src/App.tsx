@@ -99,6 +99,8 @@ import {
   deleteTimeCard,
   editTimeCard,
 } from "./components/pages/admin/daily-time-records/api/time-cards.api";
+import Sheets from "./components/pages/admin/daily-time-records/Sheets";
+import { loader as CardLoader } from "./components/pages/admin/daily-time-records/Sheets";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -227,13 +229,18 @@ const router = createBrowserRouter([
                   </QueryProvider>
                 ),
               },
+              {
+                path: "time-cards/:id",
+                loader: CardLoader(queryClient),
+                element: <Sheets />,
+              },
             ],
           },
           {
             path: "payroll",
             children: [
               {
-                index: true,
+                path: "",
                 loader: payrollLoader(queryClient),
                 element: (
                   <QueryProvider
@@ -251,6 +258,11 @@ const router = createBrowserRouter([
                     <AdminPayroll />
                   </QueryProvider>
                 ),
+              },
+              {
+                path: ":id/receipt",
+                loader: payrollReceiptLoader(queryClient),
+                element: <Receipt />,
               },
               {
                 path: "groups",
@@ -271,11 +283,6 @@ const router = createBrowserRouter([
                     <PayrollGroups />
                   </QueryProvider>
                 ),
-              },
-              {
-                path: ":id/receipt",
-                loader: payrollReceiptLoader(queryClient),
-                element: <Receipt />,
               },
             ],
           },

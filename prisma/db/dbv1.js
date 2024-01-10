@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { addDays, differenceInHours, differenceInMinutes } from "date-fns";
+import { addDays, differenceInMinutes } from "date-fns";
 import { countWeekdays, setDateTime } from "../../lib/helpers.js";
 import { token } from "morgan";
 import { holiday } from "../../lib/utils.js";
@@ -78,16 +78,9 @@ const prisma = new PrismaClient().$extends({
             deductions: true,
           },
         });
-
-        const id = options.where.id ? options.where.id : null;
         let employeesInPayrollGroup = await prisma.user.findMany({
           where: {
-            AND: [
-              {
-                payrollGroupId: options.where.payrollGroupId,
-              },
-              id ? { id: { contains: id } } : {},
-            ],
+            payrollGroupId: options.where.payrollGroupId,
           },
           include: {
             attendances: true,
@@ -120,6 +113,7 @@ const prisma = new PrismaClient().$extends({
           }),
         }));
 
+        console.log("employees attendances", employees);
         if (!employees.length) {
           error = new Error(
             "No attendance found from employees in the payroll group"
@@ -128,9 +122,6 @@ const prisma = new PrismaClient().$extends({
           throw error;
         }
 
-        // Daily Rate x No. Of Working Days in a Month x Total Nos. of Hours Absent/Total Number of Working Hours in a Day
-
-        // No of working days in semimonthly
         const calendarDays =
           countWeekdays(from, to) < 10
             ? countWeekdays(from, new Date(addDays(from, 14)))
@@ -243,12 +234,18 @@ const prisma = new PrismaClient().$extends({
           );
 
           const undertime = employee.attendances
-            .filter((attendance) => attendance.undertime > 0)
+            .filter((attendance) => attendance.undertimeMinutes > 0)
             .reduce(
-              (acc, attendance) => acc + attendance.undertime, // minutes
+              (acc, attendance) => acc + attendance.undertimeMinutes, // minutes
               0
             );
+          const late = employee.attendances
 
+            .filter((attendance) => attendance.lateMinutes > 0)
+            .reduce(
+              (acc, attendance) => acc + attendance.lateMinutes, // minutes
+              0
+            );
           const attendanceData = {
             attendances: employee.attendances,
             from: from,
@@ -259,9 +256,10 @@ const prisma = new PrismaClient().$extends({
               days: daysCount,
               calendarDays: calendarDays,
               withHalfDays: daysWithHalfDay,
-              withHolidays: daysWithHolidays < 0 ? 0 : daysWithHolidays,
+              withHolidays: daysWithHolidays,
             },
           };
+
           const gross = {
             absents: {
               days: calendarDays - daysWithHolidays,
@@ -273,6 +271,10 @@ const prisma = new PrismaClient().$extends({
               amount: +((salary.semiMonth.daily / 8 / 60) * undertime).toFixed(
                 2
               ),
+            },
+            late: {
+              minutes: late,
+              amount: +((salary.semiMonth.daily / 8 / 60) * late).toFixed(2),
             },
           };
 
@@ -325,10 +327,16 @@ const prisma = new PrismaClient().$extends({
             gross: {
               amountDue: +(
                 salary.semiMonth.total -
-                (gross.absents.amount + gross.undertime.amount)
+                (gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount)
               ).toFixed(2),
               deductions: {
-                total: +(gross.absents.amount + gross.undertime.amount),
+                total: +(
+                  gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount
+                ),
                 breakdown: {
                   ...gross,
                   holiday: {
@@ -350,7 +358,9 @@ const prisma = new PrismaClient().$extends({
             net: {
               amountDue: +(
                 salary.semiMonth.total -
-                (gross.absents.amount + gross.undertime.amount) -
+                (gross.absents.amount +
+                  gross.late.amount +
+                  gross.undertime.amount) -
                 (net.taxes.tax1 + net.taxes.tax5 + net.taxes.tax10) -
                 net.adtl.amount
               ).toFixed(2),
@@ -400,9 +410,6 @@ const prisma = new PrismaClient().$extends({
             ? new Date(args.data.pmTimeIn)
             : new Date();
 
-          // shift time | 8 hours
-          const shiftTime = 8;
-
           // Get 8 AM date time
           const eightAm = setDateTime(8, 0, 0, 0, currentDateTime);
           // Get 12 PM date time
@@ -426,29 +433,34 @@ const prisma = new PrismaClient().$extends({
             ? new Date(args.data.pmTimeOut)
             : null;
 
-          let undertime = shiftTime;
-          let noOfHoursWorked = 0;
-          let isHalfDay =
-            (!amTimeIn && !amTimeOut) || (!pmTimeIn && !pmTimeOut);
+          let lateMinutes = 0;
+          let undertimeMinutes = 0;
+          let isHalfDay = false;
 
-          // if (amTimeIn) {
-          //   undertime =
-          //     amTimeIn < eightAm ? differenceInHours(eightAm, amTimeIn) : 0;
-          // }
+          if (amTimeIn) {
+            lateMinutes =
+              amTimeIn > eightAm ? differenceInMinutes(amTimeIn, eightAm) : 0;
+          }
 
           if (amTimeOut) {
-            noOfHoursWorked = differenceInHours(
-              amTimeOut,
-              amTimeIn > eightAm ? amTimeIn : eightAm
-            );
-            undertime = shiftTime - noOfHoursWorked;
+            console.log("amTimeOut", amTimeOut);
+            console.log("twelvePm", twelvePm);
+            undertimeMinutes =
+              amTimeOut < twelvePm
+                ? differenceInMinutes(twelvePm, amTimeOut)
+                : 0;
+            isHalfDay = !pmTimeIn && !pmTimeOut ? true : false;
           }
+
+          if (pmTimeIn) {
+            lateMinutes +=
+              pmTimeIn > onePm ? differenceInMinutes(pmTimeIn, onePm) : 0;
+          }
+
           if (pmTimeOut) {
-            noOfHoursWorked += differenceInHours(
-              pmTimeOut,
-              pmTimeIn > onePm ? pmTimeIn : onePm
-            );
-            undertime = shiftTime - noOfHoursWorked;
+            undertimeMinutes +=
+              pmTimeOut < fivePm ? differenceInMinutes(fivePm, pmTimeOut) : 0;
+            isHalfDay = !amTimeIn && !amTimeOut ? true : false;
           }
           const date = amTimeIn || pmTimeIn;
           return query({
@@ -456,10 +468,10 @@ const prisma = new PrismaClient().$extends({
             data: {
               ...args.data,
               // If late, set late to true
-              undertime,
-              noOfHoursWorked,
-              isHalfDay,
+              lateMinutes,
+              undertimeMinutes,
               attendanceDate: date,
+              isHalfDay,
             },
           });
         }

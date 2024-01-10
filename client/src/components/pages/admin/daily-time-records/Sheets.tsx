@@ -4,24 +4,24 @@ import { Await, Params, defer, useLoaderData } from "react-router-dom";
 import { Suspense, useState } from "react";
 import TableFallBack from "@/components/ui/table-fallback";
 import Error from "../../Error";
-import ReceiptTable from "./tables/ReceiptTable";
-import { getReceipts } from "./api/receipt.api";
 import { IconProperties, Links } from "@/types/common";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getSheets } from "./api/sheets.api";
+import SheetTable from "./tables/SheetTable";
 
 export const loader =
   (queryClient: QueryClient) =>
   async ({ params }: { params: Params }) => {
     return defer({
       data: queryClient.ensureQueryData(
-        getReceipts({ type: "paginated", payrollId: params.id })
+        getSheets({ type: "all", id: params.id ?? "" })
       ),
       id: params.id,
     });
   };
 
-function Receipt() {
+function Card() {
   const { data: initialData, id } = useLoaderData() as {
     data: TDataFields;
     id: string;
@@ -37,8 +37,8 @@ function Receipt() {
       <Main.Header>
         <Main.BreadCrumbs
           level={[
-            { title: "Payroll", route: Links.PAYROLL },
-            { title: `Receipt ${id}`, route: "" },
+            { title: "Time Cards", route: Links.TIME_CARDS },
+            { title: `Card ${id}`, route: "" },
           ]}
           access="admin"
         >
@@ -56,7 +56,7 @@ function Receipt() {
       <Main.Content>
         <Suspense fallback={<TableFallBack />}>
           <Await resolve={initialData} errorElement={<Error />}>
-            <ReceiptTable onEdit={editMode} onEditMode={handleEditMode} />
+            <SheetTable onEdit={editMode} onEditMode={handleEditMode} />
           </Await>
         </Suspense>
       </Main.Content>
@@ -64,4 +64,4 @@ function Receipt() {
   );
 }
 
-export default Receipt;
+export default Card;

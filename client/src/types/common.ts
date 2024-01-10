@@ -12,7 +12,7 @@ export enum Links {
   TIME_CARDS = "/admin/daily-time-records/time-cards",
 
   PAYROLL = "/admin/payroll",
-  PAYROLL_RECEIPTS = "/admin/payroll/:id/receipt",
+  PAYROLL_RECEIPTS = "/admin/payroll/:id",
   PAYROLL_GROUPS = "/admin/payroll/groups",
 
   HOLIDAYS = "/admin/holidays",
@@ -88,6 +88,8 @@ export enum QueryKeys {
   CREATE_TIME_CARD = "createTimeCard",
   EDIT_TIME_CARD = "editTimeCard",
   DELETE_TIME_CARD = "deleteTimeCard",
+
+  CARDS = "cards",
 }
 
 export enum SortType {

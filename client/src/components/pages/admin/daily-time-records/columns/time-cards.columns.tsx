@@ -85,7 +85,7 @@ export const timeCardColumns: ColumnDef<TDataFields>[] = [
         <DataTableActions
           key={row.original.id}
           navigateElement={{
-            to: `${Links.PAYROLL}/${row.original.id}/receipt`,
+            to: `${Links.TIME_CARDS}/${row.original.id}?limit=2`,
           }}
           deleteElement={<DeletePayroll data={row.original} trigger={false} />}
           editElement={

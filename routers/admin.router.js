@@ -53,6 +53,8 @@ import {
   createTimeCard,
   getAllTimeCards,
   deleteTimeCard,
+  getPaginatedSheets,
+  getAllSheets,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -101,19 +103,20 @@ router
 // @Method  : GET / POST
 // @Access  : Private (Admin)
 router
-  .route("/time-cards")
+  .route("/daily-time-records/time-cards")
   .get(getPaginatedTimeCard)
   .post(validateTimeCard, createTimeCard);
-router.route("/time-cards/all").get(getAllTimeCards);
+router.route("/daily-time-records/time-cards/all").get(getAllTimeCards);
 
-// @Desc    : Delete and Update Time Cards
+// @Desc    : Get Delete and Update Time Cards
 // @Method  : DELETE / POST /
 // @Access  : Private (Admin)
 router
-  .route("/time-cards/:id")
-  .get(getPaginatedTimeCard)
+  .route("/daily-time-records/time-cards/:id")
+  .get(getPaginatedSheets)
   .put(validateTimeCard, updateAttendance) // to change
   .delete(validateId, deleteTimeCard);
+router.route("/daily-time-records/time-cards/:id/all").get(getAllSheets);
 
 // Employee Routes
 

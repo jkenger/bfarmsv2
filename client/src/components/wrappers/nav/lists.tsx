@@ -18,6 +18,7 @@ import { IconProperties, Links } from "@/types/common";
 import List from "./list";
 import ListSection from "./list-section";
 import SubLink from "./sub-link";
+import { useLocation, useParams } from "react-router-dom";
 
 function Lists() {
   const {
@@ -44,8 +45,9 @@ function Lists() {
     strokeWidth: 2,
   };
 
-  const path = window.location.pathname;
-  console.log(path);
+  const location = useLocation();
+  const path = location.pathname;
+  const { id } = useParams();
   return (
     <>
       <List>
@@ -163,7 +165,10 @@ function Lists() {
             <div className="absolute h-[35px] w-[1.5px] bg-muted-foreground/20 top-[3.3rem] left-[1.95rem] z-0"></div>
             <SubLink
               to={Links.PAYROLL}
-              end
+              end={
+                path !== Links.PAYROLL &&
+                path !== Links.PAYROLL + `/${id}/receipt`
+              }
               icon={
                 <CircleDollarSign
                   size={IconProperties.SIZE}

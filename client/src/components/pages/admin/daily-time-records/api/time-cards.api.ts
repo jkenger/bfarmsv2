@@ -27,8 +27,41 @@ export const getTimeCards = ({
 
   const qFnQuery =
     type === GetQueryType.PAGINATED
-      ? `admin/time-cards?${searchParams.toString()}`
-      : `admin/time-cards/all`;
+      ? `admin/daily-time-records/time-cards?${searchParams.toString()}`
+      : `admin/daily-time-records/time-cards/all`;
+  return {
+    queryKey: qKey,
+    queryFn: async () => {
+      return await fetch.get(qFnQuery);
+    },
+
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5,
+  };
+};
+
+export const getTimeCardsById = ({
+  type = GetQueryType.PAGINATED,
+  id,
+  customParams,
+}: TGetQueryOptions & { id?: string }) => {
+  const { searchParams: params } = getSearchParams();
+  const searchParams = customParams
+    ? Object.keys(customParams).length && new URLSearchParams(customParams)
+    : new URLSearchParams(params);
+
+  // If type is paginated, then add the search params to the query key
+  const qKey =
+    type === GetQueryType.PAGINATED
+      ? [QueryKeys.CARDS, searchParams.toString(), id]
+      : [QueryKeys.CARDS, id];
+
+  const qFnQuery =
+    type === GetQueryType.PAGINATED
+      ? `admin/daily-time-records/time-cards/${id}?${searchParams.toString()}`
+      : `admin/daily-time-records/time-cards/${id}/all`;
+
+  console.log(qFnQuery);
   return {
     queryKey: qKey,
     queryFn: async () => {
@@ -44,7 +77,7 @@ export const createTimeCard = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_TIME_CARD],
     mutationFn: async (data: TDataFields) => {
-      return await fetch.post("/admin/time-cards", {
+      return await fetch.post("/admin/daily-time-records/time-cards", {
         ...data,
       });
     },
@@ -71,9 +104,12 @@ export const editTimeCard = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.EDIT_TIME_CARD],
     mutationFn: async (data: TDataFields) => {
-      return await fetch.put(`/admin/time-cards/${data.id}`, {
-        ...data,
-      });
+      return await fetch.put(
+        `/admin/daily-time-records/time-cards/${data.id}`,
+        {
+          ...data,
+        }
+      );
     },
     onSuccess: async () => {
       toast.success(`Time Card Updated`, {
@@ -98,7 +134,9 @@ export const deleteTimeCard = ({ queryClient }: TMutation) => {
   return {
     mutationKey: [QueryKeys.DELETE_TIME_CARD],
     mutationFn: async (data: TDataFields) => {
-      return await fetch.delete(`/admin/time-cards/${data.id}`);
+      return await fetch.delete(
+        `/admin/daily-time-records/time-cards/${data.id}`
+      );
     },
     onSuccess: async () => {
       toast.warning(`Time Card Deleted`, {
