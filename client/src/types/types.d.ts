@@ -176,6 +176,7 @@ type TSheet = {
 };
 
 type TSheetAttendances = {
+  id: string;
   attendanceDate: string;
   amTimeIn?: string;
   amTimeOut?: string;
@@ -225,8 +226,9 @@ type TDataFields = TEmployees &
   TDeductions &
   TLeaveTypes &
   TDailyTimeRecord &
+  TSheet &
+  TSheetAttendances &
   TTimeCard &
-  TCards &
   TPayroll &
   TReceipt &
   TStatus;
