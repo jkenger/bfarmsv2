@@ -462,7 +462,8 @@ export const deletePayroll = asyncHandler(
 );
 
 export const getAllReceipts = asyncHandler(
-  async (req, res) => await models.getAllModel(req, res, prisma.receipt)
+  async (req, res) =>
+    await models.getAllModel(req, res, prisma.receipt, receipt)
 );
 
 export const getPaginatedReceipts = asyncHandler(

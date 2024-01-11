@@ -70,6 +70,12 @@
   }
 }
 
+@media print {
+  body {
+    margin: 0; /* Reset body margin for printing */
+  }
+}
+
 .active {
   @apply text-primary transition-all duration-300;
 }

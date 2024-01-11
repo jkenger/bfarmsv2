@@ -17,19 +17,10 @@ import { Input } from "@/components/ui/input";
 import { getSheets } from "../api/sheets.api";
 import { Button } from "@/components/ui/button";
 
-import { Braces, ChevronDown, Printer } from "lucide-react";
-import { IconProperties } from "@/types/common";
-
-import { useReactToPrint } from "react-to-print";
-import "./../css/print.css"; // Import the CSS file
-import useHandleExport from "@/components/hooks/useHandleExport";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+import ExportButton from "@/components/ui/export-button";
+import PrintButton from "@/components/ui/print-button";
 
 export type TSignatory = {
   value?: string;
@@ -106,13 +97,25 @@ function SheetTable({ onEdit, onEditMode }: Props) {
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages || 0;
   const allData = allRes?.data.data ? allRes.data.data : [];
+  const dataToExport = allData.flatMap((sheet: TDataFields) => [
+    ...sheet.attendances
+      .map((att: TSheetAttendances) => ({
+        name: sheet.name,
+        period: `${format(new Date(sheet.from), "MMMM d")}-${format(
+          new Date(sheet.to),
+          "MMMM d yyyy"
+        )}`,
+        date: new Date(att.attendanceDate).getDate(),
+        amTimeIn: att.amTimeIn ? format(new Date(att.amTimeIn), "pp") : "",
+        amTimeOut: att.amTimeOut ? format(new Date(att.amTimeOut), "pp") : "",
+        pmTimeIn: att.pmTimeIn ? format(new Date(att.pmTimeIn), "pp") : "",
+        pmTimeOut: att.pmTimeOut ? format(new Date(att.pmTimeOut), "pp") : "",
+        undertime: att.undertime,
+      }))
+      .sort((a, b) => a.date - b.date),
+  ]);
 
   const toPrintRef = useRef<HTMLDivElement>(null);
-  const handlePrint = useReactToPrint({
-    content: () => toPrintRef.current,
-  });
-
-  const { handleExportToJSON, handleExportToCSV } = useHandleExport();
 
   return (
     <div>
@@ -134,6 +137,14 @@ function SheetTable({ onEdit, onEditMode }: Props) {
         </Button>
         {!onEdit && (
           <>
+            <PrintButton printRef={toPrintRef}>
+              Print {data.length} sheet(s)
+            </PrintButton>
+            {allIsPending ? (
+              <Skeleton className="w-20" />
+            ) : (
+              <ExportButton data={dataToExport} />
+            )}
             <DataTablePaginationNoBtn
               numOfPages={numOfPages}
               pageChange={{
@@ -141,64 +152,11 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                 handlePageChange: handlePageChange,
               }}
             />
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex  justify-between gap-4"
-              onClick={handlePrint}
-            >
-              <span>Print {data.length} sheet(s)</span>
-              <Printer size={IconProperties.SIZE_ICON} />{" "}
-            </Button>
-            {allIsPending ? (
-              <Skeleton className="w-20" />
-            ) : (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="space-x-2">
-                    <span>Export as</span>
-                    <ChevronDown
-                      className="h-4 w-4"
-                      size={IconProperties.SIZE_ICON}
-                      strokeWidth={IconProperties.STROKE_WIDTH}
-                    />
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem className="p-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-between gap-2"
-                      onClick={() => handleExportToJSON(allData)}
-                    >
-                      Export as Json
-                      <Braces
-                        size={IconProperties.SIZE_ICON}
-                        strokeWidth={IconProperties.STROKE_WIDTH}
-                      />
-                    </Button>
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem className="p-0">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-start gap-2"
-                      onClick={() => handleExportToCSV(allData)}
-                    >
-                      Export as Excel
-                    </Button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
           </>
         )}
       </div>
       <div
-        className="flex gap-4 justify-center flex-wrap w-full print-sheet "
+        className="flex gap-4 justify-center flex-wrap w-full sheetTable"
         ref={toPrintRef}
       >
         {isPending ? (
@@ -485,7 +443,14 @@ function SheetTable({ onEdit, onEditMode }: Props) {
             ))}
           </>
         )}
-      </div>
+      </div>{" "}
+      <DataTablePaginationNoBtn
+        numOfPages={numOfPages}
+        pageChange={{
+          page: page,
+          handlePageChange: handlePageChange,
+        }}
+      />
     </div>
   );
 }

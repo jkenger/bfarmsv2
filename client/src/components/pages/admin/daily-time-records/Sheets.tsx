@@ -15,7 +15,7 @@ export const loader =
   async ({ params }: { params: Params }) => {
     return defer({
       data: queryClient.ensureQueryData(
-        getSheets({ type: "all", id: params.id ?? "" })
+        getSheets({ type: "paginated", id: params.id ?? "" })
       ),
       id: params.id,
     });

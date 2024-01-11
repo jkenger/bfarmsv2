@@ -23,6 +23,7 @@ module.exports = {
       fontFamily: {
         calibri: ["Calibri", "sans-serif"],
       },
+      screens: { print: { raw: "print" }, screen: { raw: "screen" } },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

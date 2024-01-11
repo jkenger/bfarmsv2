@@ -9,10 +9,14 @@ import useFilterParams, {
 } from "@/components/hooks/useFilterParams";
 import { useLocalStorageState } from "@/components/hooks/useLocalStorageState";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useKeyDown } from "@/components/hooks/useKeyDown";
+import PrintButton from "@/components/ui/print-button";
+import { Skeleton } from "@/components/ui/skeleton";
+import ExportButton from "@/components/ui/export-button";
+import { GetQueryType } from "@/types/common";
 
 export type TReceiptSignatory = {
   value?: string;
@@ -33,6 +37,10 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
   // Name: ZALDY P. PEREZ // OIC, Asst. Director for Administrative Division
 
   // Romualdo M. POL, MSc // Chief Aquaculturist, BFAR-NIFTC
+
+  // @ISSUES:
+  //    1. Print in landscape option is gone
+  //    2. Request route is all but in the server it is requesting on paginated route
 
   const initialLocalStateValue: TReceiptSignatory = {
     value: undefined,
@@ -97,22 +105,45 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
   console.log("id", id);
   const {
     data: res,
+    isPending,
     // isFetching,
     // isError,
     // isSuccess,
     // error,
     // refetch,
-  } = useQuery(getReceipts({ type: "paginated", payrollId: id }));
+  } = useQuery(getReceipts({ type: GetQueryType.PAGINATED, payrollId: id }));
+  console.log(res);
+  const { data: allRes, isPending: allIsPending } = useQuery(
+    getReceipts({ type: GetQueryType.ALL, payrollId: id ?? "" })
+  );
 
+  const toPrintRef = useRef(null);
   const { handlePageChange } = useFilterParams();
   const { page } = getSearchParams();
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
-  // const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
-  console.log("asd", data);
-  // reset page to 1 if data length is less than numOfPages
-
-  // const { handleGroupChange } = useFilterParams();
+  const allData = allRes?.data.data ? allRes.data.data : [];
+  const dataToExport = allData.flatMap((data: any, index: number) => ({
+    period: `${new Date(data.payroll.from).toDateString()} to
+        ${new Date(data.payroll.to).toDateString()}`,
+    payrollNo: data.payroll.payrollNumber,
+    fundCluster: data.payroll.fundCluster,
+    projectName: data.payroll.projectName,
+    serialNumber: index + 1,
+    name: data.name,
+    designation: data.designation,
+    prc: "",
+    monthlyRate: data.salary,
+    noOfDays: data.noOfDays,
+    grossAmountEarned: data.grossAmountEarned,
+    tax2: data.tax1,
+    tax5: data.tax5,
+    tax10: data.tax10,
+    sss: data.sss,
+    pagibig: data.pagibig,
+    philhealth: data.philhealth,
+    netAmountDue: data.netAmountDue,
+  }));
   return (
     <div>
       <div className="flex gap-2 justify-end">
@@ -131,8 +162,28 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
         >
           Save
         </Button>
+        {!onEdit && (
+          <>
+            <PrintButton printRef={toPrintRef}>Print Payroll Sheet</PrintButton>
+            {allIsPending ? (
+              <Skeleton className="w-20" />
+            ) : (
+              <ExportButton data={dataToExport} />
+            )}
+            <DataTablePaginationNoBtn
+              numOfPages={numOfPages}
+              pageChange={{
+                page: page,
+                handlePageChange: handlePageChange,
+              }}
+            />
+          </>
+        )}
       </div>
-      <div className="font-serif p-2  text-center">
+      <div
+        className="font-serif p-2  text-center print:scale-90 "
+        ref={toPrintRef}
+      >
         <div className="font-semibold text-lg -space-y-1">
           <h1 className="font-extrabold text-lg">PAYROLL</h1>
           <h2 className="font-extrabold text-lg underline">
@@ -588,11 +639,11 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
             </tr>
           </thead>
         </table>
-        <DataTablePaginationNoBtn
-          numOfPages={numOfPages}
-          pageChange={{ page, handlePageChange }}
-        />
       </div>
+      <DataTablePaginationNoBtn
+        numOfPages={numOfPages}
+        pageChange={{ page, handlePageChange }}
+      />
     </div>
   );
 }

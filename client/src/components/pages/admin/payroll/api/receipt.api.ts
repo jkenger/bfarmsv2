@@ -22,7 +22,7 @@ export const getReceipts = ({
   const qFnQuery =
     type === GetQueryType.PAGINATED
       ? `admin/payrolls/${payrollId}/receipt?${searchParams.toString()}`
-      : `admin/payrolls/${payrollId}/all`;
+      : `admin/payrolls/${payrollId}/receipt/all`;
 
   console.log(qFnQuery);
   return {
