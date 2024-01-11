@@ -54,7 +54,7 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
               alt={row.original.user.avatar}
             />
           </Avatar>
-          <span>{row.original.user.fullName}</span>
+          <span>{row.original.fullName || row.original.user?.fullName}</span>
         </div>
       );
     },
@@ -154,7 +154,7 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      row.original.noOfHoursWorked ? (
+      return row.original.noOfHoursWorked ? (
         <span>{row.original.noOfHoursWorked}</span>
       ) : (
         <EmptyCellBadge label="hours of worked" />
@@ -171,10 +171,27 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
       );
     },
     cell: ({ row }) => {
-      row.original.undertime ? (
+      return row.original.undertime ? (
         <span>{row.original.undertime}</span>
       ) : (
         <EmptyCellBadge label="undertime" />
+      );
+    },
+  },
+  {
+    accessorKey: "travelPass",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>In Travel</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return row.original.travelPass ? (
+        <span>{row.original.travelPass}</span>
+      ) : (
+        <EmptyCellBadge fullLabel="Not in travel" />
       );
     },
   },
@@ -191,6 +208,7 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
       return <ParseDate>{row.original.createdAt}</ParseDate>;
     },
   },
+
   {
     accessorKey: "actions",
     header: "",

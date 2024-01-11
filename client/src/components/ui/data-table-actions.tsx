@@ -1,5 +1,5 @@
 import React, { cloneElement } from "react";
-import { Delete, File, MoreVertical } from "lucide-react";
+import { Delete, MoreVertical } from "lucide-react";
 
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { IconProperties, Links } from "@/types/common";
@@ -8,16 +8,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "./separator";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+type TNavigateElement = {
+  to: Links | string;
+  label: React.ReactNode;
+  newTab?: boolean;
+};
 
 type Props = {
   deleteElement: React.ReactNode;
   editElement: React.ReactNode;
-  navigateElement?: {
-    to: Links | string;
-  };
+  navigateElement?: TNavigateElement[];
 };
 
 function DataTableActions({
@@ -27,7 +31,6 @@ function DataTableActions({
 }: Props) {
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
   const [openEditDialog, setOpenEditDialog] = React.useState(false);
-  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,21 +45,25 @@ function DataTableActions({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        {navigateElement && (
-          <>
-            <DropdownMenuItem className="p-0">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between gap-2"
-                onClick={() => navigate(navigateElement.to)}
-              >
-                View <File size={IconProperties.SIZE_ICON} />
-              </Button>
-            </DropdownMenuItem>
-            <Separator orientation="horizontal" />
-          </>
-        )}
+        {navigateElement &&
+          navigateElement.map((element: TNavigateElement) => (
+            <>
+              <DropdownMenuItem className="p-0">
+                <Link
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                    className: "w-full justify-between gap-2",
+                  })}
+                  to={element.to}
+                  target={element.newTab ? "_blank" : "_self"}
+                >
+                  {element.label}
+                </Link>
+              </DropdownMenuItem>
+              <Separator orientation="horizontal" />
+            </>
+          ))}
         <DropdownMenuItem className="p-0">
           <Button
             variant="ghost"

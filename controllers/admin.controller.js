@@ -57,6 +57,7 @@ export const createAttendance = asyncHandler(async (req, res) => {
       };
     }),
   ];
+  console.log(data);
   await models.addModel(res, data, prisma.attendance);
 });
 

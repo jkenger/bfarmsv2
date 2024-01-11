@@ -174,12 +174,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
             ...currentDayAttendance,
             pmTimeIn: currentDateTime,
             // If late, set late to true
-            isLate: currentDateTime > fivePm ? true : false,
-            lateMinutes:
-              differenceInMinutes(currentDateTime, fivePm) < 0
-                ? 0
-                : currentDayAttendance.lateMinutes +
-                  differenceInMinutes(currentDateTime, fivePm),
           },
         ];
         await models.updateModel(
@@ -196,13 +190,6 @@ export const createAttendance = asyncHandler(async (req, res) => {
           {
             ...currentDayAttendance,
             pmTimeOut: currentDateTime,
-            // If late, set late to true
-            isUndertime: currentDateTime < fivePm ? true : false,
-            undertimeMinutes:
-              differenceInMinutes(fivePm, currentDateTime) < 0
-                ? 0
-                : currentDayAttendance.undertimeMinutes +
-                  differenceInMinutes(fivePm, currentDateTime),
           },
         ];
         await models.updateModel(

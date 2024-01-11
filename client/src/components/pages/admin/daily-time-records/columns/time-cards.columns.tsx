@@ -8,7 +8,7 @@ import ParseDate from "@/components/ui/parse-date";
 import { Badge } from "@/components/ui/badge";
 import { differenceInDays } from "date-fns";
 import IsNew from "@/components/ui/isnew";
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, File, FileStack } from "lucide-react";
 import { IconProperties, Links } from "@/types/common";
 import DeletePayroll from "../form/time-cards/DeletePayroll";
 import EditPayroll from "../form/time-cards/EditPayroll";
@@ -84,9 +84,27 @@ export const timeCardColumns: ColumnDef<TDataFields>[] = [
       return (
         <DataTableActions
           key={row.original.id}
-          navigateElement={{
-            to: `${Links.TIME_CARDS}/${row.original.id}?limit=2`,
-          }}
+          navigateElement={[
+            {
+              to: `${Links.TIME_CARDS}/${row.original.id}`,
+              label: (
+                <>
+                  <span>View </span>
+                  <File size={IconProperties.SIZE_ICON} />
+                </>
+              ),
+            },
+            {
+              to: `${Links.TIME_CARDS}/${row.original.id}`,
+              label: (
+                <>
+                  <span>View in new tab</span>{" "}
+                  <FileStack size={IconProperties.SIZE_ICON} />
+                </>
+              ),
+              newTab: true,
+            },
+          ]}
           deleteElement={<DeletePayroll data={row.original} trigger={false} />}
           editElement={
             // @TOCHANGE

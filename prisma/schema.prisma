@@ -18,6 +18,7 @@ model Attendance {
   id               String    @id @default(uuid())
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           String
+  fullName         String?
   attendanceDate   DateTime?
   amTimeIn         DateTime?
   amTimeOut        DateTime?
@@ -25,11 +26,7 @@ model Attendance {
   pmTimeOut        DateTime?
   noOfHoursWorked  Float?
   undertime        Float?  
-  isLate           Boolean?
-  lateMinutes      Int?
-  isUndertime      Boolean?
-  undertimeMinutes Int?
-  isOnTime         Boolean?
+  travelPass       String?
   isHalfDay        Boolean?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

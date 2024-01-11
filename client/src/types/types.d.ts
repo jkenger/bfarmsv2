@@ -137,12 +137,14 @@ type TDailyTimeRecord = {
   id: string;
   user: TEmployees;
   userId: string;
+  fullName: string;
   attendanceDate?: string;
   amTimeIn?: string;
   amTimeOut?: string;
   pmTimeIn?: string;
   pmTimeOut?: string;
   undertime?: string;
+  travelPass?: string;
   noOfHoursWorked?: string;
   createdAt: string;
   updatedAt: string;
@@ -179,6 +181,7 @@ type TSheetAttendances = {
   pmTimeIn?: string;
   pmTimeOut?: string;
   undertime?: int;
+  travelPass?: string;
 };
 
 type TStatus = {

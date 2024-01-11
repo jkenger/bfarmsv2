@@ -1,5 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { addDays, differenceInHours, differenceInMinutes } from "date-fns";
+import {
+  addDays,
+  differenceInBusinessDays,
+  differenceInHours,
+  differenceInMinutes,
+  eachDayOfInterval,
+  isWeekend,
+} from "date-fns";
 import { countWeekdays, setDateTime } from "../../lib/helpers.js";
 import { token } from "morgan";
 import { holiday } from "../../lib/utils.js";
@@ -391,6 +398,109 @@ const prisma = new PrismaClient().$extends({
     },
   },
   query: {
+    travelpass: {
+      async $allOperations({ operation, args, query }) {
+        if (operation === "create" || operation === "update") {
+          const from = new Date(args.data.start);
+          const to = new Date(args.data.end);
+          const attendanceExist = await prisma.attendance.findMany({
+            where: {
+              AND: [
+                {
+                  userId: args.data.userId,
+                },
+                {
+                  attendanceDate: {
+                    gte: from,
+                    lte: to,
+                  },
+                },
+              ],
+            },
+          });
+
+          if (attendanceExist.length > 0) {
+            throw new Error(
+              `Employee has existing attendance for ${attendanceExist.map(
+                (att) => new Date(att.attendanceDate).toDateString()
+              )}`
+            );
+          }
+          // get the number of days between from and to
+
+          const days = differenceInBusinessDays(to, from);
+          const dateArray = eachDayOfInterval({ start: from, end: to }).filter(
+            (date) => !isWeekend(date)
+          );
+
+          console.log(dateArray);
+
+          const user = await prisma.user.findUnique({
+            where: {
+              id: args.data.userId,
+            },
+          });
+
+          if (!user) {
+            throw new Error("Employee not found");
+          }
+          console.log(user);
+          const attendanceToBeCreated = dateArray.map((date) => ({
+            fullName: user.fullName,
+            attendanceDate: date,
+            amTimeIn: null,
+            amTimeOut: null,
+            pmTimeIn: null,
+            pmTimeOut: null,
+            isHalfDay: false,
+            travelPass: args.data.typeOf,
+            noOfHoursWorked: 8,
+            undertime: 0,
+          }));
+
+          const createdAttendance = await prisma.user.update({
+            where: {
+              id: args.data.userId,
+            },
+            data: {
+              attendances: {
+                create: attendanceToBeCreated,
+              },
+            },
+          });
+
+          console.log(createdAttendance);
+          //   const createdAttendance = await prisma.attendance.createMany({
+          //     data: attendanceToBeCreated,
+          //     skipDuplicates: false,
+          //   });
+
+          //   if (!createdAttendance.count) {
+          //     await prisma.attendance.deleteMany({
+          //       where: {
+          //         AND: [
+          //           {
+          //             userId: args.data.userId,
+          //           },
+          //           {
+          //             attendanceDate: {
+          //               gte: from,
+          //               lte: to,
+          //             },
+          //           },
+          //         ],
+          //       },
+          //     });
+
+          //     throw new Error(
+          //       "Failed to create travel pass for the employee. Please try again."
+          //     );
+          //   }
+          // }
+          // return query(args);
+        }
+      },
+    },
     attendance: {
       async $allOperations({ operation, args, query }) {
         if (operation.includes("create") || operation === "update") {
@@ -469,12 +579,17 @@ const prisma = new PrismaClient().$extends({
     user: {
       async $allOperations({ operation, args, query }) {
         if (operation === "create" || operation === "update") {
+          const user = await prisma.user.findUnique({
+            where: {
+              id: args.data.id,
+            },
+          });
           return await query({
             ...args,
             data: {
               ...args.data,
-              fullName: `${args.data.lastName} ${args.data.firstName} ${
-                args.data.middleName ? args.data.middleName : ""
+              fullName: `${user.lastName} ${user.firstName} ${
+                user.middleName ? user.middleName : ""
               }`,
             },
           });

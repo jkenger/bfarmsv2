@@ -8,7 +8,7 @@ import useFilterParams, {
 } from "@/components/hooks/useFilterParams";
 import { useLocalStorageState } from "@/components/hooks/useLocalStorageState";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useKeyDown } from "@/components/hooks/useKeyDown";
 
@@ -16,13 +16,12 @@ import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { getSheets } from "../api/sheets.api";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
+import { Printer } from "lucide-react";
+import { IconProperties } from "@/types/common";
+
+import { useReactToPrint } from "react-to-print";
+import "./../css/print.css"; // Import the CSS file
 
 export type TSignatory = {
   value?: string;
@@ -91,20 +90,26 @@ function SheetTable({ onEdit, onEditMode }: Props) {
     // refetch,
   } = useQuery(getSheets({ type: "paginated", id: id ?? "" }));
 
-  const { handlePageChange, handlePageLimit } = useFilterParams();
-  const { page, limit } = getSearchParams({ setLimitDefault: "2" });
+  const { handlePageChange } = useFilterParams();
+  const { page } = getSearchParams({ setLimitDefault: "2" });
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages || 0;
-  // const numOfPages = res?.data.numOfPages ? res.data.numOfPages : 0;
-  console.log("id", id);
-  console.log("data", data);
 
-  // reset page to 1 if data length is less than numOfPages
+  const toPrintRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    content: () => toPrintRef.current,
+  });
 
-  // const { handleGroupChange } = useFilterParams();
   return (
     <div>
       <div className="flex gap-2 justify-end">
+        <DataTablePaginationNoBtn
+          numOfPages={numOfPages}
+          pageChange={{
+            page: page,
+            handlePageChange: handlePageChange,
+          }}
+        />
         <Button
           variant="outline"
           className={`${onEdit ? "block" : "hidden"}`}
@@ -120,10 +125,23 @@ function SheetTable({ onEdit, onEditMode }: Props) {
         >
           Save
         </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex  justify-between gap-4"
+          onClick={handlePrint}
+        >
+          <span>Print {data.length} sheet(s)</span>
+          <Printer size={IconProperties.SIZE_ICON} />{" "}
+        </Button>
       </div>
-      <div className="flex gap-4 justify-center flex-wrap w-full">
+      <div
+        className="flex gap-4 justify-center flex-wrap w-full print-sheet "
+        ref={toPrintRef}
+      >
         {data.map((sheet: TDataFields) => (
-          <table className="font-calibri text-xs w-1/3">
+          <table className="p-4 font-calibri text-xs w-2/5 print:break-after-page print:w-2/3">
             <tr>
               <td colSpan={7}>
                 <label>CIVIL SERVICE FORM No. 48</label>{" "}
@@ -192,7 +210,7 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                 <label>UNDERTIME</label>
               </td>
             </tr>
-            <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center">
+            <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center [&>td]:w-1/6">
               <td>
                 <label>TIME-IN</label>
               </td>
@@ -217,7 +235,10 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                 (att: TSheetAttendances) =>
                   new Date(att.attendanceDate).getDate() === index
               );
-              const amTimeIn = attendance?.amTimeIn
+              console.log("attendance", attendance);
+              const amTimeIn = attendance?.travelPass
+                ? attendance.travelPass
+                : attendance?.amTimeIn
                 ? format(new Date(attendance.amTimeIn), "pp")
                 : "";
               const amTimeOut = attendance?.amTimeOut
@@ -320,8 +341,8 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                 <label>Verified as to the prescribed office hours.</label>{" "}
               </td>
               <td></td>
-              <td colSpan={2} className="font-bold">
-                <label>SADSADSAD</label>
+              <td colSpan={2} className="font-bold text-center">
+                <label>{sheet.name}</label>
               </td>
             </tr>
             <tr>
@@ -334,10 +355,7 @@ function SheetTable({ onEdit, onEditMode }: Props) {
               <td></td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td colSpan={2} className="d-flex editable f-sig-val">
+              <td colSpan={7} className="text-center">
                 <label className="font-bold">
                   {" "}
                   {onEdit && (
@@ -354,15 +372,9 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                     (stateSignatory1?.value || "Romualdo M. POL, MSc")}
                 </label>
               </td>
-              <td></td>
-              <td></td>
-              <td></td>
             </tr>
             <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td colSpan={1} className="d-flex text-center editable f-sig">
+              <td colSpan={7} className="d-flex text-center editable f-sig">
                 <label className="f-sig-label">
                   {onEdit && (
                     <Input
@@ -378,8 +390,6 @@ function SheetTable({ onEdit, onEditMode }: Props) {
                     (stateSignatory1?.valueTitle || "Chief, BFAR-NIFTC")}{" "}
                 </label>{" "}
               </td>
-              <td></td>
-              <td></td>
             </tr>
             <tr>
               <td></td>
@@ -392,35 +402,6 @@ function SheetTable({ onEdit, onEditMode }: Props) {
             </tr>
           </table>
         ))}
-      </div>
-      <div className="flex justify-end gap-2">
-        <div className="flex items-center space-x-2">
-          <p className="text-xs font-medium">Rows per page</p>
-          <Select
-            value={`${limit}`}
-            onValueChange={(value) => {
-              handlePageLimit(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={limit} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[2, 4, 6, 8, 10].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <DataTablePaginationNoBtn
-          numOfPages={numOfPages}
-          pageChange={{
-            page: page,
-            handlePageChange: handlePageChange,
-          }}
-        />
       </div>
     </div>
   );

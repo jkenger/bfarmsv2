@@ -1,0 +1,14 @@
+@page {
+  size: A4; /* You can adjust the paper size accordingly */
+  margin: 0; /* Remove default margins to stretch the content to the edges */
+}
+
+@media print {
+  body {
+    margin: 0; /* Reset body margin for printing */
+  }
+
+  .print-sheet {
+    page-break-before: always; /* Start each sheet on a new page */
+  }
+}

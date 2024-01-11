@@ -1,5 +1,5 @@
 import { useNavigate, useRouteError } from "react-router-dom";
-import img from "@/assets/images/not-found.svg";
+
 import { Button } from "@/components/ui/button";
 import { Links } from "@/types/common";
 
@@ -12,11 +12,11 @@ function Error() {
   const error = useRouteError() as Error;
   const navigate = useNavigate();
 
-  if (error?.status === 404) {
+  if (error?.status) {
     return (
       <div className="flex justify-center items-center h-[80vh] p-4">
         <div className="text-center space-y-4">
-          <img src={img} alt="not found" className="max-w-md" />
+          {error.status}
           <h1 className="font-semibold  text-xl">Ohh! Page Not Found</h1>
           <p>we can't seem to find the page you are looking for</p>
           <Button variant="link" onClick={() => navigate(-1)}>
