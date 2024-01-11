@@ -103,13 +103,6 @@ function SheetTable({ onEdit, onEditMode }: Props) {
   return (
     <div>
       <div className="flex gap-2 justify-end">
-        <DataTablePaginationNoBtn
-          numOfPages={numOfPages}
-          pageChange={{
-            page: page,
-            handlePageChange: handlePageChange,
-          }}
-        />
         <Button
           variant="outline"
           className={`${onEdit ? "block" : "hidden"}`}
@@ -125,16 +118,26 @@ function SheetTable({ onEdit, onEditMode }: Props) {
         >
           Save
         </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex  justify-between gap-4"
-          onClick={handlePrint}
-        >
-          <span>Print {data.length} sheet(s)</span>
-          <Printer size={IconProperties.SIZE_ICON} />{" "}
-        </Button>
+        {!onEdit && (
+          <>
+            <DataTablePaginationNoBtn
+              numOfPages={numOfPages}
+              pageChange={{
+                page: page,
+                handlePageChange: handlePageChange,
+              }}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex  justify-between gap-4"
+              onClick={handlePrint}
+            >
+              <span>Print {data.length} sheet(s)</span>
+              <Printer size={IconProperties.SIZE_ICON} />{" "}
+            </Button>
+          </>
+        )}
       </div>
       <div
         className="flex gap-4 justify-center flex-wrap w-full print-sheet "
