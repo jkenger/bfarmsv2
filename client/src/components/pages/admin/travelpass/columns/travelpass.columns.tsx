@@ -89,6 +89,19 @@ export const travelpassColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
+    accessorKey: "expiresAt",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>Expires At</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return <ParseDate>{row.original.expireAt}</ParseDate>;
+    },
+  },
+  {
     accessorKey: "actions",
     header: "",
     cell: ({ row }) => {

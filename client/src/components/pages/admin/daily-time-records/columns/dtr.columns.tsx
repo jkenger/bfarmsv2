@@ -183,7 +183,7 @@ export const dtrColumns: ColumnDef<TDataFields>[] = [
     header: ({ column }) => {
       return (
         <DataTableHeader column={column}>
-          <span>In Travel</span>
+          <span>Travel Type</span>
         </DataTableHeader>
       );
     },

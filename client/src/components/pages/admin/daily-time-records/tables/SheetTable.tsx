@@ -12,16 +12,24 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useKeyDown } from "@/components/hooks/useKeyDown";
 
-import { format } from "date-fns";
+import { format, isSaturday, isSunday } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { getSheets } from "../api/sheets.api";
 import { Button } from "@/components/ui/button";
 
-import { Printer } from "lucide-react";
+import { Braces, ChevronDown, Printer } from "lucide-react";
 import { IconProperties } from "@/types/common";
 
 import { useReactToPrint } from "react-to-print";
 import "./../css/print.css"; // Import the CSS file
+import useHandleExport from "@/components/hooks/useHandleExport";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export type TSignatory = {
   value?: string;
@@ -83,22 +91,28 @@ function SheetTable({ onEdit, onEditMode }: Props) {
   // useQuery for fetching employee is needed here
   const {
     data: res,
-    // isFetching,
+    isPending: isPending,
     // isError,
     // isSuccess,
     // error,
     // refetch,
   } = useQuery(getSheets({ type: "paginated", id: id ?? "" }));
+  const { data: allRes, isPending: allIsPending } = useQuery(
+    getSheets({ type: "all", id: id ?? "" })
+  );
 
   const { handlePageChange } = useFilterParams();
   const { page } = getSearchParams({ setLimitDefault: "2" });
   const data = res?.data.data ? res.data.data : [];
   const numOfPages = res?.data.numOfPages || 0;
+  const allData = allRes?.data.data ? allRes.data.data : [];
 
   const toPrintRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
     content: () => toPrintRef.current,
   });
+
+  const { handleExportToJSON, handleExportToCSV } = useHandleExport();
 
   return (
     <div>
@@ -136,6 +150,50 @@ function SheetTable({ onEdit, onEditMode }: Props) {
               <span>Print {data.length} sheet(s)</span>
               <Printer size={IconProperties.SIZE_ICON} />{" "}
             </Button>
+            {allIsPending ? (
+              <Skeleton className="w-20" />
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="space-x-2">
+                    <span>Export as</span>
+                    <ChevronDown
+                      className="h-4 w-4"
+                      size={IconProperties.SIZE_ICON}
+                      strokeWidth={IconProperties.STROKE_WIDTH}
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem className="p-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-between gap-2"
+                      onClick={() => handleExportToJSON(allData)}
+                    >
+                      Export as Json
+                      <Braces
+                        size={IconProperties.SIZE_ICON}
+                        strokeWidth={IconProperties.STROKE_WIDTH}
+                      />
+                    </Button>
+                  </DropdownMenuItem>
+
+                  <DropdownMenuItem className="p-0">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-start gap-2"
+                      onClick={() => handleExportToCSV(allData)}
+                    >
+                      Export as Excel
+                    </Button>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </>
         )}
       </div>
@@ -143,268 +201,290 @@ function SheetTable({ onEdit, onEditMode }: Props) {
         className="flex gap-4 justify-center flex-wrap w-full print-sheet "
         ref={toPrintRef}
       >
-        {data.map((sheet: TDataFields) => (
-          <table className="p-4 font-calibri text-xs w-2/5 print:break-after-page print:w-2/3">
-            <tr>
-              <td colSpan={7}>
-                <label>CIVIL SERVICE FORM No. 48</label>{" "}
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="text-center">
-                <label>DAILY TIME RECORD</label>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td
-                colSpan={7}
-                className="border-b border-black text-center font-bold"
-              >
-                <label>{sheet.name}</label>{" "}
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="text-center">
-                <label>(Name)</label>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="text-center">
-                <label>
-                  {" "}
-                  For the month{" "}
-                  <span className="font-bold">
-                    {format(new Date(sheet.from), "MMMM d")}-{" "}
-                    {format(new Date(sheet.to), "MMMM d yyyy")}
-                  </span>
-                </label>
-              </td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7}>
-                <div className=" flex justify-between">
-                  {" "}
-                  <label> Official hours for arrival</label>
-                  <label> Regular days__________</label>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="text-end">
-                <label> Saturdays__________</label>
-              </td>
-            </tr>
-            <tr className="[&>td]:border [&>td]:border-black [&>td]:text-center">
-              <td rowSpan={2}>
-                <label> Date</label>
-              </td>
-              <td colSpan={2}>
-                <label>A.M.</label>
-              </td>
-              <td colSpan={2}>
-                <label>P.M.</label>
-              </td>
-              <td colSpan={2}>
-                <label>UNDERTIME</label>
-              </td>
-            </tr>
-            <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center [&>td]:w-1/6">
-              <td>
-                <label>TIME-IN</label>
-              </td>
-              <td>
-                <label>TIME-OUT</label>
-              </td>
-              <td>
-                <label>TIME-IN</label>
-              </td>
-              <td>
-                <label>TIME-OUT</label>
-              </td>
-              <td>
-                <label>Hours</label>
-              </td>
-              <td>
-                <label>Minutes</label>
-              </td>
-            </tr>
-            {new Array(31 + 1).fill(1, 1).map((_, index) => {
-              const attendance = sheet.attendances.find(
-                (att: TSheetAttendances) =>
-                  new Date(att.attendanceDate).getDate() === index
-              );
-              console.log("attendance", attendance);
-              const amTimeIn = attendance?.travelPass
-                ? attendance.travelPass
-                : attendance?.amTimeIn
-                ? format(new Date(attendance.amTimeIn), "pp")
-                : "";
-              const amTimeOut = attendance?.amTimeOut
-                ? format(new Date(attendance.amTimeOut), "pp")
-                : "";
-              const pmTimeIn = attendance?.pmTimeIn
-                ? format(new Date(attendance.pmTimeIn), "pp")
-                : "";
-              const pmTimeOut = attendance?.pmTimeOut
-                ? format(new Date(attendance.pmTimeOut), "pp")
-                : "";
-              return (
-                <>
-                  <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center">
-                    <td>
-                      <label>{index}</label>
-                    </td>
-                    <td>
-                      <label>{amTimeIn}</label>
-                    </td>
-                    <td>
-                      <label>{amTimeOut}</label>
-                    </td>
-                    <td>
-                      <label>{pmTimeIn}</label>
-                    </td>
-                    <td>
-                      <label>{pmTimeOut}</label>
-                    </td>
-                    <td>
-                      <label>{attendance?.undertime}</label>
-                    </td>
-                    <td>
-                      <label></label>
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
+        {isPending ? (
+          <Skeleton className="w-full h-[80vh]" />
+        ) : (
+          <>
+            {data.map((sheet: TDataFields) => (
+              <table className="p-4 font-calibri text-xs w-full lg:w-2/5 print:break-after-page print:w-2/3">
+                <tr>
+                  <td colSpan={7}>
+                    <label>CIVIL SERVICE FORM No. 48</label>{" "}
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    <label>DAILY TIME RECORD</label>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="border-b border-black text-center font-bold"
+                  >
+                    <label>{sheet.name}</label>{" "}
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    <label>(Name)</label>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    <label>
+                      {" "}
+                      For the month{" "}
+                      <span className="font-bold">
+                        {format(new Date(sheet.from), "MMMM d")}-
+                        {format(new Date(sheet.to), "MMMM d yyyy")}
+                      </span>
+                    </label>
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7}>
+                    <div className=" flex justify-between">
+                      {" "}
+                      <label> Official hours for arrival</label>
+                      <label> Regular days__________</label>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="text-end">
+                    <label> Saturdays__________</label>
+                  </td>
+                </tr>
+                <tr className="[&>td]:border [&>td]:border-black [&>td]:text-center">
+                  <td rowSpan={2}>
+                    <label> Date</label>
+                  </td>
+                  <td colSpan={2}>
+                    <label>A.M.</label>
+                  </td>
+                  <td colSpan={2}>
+                    <label>P.M.</label>
+                  </td>
+                  <td colSpan={2}>
+                    <label>UNDERTIME</label>
+                  </td>
+                </tr>
+                <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center [&>td]:w-1/6">
+                  <td>
+                    <label>TIME-IN</label>
+                  </td>
+                  <td>
+                    <label>TIME-OUT</label>
+                  </td>
+                  <td>
+                    <label>TIME-IN</label>
+                  </td>
+                  <td>
+                    <label>TIME-OUT</label>
+                  </td>
+                  <td>
+                    <label>Hours</label>
+                  </td>
+                  <td>
+                    <label>Minutes</label>
+                  </td>
+                </tr>
+                {new Array(31 + 1).fill(1, 1).map((_, index) => {
+                  const attendance = sheet.attendances.find(
+                    (att: TSheetAttendances) =>
+                      new Date(att.attendanceDate).getDate() === index
+                  );
 
-            <tr>
-              <td className="text-center">
-                <label>TOTAL</label>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr className="[&>td]:p-2">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7}>
-                <label>
-                  {" "}
-                  I CERTIFY on my honor that the above is true and correct
-                  report of the hours of work{" "}
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={7}>
-                <label>
-                  {" "}
-                  performed, record of which was made daily at the time of and
-                  departure from Office.
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td colSpan={2}>
-                <label className="font-weight:bold;"></label>
-              </td>
-            </tr>
-            <tr className="[&>td]:py-6">
-              <td colSpan={4}>
-                <label>Verified as to the prescribed office hours.</label>{" "}
-              </td>
-              <td></td>
-              <td colSpan={2} className="font-bold text-center">
-                <label>{sheet.name}</label>
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="text-center">
-                <label className="font-bold">
-                  {" "}
-                  {onEdit && (
-                    <Input
-                      placeholder="Signatory Value"
-                      value={stateSignatory1?.value || "Romualdo M. POL, MSc"}
-                      onChange={(e) =>
-                        setStateSignatory1({ value: e.target.value })
-                      }
-                      className="mb-1 text-center"
-                    />
-                  )}
-                  {!onEdit &&
-                    (stateSignatory1?.value || "Romualdo M. POL, MSc")}
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={7} className="d-flex text-center editable f-sig">
-                <label className="f-sig-label">
-                  {onEdit && (
-                    <Input
-                      placeholder="Signatory Value"
-                      value={stateSignatory1?.valueTitle || "Chief, BFAR-NIFTC"}
-                      onChange={(e) =>
-                        setStateSignatory1({ valueTitle: e.target.value })
-                      }
-                      className="mb-1 text-center"
-                    />
-                  )}
-                  {!onEdit &&
-                    (stateSignatory1?.valueTitle || "Chief, BFAR-NIFTC")}{" "}
-                </label>{" "}
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </table>
-        ))}
+                  const amTimeIn = attendance?.travelPass
+                    ? attendance.travelPass
+                    : attendance?.amTimeIn
+                    ? format(new Date(attendance.amTimeIn), "pp")
+                    : "";
+
+                  const amTimeOut = attendance?.amTimeOut
+                    ? format(new Date(attendance.amTimeOut), "pp")
+                    : "";
+                  const pmTimeIn = attendance?.pmTimeIn
+                    ? format(new Date(attendance.pmTimeIn), "pp")
+                    : "";
+                  const pmTimeOut = attendance?.pmTimeOut
+                    ? format(new Date(attendance.pmTimeOut), "pp")
+                    : "";
+                  return (
+                    <>
+                      <tr className="actTable [&>td]:border [&>td]:border-black [&>td]:text-center">
+                        <td>
+                          <label>{index}</label>
+                        </td>
+                        <td>
+                          <label>
+                            {amTimeIn
+                              ? amTimeIn
+                              : index <= new Date(sheet.to).getDate()
+                              ? isSaturday(new Date(sheet.from).setDate(index))
+                                ? "Saturday"
+                                : isSunday(new Date(sheet.from).setDate(index))
+                                ? "Sunday"
+                                : ""
+                              : ""}
+                          </label>
+                        </td>
+                        <td>
+                          <label>{amTimeOut}</label>
+                        </td>
+                        <td>
+                          <label>{pmTimeIn}</label>
+                        </td>
+                        <td>
+                          <label>{pmTimeOut}</label>
+                        </td>
+                        <td>
+                          <label>{attendance?.undertime}</label>
+                        </td>
+                        <td>
+                          <label></label>
+                        </td>
+                      </tr>
+                    </>
+                  );
+                })}
+
+                <tr>
+                  <td className="text-center">
+                    <label>TOTAL</label>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr className="[&>td]:p-2">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7}>
+                    <label>
+                      {" "}
+                      I CERTIFY on my honor that the above is true and correct
+                      report of the hours of work{" "}
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={7}>
+                    <label>
+                      {" "}
+                      performed, record of which was made daily at the time of
+                      and departure from Office.
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td colSpan={2}>
+                    <label className="font-weight:bold;"></label>
+                  </td>
+                </tr>
+                <tr className="[&>td]:py-6">
+                  <td colSpan={4}>
+                    <label>Verified as to the prescribed office hours.</label>{" "}
+                  </td>
+                  <td></td>
+                  <td colSpan={2} className="font-bold text-center">
+                    <label>{sheet.name}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="text-center">
+                    <label className="font-bold">
+                      {" "}
+                      {onEdit && (
+                        <Input
+                          placeholder="Signatory Value"
+                          value={
+                            stateSignatory1?.value || "Romualdo M. POL, MSc"
+                          }
+                          onChange={(e) =>
+                            setStateSignatory1({ value: e.target.value })
+                          }
+                          className="mb-1 text-center"
+                        />
+                      )}
+                      {!onEdit &&
+                        (stateSignatory1?.value || "Romualdo M. POL, MSc")}
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={7} className="d-flex text-center editable f-sig">
+                    <label className="f-sig-label">
+                      {onEdit && (
+                        <Input
+                          placeholder="Signatory Value"
+                          value={
+                            stateSignatory1?.valueTitle || "Chief, BFAR-NIFTC"
+                          }
+                          onChange={(e) =>
+                            setStateSignatory1({ valueTitle: e.target.value })
+                          }
+                          className="mb-1 text-center"
+                        />
+                      )}
+                      {!onEdit &&
+                        (stateSignatory1?.valueTitle ||
+                          "Chief, BFAR-NIFTC")}{" "}
+                    </label>{" "}
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

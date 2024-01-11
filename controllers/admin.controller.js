@@ -550,6 +550,7 @@ export const createTravelpass = asyncHandler(async (req, res) => {
         ...item,
         start: new Date(item.start),
         end: new Date(item.end),
+        expireAt: new Date(item.end),
       };
     }),
   ];

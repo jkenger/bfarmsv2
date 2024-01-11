@@ -185,6 +185,7 @@ model Travelpass {
   end       DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  expireAt DateTime?
 }
 
 model Deduction {

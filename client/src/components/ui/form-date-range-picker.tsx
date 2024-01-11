@@ -1,5 +1,5 @@
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { addDays, format, startOfMonth } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -16,6 +16,8 @@ import DropdownSelect from "./dropdown-select";
 enum DateFilter {
   ALL_TIME = "All Records",
   TODAY = "Past 24 hours",
+  FIRST_HALF = "1st - 15th",
+  SECOND_HALF = "16th - 30th",
   SEMI_MONTHLY = "Past 15 days",
   MONTHLY = "Past 30 days",
   CUSTOM = "Custom Date",
@@ -27,12 +29,14 @@ export function FormDateRangePicker({
 }: React.HTMLAttributes<HTMLDivElement> & {
   form: any;
 }) {
-  const [range, setRange] = React.useState<DateFilter>(DateFilter.ALL_TIME);
+  const [range, setRange] = React.useState<DateFilter>(DateFilter.FIRST_HALF);
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: form.getValues("from")
       ? new Date(form.getValues("from"))
-      : new Date(addDays(new Date(), -14)),
-    to: form.getValues("to") ? new Date(form.getValues("to")) : new Date(),
+      : startOfMonth(new Date()),
+    to: form.getValues("to")
+      ? new Date(form.getValues("to"))
+      : addDays(startOfMonth(new Date()), 14),
   });
 
   React.useEffect(() => {
@@ -80,6 +84,23 @@ export function FormDateRangePicker({
               onValueChange={(value) => {
                 setRange(value as DateFilter);
                 switch (value) {
+                  case DateFilter.FIRST_HALF:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: startOfMonth(new Date()),
+                      to: addDays(startOfMonth(new Date()), 14),
+                    }));
+                    break;
+
+                  case DateFilter.SECOND_HALF:
+                    setDate((prev) => ({
+                      ...prev,
+                      from: addDays(startOfMonth(new Date()), 15),
+                      to: addDays(startOfMonth(new Date()), 29),
+                    }));
+
+                    break;
+
                   case DateFilter.ALL_TIME:
                     setDate((prev) => ({
                       ...prev,

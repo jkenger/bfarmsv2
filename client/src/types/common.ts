@@ -123,6 +123,6 @@ export enum GetQueryType {
 }
 
 export enum TravelpassType {
-  OFFICIAL_BUSINESS = "officialBusiness",
-  TRAVEL_ORDER = "travelOrder",
+  OFFICIAL_BUSINESS = "Official Business",
+  TRAVEL_ORDER = "Travel Order",
 }

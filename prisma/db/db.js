@@ -1,15 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import {
   addDays,
-  differenceInBusinessDays,
   differenceInHours,
-  differenceInMinutes,
   eachDayOfInterval,
   isWeekend,
 } from "date-fns";
 import { countWeekdays, setDateTime } from "../../lib/helpers.js";
-import { token } from "morgan";
-import { holiday } from "../../lib/utils.js";
+
+import cron from "node-cron";
+
 const prisma = new PrismaClient().$extends({
   model: {
     holiday: {
@@ -428,12 +427,9 @@ const prisma = new PrismaClient().$extends({
           }
           // get the number of days between from and to
 
-          const days = differenceInBusinessDays(to, from);
           const dateArray = eachDayOfInterval({ start: from, end: to }).filter(
             (date) => !isWeekend(date)
           );
-
-          console.log(dateArray);
 
           const user = await prisma.user.findUnique({
             where: {
@@ -444,7 +440,6 @@ const prisma = new PrismaClient().$extends({
           if (!user) {
             throw new Error("Employee not found");
           }
-          console.log(user);
           const attendanceToBeCreated = dateArray.map((date) => ({
             fullName: user.fullName,
             attendanceDate: date,
@@ -468,37 +463,8 @@ const prisma = new PrismaClient().$extends({
               },
             },
           });
-
-          console.log(createdAttendance);
-          //   const createdAttendance = await prisma.attendance.createMany({
-          //     data: attendanceToBeCreated,
-          //     skipDuplicates: false,
-          //   });
-
-          //   if (!createdAttendance.count) {
-          //     await prisma.attendance.deleteMany({
-          //       where: {
-          //         AND: [
-          //           {
-          //             userId: args.data.userId,
-          //           },
-          //           {
-          //             attendanceDate: {
-          //               gte: from,
-          //               lte: to,
-          //             },
-          //           },
-          //         ],
-          //       },
-          //     });
-
-          //     throw new Error(
-          //       "Failed to create travel pass for the employee. Please try again."
-          //     );
-          //   }
-          // }
-          // return query(args);
         }
+        return query(args);
       },
     },
     attendance: {
@@ -581,7 +547,7 @@ const prisma = new PrismaClient().$extends({
         if (operation === "create" || operation === "update") {
           const user = await prisma.user.findUnique({
             where: {
-              id: args.data.id,
+              id: args.data?.id || args.where.id,
             },
           });
           return await query({
@@ -643,6 +609,26 @@ const prisma = new PrismaClient().$extends({
       },
     },
   },
+});
+
+// cron
+// 0 0 * * *
+cron.schedule("0 0 * * *", async () => {
+  console.log("Running job to delete expired records...");
+  // Replace the following logic with your own logic to identify and delete expired records
+  try {
+    // Your Prisma code here
+    const deleted = await prisma.travelpass.deleteMany({
+      where: {
+        expireAt: {
+          lte: new Date(),
+        },
+      },
+    });
+    console.log("Deleted ", count + " records");
+  } catch (error) {
+    console.error("Error:", error);
+  }
 });
 
 export default prisma;

@@ -115,6 +115,9 @@ type TTravelpass = {
   typeOf: TravelpassType;
   start: string;
   end: string;
+  createdAt: string;
+  updatedAt: string;
+  expireAt: string;
 };
 
 type TDeductions = {

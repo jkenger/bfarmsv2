@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { addDays, format, startOfMonth } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -16,6 +16,8 @@ import useFilterParams, { getSearchParams } from "../hooks/useFilterParams";
 
 enum DateFilter {
   ALL_TIME = "All Records",
+  FIRST_HALF = "1st - 15th",
+  SECOND_HALF = "16th - 30th",
   TODAY = "Past 24 hours",
   SEMI_MONTHLY = "Past 15 days",
   MONTHLY = "Past 30 days",
@@ -29,7 +31,7 @@ export function CalendarDateRangePicker({
   queryOnChange?: boolean;
 }) {
   const { fromDate, toDate } = getSearchParams();
-  const [range, setRange] = React.useState<DateFilter>(DateFilter.ALL_TIME);
+  const [range, setRange] = React.useState<DateFilter>(DateFilter.FIRST_HALF);
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: fromDate ? new Date(fromDate) : new Date("01/01/2021"),
     to: toDate ? new Date(toDate) : new Date(),
@@ -93,6 +95,24 @@ export function CalendarDateRangePicker({
               onValueChange={(value) => {
                 setRange(value as DateFilter);
                 switch (value) {
+                  case DateFilter.FIRST_HALF:
+                    handleFromDateChange(
+                      startOfMonth(new Date()).toDateString()
+                    );
+                    handleToDateChange(
+                      addDays(startOfMonth(new Date()), 14).toDateString()
+                    );
+                    break;
+
+                  case DateFilter.SECOND_HALF:
+                    handleFromDateChange(
+                      addDays(startOfMonth(new Date()), 15).toDateString()
+                    );
+                    handleToDateChange(
+                      addDays(startOfMonth(new Date()), 29).toDateString()
+                    );
+                    break;
+
                   case DateFilter.ALL_TIME:
                     handleFromDateChange(new Date("01/01/2021").toDateString());
                     handleToDateChange(new Date().toDateString());
