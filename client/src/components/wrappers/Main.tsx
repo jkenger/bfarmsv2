@@ -3,6 +3,7 @@ import { Badge } from "../ui/badge";
 import { IconProperties, Links } from "@/types/common";
 import { Slash } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ResizablePanelGroup } from "../ui/resizable";
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
@@ -105,8 +106,18 @@ function Heading({
   );
 }
 
-function Content({ children }: { children: React.ReactNode }) {
-  return <div className="mt-4 px-6 py-4 md:px-10 ">{children}</div>;
+function Content({
+  children,
+  isResizable = false,
+}: {
+  children: React.ReactNode;
+  isResizable?: boolean;
+}) {
+  return !isResizable ? (
+    <div className="mt-4 px-6 py-4 md:px-10 ">{children}</div>
+  ) : (
+    <ResizablePanelGroup direction="horizontal">{children}</ResizablePanelGroup>
+  );
 }
 
 Main.BreadCrumbs = BreadCrumbs;
