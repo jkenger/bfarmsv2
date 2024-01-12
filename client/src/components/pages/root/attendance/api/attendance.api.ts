@@ -15,7 +15,7 @@ export const createAttendance = ({ queryClient, form }: TMutation) => {
         description: "A new deduction has been successfully addded.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ATTENDACE],
+        queryKey: [QueryKeys.ATTENDANCE],
       });
       form?.reset();
     },
