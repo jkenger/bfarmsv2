@@ -122,6 +122,9 @@ export const editPayroll = ({ queryClient, form }: TMutation) => {
       await queryClient.invalidateQueries({
         queryKey: [QueryKeys.PAYROLLS],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.RECEIPTS],
+      });
       toast.success(`Payroll Updated`, {
         description: "Changes to the payroll details have been saved.",
       });

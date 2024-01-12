@@ -117,7 +117,7 @@ export const validateTimeCard = withValidationErrors([
     .notEmpty()
     .withMessage("End Date must not be empty")
     .custom((value, { req }) => {
-      if (value < req.body.from) {
+      if (new Date(value) < new Date(req.body.from)) {
         throw new Error("End Date must be ahead than Starting Date");
       }
       return true;

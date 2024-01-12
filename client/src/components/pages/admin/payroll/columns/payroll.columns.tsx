@@ -10,7 +10,7 @@ import { differenceInDays } from "date-fns";
 import EditPayroll from "../form/payroll/EditPayroll";
 import DeletePayroll from "../form/payroll/DeletePayroll";
 import IsNew from "@/components/ui/isnew";
-import { CalendarRange, File } from "lucide-react";
+import { CalendarRange, File, FileStack } from "lucide-react";
 import { IconProperties, Links } from "@/types/common";
 
 export const payrollColumns: ColumnDef<TDataFields>[] = [
@@ -122,6 +122,16 @@ export const payrollColumns: ColumnDef<TDataFields>[] = [
                   View <File size={IconProperties.SIZE_ICON} />
                 </>
               ),
+            },
+            {
+              to: `${Links.PAYROLL}/${row.original.id}/receipt`,
+              label: (
+                <>
+                  <span>View in new tab</span>{" "}
+                  <FileStack size={IconProperties.SIZE_ICON} />
+                </>
+              ),
+              newTab: true,
             },
           ]}
           deleteElement={<DeletePayroll data={row.original} trigger={false} />}

@@ -10,8 +10,8 @@ import { differenceInDays } from "date-fns";
 import IsNew from "@/components/ui/isnew";
 import { CalendarRange, File, FileStack } from "lucide-react";
 import { IconProperties, Links } from "@/types/common";
-import DeletePayroll from "../form/time-cards/DeletePayroll";
-import EditPayroll from "../form/time-cards/EditPayroll";
+import DeleteTimeCard from "../form/time-cards/DeleteTimeCard";
+import EditTimeCard from "../form/time-cards/EditTimeCard";
 
 export const timeCardColumns: ColumnDef<TDataFields>[] = [
   {
@@ -65,6 +65,19 @@ export const timeCardColumns: ColumnDef<TDataFields>[] = [
     },
   },
   {
+    accessorKey: "isAllEmployees",
+    header: ({ column }) => {
+      return (
+        <DataTableHeader column={column}>
+          <span>For All Employees?</span>
+        </DataTableHeader>
+      );
+    },
+    cell: ({ row }) => {
+      return row.original.isAllEmployees ? <span>Yes </span> : <span>No </span>;
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
@@ -105,10 +118,9 @@ export const timeCardColumns: ColumnDef<TDataFields>[] = [
               newTab: true,
             },
           ]}
-          deleteElement={<DeletePayroll data={row.original} trigger={false} />}
+          deleteElement={<DeleteTimeCard data={row.original} trigger={false} />}
           editElement={
-            // @TOCHANGE
-            <EditPayroll toEditItem={row.original} from="tableAction" />
+            <EditTimeCard toEditItem={row.original} from="tableAction" />
           }
         />
       );

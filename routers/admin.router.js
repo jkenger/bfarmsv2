@@ -55,6 +55,7 @@ import {
   deleteTimeCard,
   getPaginatedSheets,
   getAllSheets,
+  updateTimeCard,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -114,7 +115,7 @@ router.route("/daily-time-records/time-cards/all").get(getAllTimeCards);
 router
   .route("/daily-time-records/time-cards/:id")
   .get(getPaginatedSheets)
-  .put(validateTimeCard, updateAttendance) // to change
+  .put(validateTimeCard, updateTimeCard) // to change
   .delete(validateId, deleteTimeCard);
 router.route("/daily-time-records/time-cards/:id/all").get(getAllSheets);
 

@@ -12,6 +12,7 @@ import { SheetTrigger } from "@/components/ui/sheet";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { getTimeCards } from "../api/time-cards.api";
 import AddTimeCard from "../form/time-cards/AddTimeCard";
+import EditTimeCard from "../form/time-cards/EditTimeCard";
 // import useFilterParams from "@/components/hooks/useFilterParams";
 
 type Props = {
@@ -95,7 +96,7 @@ function PayrollTable({ columns }: Props) {
                 table={titlePage}
                 error={editMutationError?.response?.data as string}
               >
-                {/* <EditPayroll toEditItem={editMutation?.variables} /> */}
+                <EditTimeCard toEditItem={editMutation?.variables} />
               </MutationSheet>
             ),
             onCreateErrorAction: (

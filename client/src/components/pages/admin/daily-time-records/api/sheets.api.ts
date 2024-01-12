@@ -16,8 +16,8 @@ export const getSheets = ({
   // If type is paginated, then add the search params to the query key
   const qKey =
     type === GetQueryType.PAGINATED
-      ? [QueryKeys.RECEIPTS, searchParams.toString(), id]
-      : [QueryKeys.RECEIPTS, id];
+      ? [QueryKeys.SHEETS, searchParams.toString(), id]
+      : [QueryKeys.SHEETS, id];
 
   const qFnQuery =
     type === GetQueryType.PAGINATED

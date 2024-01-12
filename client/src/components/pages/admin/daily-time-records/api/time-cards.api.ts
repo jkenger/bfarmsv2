@@ -40,39 +40,6 @@ export const getTimeCards = ({
   };
 };
 
-export const getTimeCardsById = ({
-  type = GetQueryType.PAGINATED,
-  id,
-  customParams,
-}: TGetQueryOptions & { id?: string }) => {
-  const { searchParams: params } = getSearchParams();
-  const searchParams = customParams
-    ? Object.keys(customParams).length && new URLSearchParams(customParams)
-    : new URLSearchParams(params);
-
-  // If type is paginated, then add the search params to the query key
-  const qKey =
-    type === GetQueryType.PAGINATED
-      ? [QueryKeys.CARDS, searchParams.toString(), id]
-      : [QueryKeys.CARDS, id];
-
-  const qFnQuery =
-    type === GetQueryType.PAGINATED
-      ? `admin/daily-time-records/time-cards/${id}?${searchParams.toString()}`
-      : `admin/daily-time-records/time-cards/${id}/all`;
-
-  console.log(qFnQuery);
-  return {
-    queryKey: qKey,
-    queryFn: async () => {
-      return await fetch.get(qFnQuery);
-    },
-
-    placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 5,
-  };
-};
-
 export const createTimeCard = ({ queryClient, form }: TMutation) => {
   return {
     mutationKey: [QueryKeys.CREATE_TIME_CARD],

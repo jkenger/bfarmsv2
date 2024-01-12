@@ -105,7 +105,6 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
   console.log("id", id);
   const {
     data: res,
-    isPending,
     // isFetching,
     // isError,
     // isSuccess,
@@ -180,10 +179,7 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
           </>
         )}
       </div>
-      <div
-        className="font-serif p-2  text-center print:scale-90 "
-        ref={toPrintRef}
-      >
+      <div className="font-serif p-2  text-center  " ref={toPrintRef}>
         <div className="font-semibold text-lg -space-y-1">
           <h1 className="font-extrabold text-lg">PAYROLL</h1>
           <h2 className="font-extrabold text-lg underline">
@@ -212,9 +208,9 @@ function ReceiptTable({ onEdit, onEditMode }: Props) {
             compensation for services rendered for the period covered.
           </p>
         </div>
-        <table className="border border-black text-xs border-collapse">
+        <table className="border border-black text-xs border-collapse ">
           <thead className="">
-            <tr className="[&>th]:p-2 [&>th]:font-normal">
+            <tr className="[&>th]:px-2 [&>th]:font-normal">
               <th rowSpan={2} className="w-[1%] border border-black">
                 Serial No.
               </th>

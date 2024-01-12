@@ -9,7 +9,7 @@ type Props = {
   trigger?: boolean;
   children?: React.ReactNode;
 };
-function DeletePayroll({
+function DeleteTimeCard({
   open,
   onOpen,
   data,
@@ -33,4 +33,4 @@ function DeletePayroll({
   );
 }
 
-export default DeletePayroll;
+export default DeleteTimeCard;

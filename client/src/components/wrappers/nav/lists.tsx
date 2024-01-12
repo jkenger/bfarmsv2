@@ -105,7 +105,7 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="All Records"
+              title="Manage Employees"
               end
             />
             <SubLink
@@ -131,17 +131,6 @@ function Lists() {
           <>
             <div className="absolute h-[35px] w-[1.5px] bg-muted-foreground/20 top-[3.3rem] left-[1.95rem] z-0"></div>
             <SubLink
-              to={Links.DAILY_TIME_RECORDS}
-              icon={
-                <Calendar
-                  size={IconProperties.SIZE}
-                  strokeWidth={IconProperties.STROKE_WIDTH}
-                />
-              }
-              title="All Records"
-              end
-            />
-            <SubLink
               to={Links.TIME_CARDS}
               icon={
                 <CalendarClock
@@ -149,7 +138,18 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="Time Cards"
+              title="Generate DTR"
+            />
+            <SubLink
+              to={Links.DAILY_TIME_RECORDS}
+              icon={
+                <Calendar
+                  size={IconProperties.SIZE}
+                  strokeWidth={IconProperties.STROKE_WIDTH}
+                />
+              }
+              title="Manage DTR"
+              end
             />
           </>
         )}
@@ -175,7 +175,7 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="All Records"
+              title="Generate Payroll"
             />
             <SubLink
               to={Links.PAYROLL_GROUPS}
@@ -185,7 +185,7 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="Groups"
+              title="Manage Payroll Groups"
             />
           </>
         )}
@@ -205,7 +205,7 @@ function Lists() {
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             }
-            title="All Records"
+            title="Manage Holidays"
           />
         )}
       </List>
@@ -224,7 +224,7 @@ function Lists() {
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             }
-            title="All Records"
+            title="Manage Travel Pass"
           />
         )}
       </List>
@@ -243,7 +243,7 @@ function Lists() {
                 strokeWidth={IconProperties.STROKE_WIDTH}
               />
             }
-            title="All Records"
+            title="Manage Deductions"
           />
         )}
       </List>
@@ -266,7 +266,7 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="All Records"
+              title="Leave Applications"
             />
             <SubLink
               to={Links.LEAVE_TYPES}
@@ -277,7 +277,7 @@ function Lists() {
                   strokeWidth={IconProperties.STROKE_WIDTH}
                 />
               }
-              title="Types"
+              title="Manage Leave Types"
             />
           </>
         )}

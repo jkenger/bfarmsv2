@@ -18,8 +18,8 @@ export const getDTR = ({ type = GetQueryType.PAGINATED }: TGetQueryOptions) => {
   // If type is paginated, then add the search params to the query key
   const qKey =
     type === GetQueryType.PAGINATED
-      ? [QueryKeys.ATTENDACE, searchParams.toString()]
-      : [QueryKeys.ATTENDACE];
+      ? [QueryKeys.ATTENDANCE, searchParams.toString()]
+      : [QueryKeys.ATTENDANCE];
 
   const qFnQuery =
     type === GetQueryType.PAGINATED
@@ -49,7 +49,10 @@ export const createDTR = ({ queryClient, form }: TMutation) => {
         description: "A new attendance has been successfully addded.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ATTENDACE],
+        queryKey: [QueryKeys.ATTENDANCE],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SHEETS],
       });
       form?.reset();
     },
@@ -76,8 +79,12 @@ export const editDTR = ({ queryClient, form }: TMutation) => {
         description: "Changes to the Attendance details have been saved.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ATTENDACE],
+        queryKey: [QueryKeys.ATTENDANCE],
       });
+      await queryClient.invalidateQueries({
+        queryKey: [QueryKeys.SHEETS],
+      });
+
       sheetCloseBtn?.click();
       form?.reset();
     },
@@ -102,7 +109,7 @@ export const deleteDTR = ({ queryClient }: TMutation) => {
         description: "Attendance selected has been removed from the records.",
       });
       await queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ATTENDACE],
+        queryKey: [QueryKeys.ATTENDANCE],
       });
     },
     onError: async () => {

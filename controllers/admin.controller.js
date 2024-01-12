@@ -163,11 +163,13 @@ export const createTimeCard = asyncHandler(async (req, res) => {
         from: timeCard.from,
         to: timeCard.to,
         name: employees[0].fullName,
+        isAllEmployees,
       }
     : {
         from: timeCard.from,
         to: timeCard.to,
         name: "All Employee",
+        isAllEmployees,
       };
   const createdTimeCard = await prisma.timeCard.create({
     data: timeCardObj,
@@ -195,6 +197,111 @@ export const createTimeCard = asyncHandler(async (req, res) => {
   }
   if (createdSheets) {
     return res.status(StatusCodes.OK).json({ data: createdSheets });
+  }
+});
+
+export const updateTimeCard = asyncHandler(async (req, res) => {
+  const data = [
+    ...req.body.map((item) => {
+      return {
+        ...item,
+        from: setDateTime(0, 0, 0, 0, item.from),
+        to: setDateTime(23, 59, 59, 999, item.to),
+      };
+    }),
+  ];
+  if (!data.length) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("No information to be created was received. Please try again.");
+  }
+
+  const timeCard = data[0];
+  const employeeId = timeCard.employeeId;
+  const isAllEmployees = timeCard.isAllEmployees;
+
+  const whereObj = !isAllEmployees ? { id: employeeId } : {};
+  console.log("whereObj", whereObj);
+  const { employees, allEmployeesCount } =
+    await prisma.user.findUsersAttendance({
+      where: whereObj,
+      range: {
+        from: timeCard.from,
+        to: timeCard.to,
+      },
+    });
+
+  if (!allEmployeesCount) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        "No employees found. Please check the employee's page if there is any existing employee."
+      );
+  }
+
+  if (!employees.length) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        `No employee found with id ${employeeId}. Please check the employee's page if there is any existing employee.`
+      );
+  }
+
+  // Create timecard
+  const timeCardObj = !isAllEmployees
+    ? {
+        from: timeCard.from,
+        to: timeCard.to,
+        name: employees[0].fullName,
+        isAllEmployees,
+      }
+    : {
+        from: timeCard.from,
+        to: timeCard.to,
+        name: "All Employee",
+        isAllEmployees,
+      };
+  const updatedTimeCard = await prisma.timeCard.update({
+    where: {
+      id: timeCard.id,
+    },
+    data: timeCardObj,
+  });
+
+  if (!updatedTimeCard) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("Failted to update time card. Please try again.");
+  }
+
+  const deletedSheets = await prisma.sheet.deleteMany({
+    where: {
+      timeCardId: timeCard.id,
+    },
+  });
+
+  if (!deletedSheets.count) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json("Error updating time card. Please try again.");
+  }
+
+  const updatedSheets = await createSheet(prisma, employees, updatedTimeCard);
+
+  if (!updatedSheets) {
+    await prisma.timeCard.delete({
+      where: {
+        id: updatedTimeCard.id,
+      },
+    });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json(
+        "Time card was created but error creating time record card. Check the date range or check if there is any existing attendance from your employees."
+      );
+  }
+  if (updatedSheets) {
+    return res.status(StatusCodes.OK).json({ data: updatedSheets });
   }
 });
 
@@ -400,17 +507,18 @@ export const updatePayroll = asyncHandler(async (req, res) => {
   ];
   const payroll = data[0];
 
-  const { employees, employeeCount } = await prisma.user.findUsersAttendance({
-    where: {
-      payrollGroupId: payroll.payrollGroupId,
-    },
-    range: {
-      from: payroll.from,
-      to: payroll.to,
-    },
-  });
+  const { employees, allEmployeesCount } =
+    await prisma.user.findUsersAttendance({
+      where: {
+        payrollGroupId: payroll.payrollGroupId,
+      },
+      range: {
+        from: payroll.from,
+        to: payroll.to,
+      },
+    });
 
-  if (!employeeCount) {
+  if (!allEmployeesCount) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .json(
@@ -421,6 +529,26 @@ export const updatePayroll = asyncHandler(async (req, res) => {
         ).toDateString()}. Please check the dates.`
       );
   }
+
+  // delete receipts from - to
+  const deletedReceipts = await prisma.receipt.deleteMany({
+    where: {
+      payrollId: payroll.id,
+    },
+  });
+
+  if (!deletedReceipts.count) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(
+        `No receipts found from ${new Date(
+          payroll.from
+        ).toDateString()} to ${new Date(
+          payroll.to
+        ).toDateString()}. Please check the dates.`
+      );
+  }
+
   const updatedPayroll = await prisma.payroll.update({
     where: {
       id: payroll.id,
@@ -442,6 +570,7 @@ export const updatePayroll = asyncHandler(async (req, res) => {
 
   // @TODO: CREATE A NEW UPDATE PAYROLL RECEIPT FUNCTION
   const createdPayrollReceipt = await createPayrollReceipts(
+    prisma,
     employees,
     updatedPayroll.id
   );
