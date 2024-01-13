@@ -6,14 +6,18 @@ type TProps = {
 
 function StatsCard({ children }: TProps) {
   return (
-    <div className="p-4 border text-md bg-card rounded">
-      <div className="flex justify-between flex-col gap-3">{children}</div>
+    <div className=" text-md bg-card rounded">
+      <div className="flex justify-between flex-col ">{children}</div>
     </div>
   );
 }
 
 function Header({ children }: TProps) {
-  return <div className="flex justify-between text-xs">{children}</div>;
+  return (
+    <div className="p-4 flex justify-start items-center text-xs">
+      {children}
+    </div>
+  );
 }
 
 function Body({ children }: TProps) {

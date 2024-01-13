@@ -23,6 +23,14 @@ module.exports = {
       fontFamily: {
         calibri: ["Calibri", "sans-serif"],
       },
+      backgroundImage: {
+        "hero-pattern": "url('/images/hero-pattern.png')",
+        "footer-texture": "url('/images/footer-texture.png')",
+        "coral-web": "url('/src/assets/images/coralbfar.png')",
+        "coral-mobile": "url('/src/assets/images/coralbfarv1.png')",
+        bfar: "url('/src/assets/bfarlogo.png')",
+      },
+
       screens: { print: { raw: "print" }, screen: { raw: "screen" } },
       colors: {
         border: "hsl(var(--border))",
