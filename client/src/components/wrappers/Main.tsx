@@ -4,7 +4,6 @@ import { IconProperties, Links } from "@/types/common";
 import { Slash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ResizablePanelGroup } from "../ui/resizable";
-import useMediaQuery from "../hooks/useMediaQuery";
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
