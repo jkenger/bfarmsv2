@@ -1,4 +1,3 @@
-import React from "react";
 import StatsCard from "./StatsCard";
 import { User } from "lucide-react";
 import { Badge } from "./badge";
