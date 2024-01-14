@@ -1,7 +1,9 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 type TProps = {
   children: React.ReactNode;
+  className?: string;
 };
 
 function StatsCard({ children }: TProps) {
@@ -20,8 +22,12 @@ function Header({ children }: TProps) {
   );
 }
 
-function Body({ children }: TProps) {
-  return <div className="flex justify-between text-xl">{children}</div>;
+function Body({ children, className }: TProps) {
+  return (
+    <div className={cn("flex justify-between text-xl", className)}>
+      {children}
+    </div>
+  );
 }
 
 StatsCard.Header = Header;

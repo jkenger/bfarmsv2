@@ -32,6 +32,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
     "debounce": "^2.0.0",
+    "embla-carousel": "^8.0.0-rc19",
     "embla-carousel-react": "^8.0.0-rc19",
     "framer-motion": "^10.16.12",
     "lucide-react": "^0.292.0",
