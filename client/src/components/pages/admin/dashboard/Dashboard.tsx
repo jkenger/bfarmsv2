@@ -5,10 +5,16 @@ import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { Calendar } from "@/components/ui/calendar";
 import StatsContainer from "@/components/ui/stats-container";
 
-import { CalendarOff, LogOut } from "lucide-react";
-import { IconProperties, Links } from "@/types/common";
+import {
+  ArrowUpLeftFromCircle,
+  BarChart,
+  CalendarDays,
+  CalendarOff,
+  LogOut,
+} from "lucide-react";
+import { GetQueryType, IconProperties, Links } from "@/types/common";
 import useMediaQuery from "@/components/hooks/useMediaQuery";
-import { Link } from "react-router-dom";
+import { Link, defer } from "react-router-dom";
 import { buttonVariants } from "@/components/ui/button";
 import AttendanceInfoCard from "@/components/ui/attendance-info-card";
 import OverallInfoCard from "@/components/ui/overall-info-card";
@@ -16,12 +22,31 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import IsEmptyContent from "@/components/ui/isempty-content";
+import { getDashboard } from "./api/dashboard.api";
+import { QueryClient, useQuery } from "@tanstack/react-query";
+// import { addDays, startOfMonth } from "date-fns";
+import StatsCard from "@/components/ui/StatsCard";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export const loader = (queryClient: QueryClient) => async () => {
+  return defer({
+    data: queryClient.ensureQueryData(getDashboard({ type: GetQueryType.ALL })),
+  });
+};
 
 function Dashboard() {
+  const { data, isPending } = useQuery(
+    getDashboard({ type: GetQueryType.ALL })
+  );
+  console.log(data);
   const isMobile = useMediaQuery("(max-width: 1180px)");
-  const data = [];
+  // const startDate = startOfMonth(new Date());
+  // const endDate = addDays(startOfMonth(new Date()), 14);
+
   const MainContent = (
     <>
       {/* Image */}
@@ -55,11 +80,71 @@ function Dashboard() {
           {/* Content */}
           <div className="mt-2 flex gap-2">
             <div className="bg-card w-full p-2 px-4 border rounded">
-              <h1 className="text-md font-semibold mb-3 mt-2">Overall Stats</h1>
+              <h1 className="text-md font-semibold mb-3 mt-2">
+                Attendance Stats
+              </h1>
               <StatsContainer className="grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
-                <OverallInfoCard data={["a"]} />
-                <OverallInfoCard data={["a"]} />
-                <OverallInfoCard data={["a"]} />
+                {isPending ? (
+                  <div>Loading...</div>
+                ) : (
+                  <>
+                    <OverallInfoCard
+                      icon={
+                        <CalendarDays className="w-6 h-6" strokeWidth={1} />
+                      }
+                      total={data.overallStats.attendance.total}
+                      data={data.overallStats.attendance.data}
+                      label={` Overview for the past 15 days`}
+                      keys={{
+                        Y: "day",
+                        X: "total",
+                      }}
+                    />
+                    <OverallInfoCard
+                      icon={<BarChart className="w-6 h-6" strokeWidth={1} />}
+                      total={data.overallStats.ranking.total}
+                      data={data.overallStats.ranking.data}
+                      label={`Attendance Ranking for the past 15 days`}
+                      keys={{
+                        Y: "name",
+                        X: "total",
+                      }}
+                    />
+                    <StatsCard>
+                      <StatsCard.Header>
+                        <div className="bg-bfar mr-4">
+                          <ArrowUpLeftFromCircle size={18} strokeWidth={1} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-muted-foreground">
+                            Quick Actions
+                          </span>
+                        </div>
+                      </StatsCard.Header>
+                      <StatsCard.Body>
+                        <div className="w-full h-[150px] mr-4 px-4">
+                          Quick Actions
+                        </div>
+                      </StatsCard.Body>
+                    </StatsCard>
+                    {/* <OverallInfoCard
+                      total={data.overallStats.attendance.total}
+                      data={data.overallStats.attendance.data}
+                      label={`Total Attendances for ${startOfMonth(
+                        new Date()
+                      ).toLocaleDateString()} - ${addDays(
+                        startOfMonth(new Date()),
+                        14
+                      ).toLocaleDateString()}`}
+                      keys={{
+                        Y: "day",
+                        X: "total",
+                      }}
+                    /> */}
+                  </>
+                )}
+                {/* <OverallInfoCard data={["a"]} />
+                <OverallInfoCard data={["a"]} /> */}
               </StatsContainer>
             </div>
             {/* <div className="bg-card w-1/2  p-2 px-4 border rounded">
@@ -70,38 +155,35 @@ function Dashboard() {
           </div>
           <div className="mt-2 flex gap-4">
             <div className="bg-card w-full py-4 px-4 border rounded">
-              <h1 className="text-md font-semibold mb-3 ">
-                Recent Attendances
+              <h1 className="text-md  font-semibold mb-3 ">
+                <span>Recent Attendances </span>
               </h1>
               <StatsContainer className=" mb-2">
-                {!data.length ? (
+                {!isPending ? (
                   <Carousel className="w-full hover:cursor-grab active:cursor-grabbing ">
                     <CarouselContent className=" max-w-sm md:max-w-md lg:max-w-lg">
-                      <CarouselItem className="pl-1 ">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
-                      <CarouselItem className="pl-1">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
-                      <CarouselItem className="pl-1 ">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
-                      <CarouselItem className="pl-1 ">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
-                      <CarouselItem className="pl-1 ">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
-                      <CarouselItem className="pl-1 ">
-                        <AttendanceInfoCard data={["asd"]} />
-                      </CarouselItem>
+                      {data.overallStats.recentAttendances ? (
+                        data.overallStats.recentAttendances.map(
+                          (recent: TDailyTimeRecord) => {
+                            return (
+                              <CarouselItem className="pl-1 " key={recent.id}>
+                                <AttendanceInfoCard data={recent} />
+                              </CarouselItem>
+                            );
+                          }
+                        )
+                      ) : (
+                        <IsEmptyContent
+                          icon={<CalendarOff size={35} strokeWidth={1.5} />}
+                          label="No recent attendance for today."
+                        />
+                      )}
                     </CarouselContent>
+                    <CarouselPrevious variant="secondary" className="-left-9" />
+                    <CarouselNext variant="secondary" className="-right-9" />
                   </Carousel>
                 ) : (
-                  <IsEmptyContent
-                    icon={<CalendarOff size={35} strokeWidth={1.5} />}
-                    label="No recent attendance for today."
-                  />
+                  <Skeleton className="w-full h-[150px] mr-4 px-4" />
                 )}
               </StatsContainer>
             </div>
@@ -142,26 +224,24 @@ function Dashboard() {
   //     </div>
   //   </div>
   // );
+  const Aside = (
+    <div className="flex flex-col items-center h-full p-6">
+      <div className="space-y-2 bg-card rounded border">
+        <h1 className="text-sm font-semibold ml-4 mt-4">Upcoming holidays</h1>
+        <Calendar />
+      </div>
+    </div>
+  );
 
-  const AsideContent = isMobile ? (
+  const AsideContainer = isMobile ? (
     <aside
       className="
 md:top-[5.3rem]   md:h-[calc(100vh-5.3rem)] shrink-0 md:sticky md:block md:w-auto md:max-w-2xl md:pt-0 flex flex-col justify-center items-center"
     >
-      <div className="flex flex-col items-center h-full p-6">
-        <div className="space-y-2">
-          <h1 className="text-sm ml-4">Upcoming holidays</h1>
-          <Calendar />
-        </div>
-      </div>
+      {Aside}
     </aside>
   ) : (
-    <div className="flex flex-col items-center h-full p-6">
-      <div className="space-y-2">
-        <h1 className="text-sm ml-4">Upcoming holidays</h1>
-        <Calendar />
-      </div>
-    </div>
+    Aside
   );
 
   return (
@@ -177,15 +257,15 @@ md:top-[5.3rem]   md:h-[calc(100vh-5.3rem)] shrink-0 md:sticky md:block md:w-aut
               defaultSize={20}
               minSize={15}
               className="
-              md:top-[5.3rem]   md:h-[calc(100vh-5.3rem)] shrink-0 md:sticky md:block md:w-auto md:max-w-2xl md:pt-0 flex flex-col justify-center items-center"
+              md:top-[4.3rem]   md:h-[calc(100vh-3.3rem)] shrink-0 md:sticky md:block md:w-auto md:max-w-2xl md:pt-0 flex flex-col justify-center items-center"
             >
-              {AsideContent}
+              {AsideContainer}
             </ResizablePanel>
           </>
         ) : (
           <>
             {MainContent}
-            {AsideContent}
+            {AsideContainer}
           </>
         )}
       </Main.Content>

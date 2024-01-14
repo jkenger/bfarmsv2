@@ -56,6 +56,7 @@ import {
   getPaginatedSheets,
   getAllSheets,
   updateTimeCard,
+  getDashboard,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -80,6 +81,12 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+// Dashboard Routes
+// @Desc    : Read Dashboard
+// @Method  : GET
+// @Access  : Private (Admin)
+router.route("/dashboard").get(getDashboard);
 
 // Attendance Routes
 // @Desc    : Read and Create Attendance

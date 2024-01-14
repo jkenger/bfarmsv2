@@ -36,6 +36,7 @@ type TEmployees = {
   payrollGroup?: TPayrollGroup;
   designationId?: string;
   designation?: TDesignation;
+  attendances: TDailyTimeRecord[];
   deductions: TDeductions[];
   travelPass: TTravelpass[];
   createdAt: string;
@@ -187,6 +188,11 @@ type TSheetAttendances = {
   travelPass?: string;
 };
 
+type TDashboard = {
+  total: number;
+  totalEmployees: number;
+};
+
 type TStatus = {
   status: string;
 };
@@ -218,6 +224,11 @@ type TQueryContext = {
 
 type TTableValues = {
   id: string;
+};
+
+type TOverAllStats = {
+  day: string;
+  total: number;
 };
 
 type TDataFields = TEmployees &

@@ -85,13 +85,12 @@ const prisma = new PrismaClient().$extends({
           },
         });
 
-        const id = options.where.id ? options.where.id : null;
+        const id = options.where?.id ? options.where.id : null;
+        const payrollGroupId = options.where?.payrollGroupId || null;
         let employeesInPayrollGroup = await prisma.user.findMany({
           where: {
             AND: [
-              {
-                payrollGroupId: options.where.payrollGroupId,
-              },
+              payrollGroupId ? { payrollGroupId: payrollGroupId } : {},
               id ? { id: { contains: id } } : {},
             ],
           },

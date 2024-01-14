@@ -101,6 +101,7 @@ import {
 } from "./components/pages/admin/daily-time-records/api/time-cards.api";
 import Sheets from "./components/pages/admin/daily-time-records/Sheets";
 import { loader as CardLoader } from "./components/pages/admin/daily-time-records/Sheets";
+import { loader as dashboardLoader } from "./components/pages/admin/dashboard/Dashboard";
 
 const isLoggedIn = true;
 const queryClient = new QueryClient({
@@ -139,6 +140,7 @@ const router = createBrowserRouter([
           {
             index: true,
             path: "dashboard",
+            loader: dashboardLoader(queryClient),
             element: <AdminDashboard />,
           },
           {

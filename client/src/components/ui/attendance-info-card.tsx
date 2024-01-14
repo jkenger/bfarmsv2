@@ -1,13 +1,40 @@
 import StatsCard from "./StatsCard";
 import { User } from "lucide-react";
-import { Badge } from "./badge";
+import { format } from "date-fns";
 
 type Props = {
-  data: any;
+  data: TDailyTimeRecord;
 };
 
 function AttendanceInfoCard({ data }: Props) {
-  console.log(data);
+  const currentDay = new Date().getDay();
+  // const currentDay = new Date().getDay();
+  const days = [
+    { day: "Sun", value: 0, isAbsent: null },
+    { day: "Mon", value: 1, isAbsent: null },
+    { day: "Tue", value: 2, isAbsent: null },
+    { day: "Wed", value: 3, isAbsent: null },
+    { day: "Thu", value: 4, isAbsent: null },
+    { day: "Fri", value: 5, isAbsent: null },
+    { day: "Sat", value: 6, isAbsent: null },
+  ];
+
+  const getAttendanceStatus = (dayValue: number) => {
+    return data.user.attendances.length
+      ? data.user.attendances
+          .map((attendance) =>
+            new Date(attendance.attendanceDate ?? "").getDay()
+          )
+          .includes(dayValue)
+        ? false
+        : true
+      : true;
+  };
+  const newDays = days.map((day) => ({
+    ...day,
+    isAbsent: getAttendanceStatus(day.value),
+  }));
+  console.log(newDays);
   return (
     <StatsCard>
       <StatsCard.Header>
@@ -16,16 +43,18 @@ function AttendanceInfoCard({ data }: Props) {
           <User className="w-6 h-6" strokeWidth={1} />
         </div>
         <div className="flex flex-col">
-          <span className=" font-semibold">Employee.Name</span>
-          <span className="text-muted-foreground">Employee.Designation</span>
+          <span className=" font-semibold">{data.user.fullName}</span>
+          <span className="text-muted-foreground">
+            {data.user.designation?.name || "No Designation"}
+          </span>
+          <span className="text-muted-foreground">
+            {data.user.payrollGroup?.name || "No Payroll Group"}
+          </span>
         </div>
       </StatsCard.Header>
       <StatsCard.Body className="flex flex-col text-sm gap-2 px-4">
         <div className="flex gap-2">
           <h2 className="font-medium">Attendance Report</h2>
-          <Badge variant="outline" className="text-xs">
-            January 1 - 7
-          </Badge>
         </div>
         <div
           className="flex justify-around  flex-wrap py-2 px-4 
@@ -38,9 +67,15 @@ function AttendanceInfoCard({ data }: Props) {
 
             <div className="space-x-2">
               <span className="text-start border-l-2 border-primary pl-1">
-                8:00:00 AM
+                {data.amTimeIn
+                  ? format(new Date(data.amTimeIn), "pp")
+                  : "--:--:-- AM"}
               </span>
-              <span className="text-center">8:00:00 AM</span>
+              <span className="text-center">
+                {data.amTimeOut
+                  ? format(new Date(data.amTimeOut), "pp")
+                  : "--:--:-- AM"}
+              </span>
             </div>
           </div>
           <div className="flex flex-col text-xs">
@@ -50,30 +85,55 @@ function AttendanceInfoCard({ data }: Props) {
 
             <div className="space-x-2">
               <span className="text-start border-l-2 border-primary pl-1">
-                8:00:00 AM
+                {data.pmTimeIn
+                  ? format(new Date(data.pmTimeIn), "pp")
+                  : "--:--:-- PM"}
               </span>
-              <span className="text-center">8:00:00 AM</span>
+              <span className="text-center">
+                {data.pmTimeOut
+                  ? format(new Date(data.pmTimeOut), "pp")
+                  : "--:--:-- PM"}
+              </span>
             </div>
           </div>
         </div>
         <div className="text-xs flex justify-evenly w-full">
-          {/* Monday */}
-          <div className="flex-1 text-center rounded-l-md p-2 border">Mon</div>
-          <div className="flex-1 text-center p-2 border-y border-r">Tue</div>
-          <div className="flex-1 text-center p-2 border-y border-r">Wed</div>
-          <div className="flex-1 text-center p-2 border-y border-r">Thu</div>
-          <div className="flex-1 text-center  p-2 border-y border-r">Fri</div>
-          <div className="flex-1 text-center  p-2 border-y">Sat</div>
-          <div className="flex-1 text-center  p-2 border rounded-r-md">Sun</div>
+          {newDays.map((day) => {
+            const isToday = currentDay === day.value ? "bg-secondary" : "";
+            const style =
+              day.value === 0
+                ? " border rounded-l-md"
+                : day.value === 6
+                ? "rounded-r-md border border-l-0"
+                : "border border-l-0";
+
+            const inOffice = day.isAbsent ? (
+              <span className="w-1 h-1 rounded-full bg-orange-400 absolute top-2 right-2"></span>
+            ) : (
+              <span className="w-1 h-1 rounded-full bg-green-400 absolute top-2 right-2"></span>
+            );
+            return (
+              <div
+                className={`flex-1 text-center p-2 ${style} ${isToday} relative`}
+              >
+                {day.day}
+                {day.value <= currentDay && inOffice}
+              </div>
+            );
+          })}
         </div>
         <div className="text-xs flex gap-2">
           <div className=" flex items-center gap-1 ">
-            <span className="p-1 rounded-md bg-red-400"></span>
+            <span className="p-1 rounded-md bg-orange-400"></span>
             Absent
           </div>
           <div className=" flex items-center gap-1 ">
             <span className="p-1 rounded-md bg-green-400"></span>
             In Office
+          </div>
+          <div className=" flex items-center gap-1 ">
+            <span className="p-1  bg-secondary"></span>
+            Current Day
           </div>
         </div>
         {/* Attendance Information */}
