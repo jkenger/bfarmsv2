@@ -5,7 +5,7 @@ import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { Calendar } from "@/components/ui/calendar";
 import StatsContainer from "@/components/ui/stats-container";
 
-import { LogOut } from "lucide-react";
+import { CalendarOff, LogOut } from "lucide-react";
 import { IconProperties, Links } from "@/types/common";
 import useMediaQuery from "@/components/hooks/useMediaQuery";
 import { Link } from "react-router-dom";
@@ -17,10 +17,11 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import IsEmptyContent from "@/components/ui/isempty-content";
 
 function Dashboard() {
   const isMobile = useMediaQuery("(max-width: 1180px)");
-
+  const data = [];
   const MainContent = (
     <>
       {/* Image */}
@@ -72,29 +73,36 @@ function Dashboard() {
               <h1 className="text-md font-semibold mb-3 ">
                 Recent Attendances
               </h1>
-              <StatsContainer className="hover:cursor-grab active:cursor-grabbing mb-2">
-                <Carousel className="w-full ">
-                  <CarouselContent className=" max-w-sm md:max-w-md lg:max-w-lg">
-                    <CarouselItem className="pl-1 ">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                    <CarouselItem className="pl-1">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                    <CarouselItem className="pl-1 ">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                    <CarouselItem className="pl-1 ">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                    <CarouselItem className="pl-1 ">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                    <CarouselItem className="pl-1 ">
-                      <AttendanceInfoCard data={["asd"]} />
-                    </CarouselItem>
-                  </CarouselContent>
-                </Carousel>
+              <StatsContainer className=" mb-2">
+                {!data.length ? (
+                  <Carousel className="w-full hover:cursor-grab active:cursor-grabbing ">
+                    <CarouselContent className=" max-w-sm md:max-w-md lg:max-w-lg">
+                      <CarouselItem className="pl-1 ">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                      <CarouselItem className="pl-1">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                      <CarouselItem className="pl-1 ">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                      <CarouselItem className="pl-1 ">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                      <CarouselItem className="pl-1 ">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                      <CarouselItem className="pl-1 ">
+                        <AttendanceInfoCard data={["asd"]} />
+                      </CarouselItem>
+                    </CarouselContent>
+                  </Carousel>
+                ) : (
+                  <IsEmptyContent
+                    icon={<CalendarOff size={35} strokeWidth={1.5} />}
+                    label="No recent attendance for today."
+                  />
+                )}
               </StatsContainer>
             </div>
           </div>
