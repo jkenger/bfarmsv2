@@ -29,6 +29,7 @@ import {
 import { StatusCodes } from "http-status-codes";
 import {
   addDays,
+  endOfMonth,
   endOfWeek,
   format,
   startOfMonth,
@@ -40,13 +41,25 @@ export const getDashboard = asyncHandler(async (req, res) => {
   const { total, data } = await getDailyAttendance();
   const attendanceRanking = await getAttendanceRanking();
   const recentAttendances = await getAttendanceToday();
+  const firstHalfDate = 15;
+  const dataObj =
+    new Date().getDate() <= firstHalfDate
+      ? {
+          from: startOfMonth(new Date()),
+          to: endOfMonth(new Date()),
+        }
+      : {
+          from: addDays(startOfMonth(new Date()), 15),
+          to: endOfMonth(new Date()),
+        };
   return res.status(200).json({
     overallStats: {
-      attendance: { total, data },
+      attendance: { total, data, dateRange: dataObj },
       recentAttendances,
       ranking: {
         total: attendanceRanking.data[0].name,
         data: attendanceRanking.data,
+        dateRange: dataObj,
       },
     },
   });
@@ -94,14 +107,21 @@ export const getAttendanceToday = asyncHandler(async (req, res) => {
   });
 });
 export const getAttendanceRanking = asyncHandler(async (req, res) => {
-  const startDate = startOfMonth(new Date());
-  const endDate = addDays(startOfMonth(new Date()), 14);
+  const firstHalfDate = 15;
+  const dataObj =
+    new Date().getDate() <= firstHalfDate
+      ? {
+          from: startOfMonth(new Date()),
+          to: endOfMonth(new Date()),
+        }
+      : {
+          from: addDays(startOfMonth(new Date()), 15),
+          to: endOfMonth(new Date()),
+        };
+  console.log(dataObj);
   const { employees, allEmployeesCount } =
     await prisma.user.findUsersAttendance({
-      range: {
-        from: startDate,
-        to: endDate,
-      },
+      range: dataObj,
     });
 
   // filter 10 employees with the largest attendance
@@ -125,12 +145,20 @@ export const getAttendanceRanking = asyncHandler(async (req, res) => {
 });
 
 export const getDailyAttendance = asyncHandler(async (req, res) => {
+  const firstHalfDate = 15;
+  const dataObj =
+    new Date().getDate() <= firstHalfDate
+      ? {
+          gte: startOfMonth(new Date()),
+          lte: endOfMonth(new Date()),
+        }
+      : {
+          gte: addDays(startOfMonth(new Date()), 15),
+          lte: endOfMonth(new Date()),
+        };
   const attendanceData = await prisma.attendance.findMany({
     where: {
-      attendanceDate: {
-        gte: startOfMonth(new Date()),
-        lte: addDays(startOfMonth(new Date()), 14),
-      },
+      attendanceDate: dataObj,
     },
   });
   const totalEmployeesMap = new Map();
@@ -143,13 +171,23 @@ export const getDailyAttendance = asyncHandler(async (req, res) => {
   });
 
   // Fill in missing days with total count 0
-  for (let day = 1; day <= 15; day++) {
-    const dayNumber = day.toString();
-    if (!totalEmployeesMap.has(dayNumber)) {
-      totalEmployeesMap.set(dayNumber, 0);
+  if (new Date().getDate() <= firstHalfDate) {
+    for (let i = 1; i <= firstHalfDate; i++) {
+      if (!totalEmployeesMap.has(i.toString())) {
+        totalEmployeesMap.set(i.toString(), 0);
+      }
+    }
+  } else {
+    for (
+      let i = firstHalfDate + 1;
+      i <= endOfMonth(new Date()).getDate();
+      i++
+    ) {
+      if (!totalEmployeesMap.has(i.toString())) {
+        totalEmployeesMap.set(i.toString(), 0);
+      }
     }
   }
-
   // Convert the Map entries to an array of objects
   const overallData = [...totalEmployeesMap.entries()]
     .map(([day, total]) => ({

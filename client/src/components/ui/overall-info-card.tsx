@@ -10,16 +10,26 @@ type Props<T> = {
   };
   label: string;
   icon: React.ReactNode;
+  type: string;
 };
 
-function OverallInfoCard<T>({ data, total, keys, label, icon }: Props<T>) {
+function OverallInfoCard<T>({
+  data,
+  total,
+  keys,
+  label,
+  icon,
+  type,
+}: Props<T>) {
   return (
     <StatsCard>
       <StatsCard.Header>
         <div className="bg-bfar mr-4">{icon}</div>
         <div className="flex flex-col">
           <span className="text-muted-foreground">{label}</span>
-          <span className="font-semibold">{total}</span>
+          <span className="font-semibold">
+            {total} {type}
+          </span>
         </div>
       </StatsCard.Header>
       <StatsCard.Body>
