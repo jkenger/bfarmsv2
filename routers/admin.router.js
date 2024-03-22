@@ -2,11 +2,8 @@
 
 import express from "express";
 import {
-  createEmployee,
   createPayrollGroup,
   createDesignation,
-  deleteEmployee,
-  updateEmployee,
   deleteDesignation,
   updateDesignation,
   getPaginatedDesignations,
@@ -15,8 +12,6 @@ import {
   getAllPayrollGroups,
   updatePayrollGroup,
   deletePayrollGroup,
-  getPaginatedEmployees,
-  getAllEmployees,
   createHoliday,
   getPaginatedHolidays,
   updateHoliday,
@@ -37,26 +32,11 @@ import {
   getAllLeaveTypes,
   updateLeaveType,
   deleteLeaveType,
-  getAllAttendance,
-  getPaginatedAttendance,
-  updateAttendance,
-  deleteAttendance,
-  createAttendance,
   updatePayroll,
   deletePayroll,
   createPayroll,
   getAllPayroll,
   getPaginatedPayroll,
-  getPaginatedReceipts,
-  getAllReceipts,
-  getPaginatedTimeCard,
-  createTimeCard,
-  getAllTimeCards,
-  deleteTimeCard,
-  getPaginatedSheets,
-  getAllSheets,
-  updateTimeCard,
-  getDashboard,
 } from "../controllers/admin.controller.js";
 import {
   validateAdminAttendance,
@@ -71,6 +51,11 @@ import {
   validateTimeCard,
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
+import { getDashboard } from "../controllers/admin/dashboard.controller.js";
+import { createAttendance, deleteAttendance, getAllAttendance, getPaginatedAttendance, updateAttendance } from "../controllers/admin/attendance.controller.js";
+import { createTimeCard, deleteTimeCard, getAllSheets, getAllTimeCards, getPaginatedSheets, getPaginatedTimeCard, updateTimeCard } from "../controllers/admin/dtr.controller.js";
+import { getAllReceipts, getPaginatedReceipts } from "../controllers/admin/payroll.controller.js";
+import { createEmployee, deleteEmployee, getAllEmployees, getPaginatedEmployees, updateEmployee } from "../controllers/admin/employee.controller.js";
 
 const router = express.Router();
 

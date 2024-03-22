@@ -112,12 +112,16 @@ function AttendanceInfoCard({ data }: Props) {
             ) : (
               <span className="w-1 h-1 rounded-full bg-green-400 absolute top-2 right-2"></span>
             );
+            const currentDaySpan = (
+              <span className="w-1 h-1 rounded-full bg-primary absolute top-2 right-4"></span>
+            );
             return (
               <div
                 className={`flex-1 text-center p-2 ${style} ${isToday} relative`}
               >
                 {day.day}
                 {day.value <= currentDay && inOffice}
+                {day.value === currentDay && currentDaySpan}
               </div>
             );
           })}
@@ -132,7 +136,7 @@ function AttendanceInfoCard({ data }: Props) {
             In Office
           </div>
           <div className=" flex items-center gap-1 ">
-            <span className="p-1  bg-secondary"></span>
+            <span className="p-1 rounded-md bg-primary"></span>
             Current Day
           </div>
         </div>
