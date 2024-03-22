@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import StatsContainer from '@/components/ui/stats-container';
 import { ArrowUpLeftFromCircle, SquareStack } from 'lucide-react';
-import React from 'react'
 
 const PayrollStats = ({isPending}: {isPending: boolean}) => {
   return (
