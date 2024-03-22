@@ -2,43 +2,6 @@
 
 import express from "express";
 import {
-  createPayrollGroup,
-  createDesignation,
-  deleteDesignation,
-  updateDesignation,
-  getPaginatedDesignations,
-  getAllDesignations,
-  getPaginatedPayrollGroups,
-  getAllPayrollGroups,
-  updatePayrollGroup,
-  deletePayrollGroup,
-  createHoliday,
-  getPaginatedHolidays,
-  updateHoliday,
-  deleteHoliday,
-  getAllHolidays,
-  getPaginatedTravelpass,
-  createTravelpass,
-  getAllTravelpass,
-  updateTravelpass,
-  deleteTravelpass,
-  getPaginatedDeductions,
-  createDeductions,
-  getAllDeductions,
-  updateDeductions,
-  deleteDeductions,
-  getPaginatedLeaveTypes,
-  createLeaveType,
-  getAllLeaveTypes,
-  updateLeaveType,
-  deleteLeaveType,
-  updatePayroll,
-  deletePayroll,
-  createPayroll,
-  getAllPayroll,
-  getPaginatedPayroll,
-} from "../controllers/admin.controller.js";
-import {
   validateAdminAttendance,
   validateDeductions,
   validateDesignation,
@@ -54,8 +17,14 @@ import {
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
 import { createAttendance, deleteAttendance, getAllAttendance, getPaginatedAttendance, updateAttendance } from "../controllers/admin/attendance.controller.js";
 import { createTimeCard, deleteTimeCard, getAllSheets, getAllTimeCards, getPaginatedSheets, getPaginatedTimeCard, updateTimeCard } from "../controllers/admin/dtr.controller.js";
-import { getAllReceipts, getPaginatedReceipts } from "../controllers/admin/payroll.controller.js";
+import { createPayroll, deletePayroll, getAllPayroll, getAllReceipts, getPaginatedPayroll, getPaginatedReceipts, updatePayroll } from "../controllers/admin/payroll.controller.js";
 import { createEmployee, deleteEmployee, getAllEmployees, getPaginatedEmployees, updateEmployee } from "../controllers/admin/employee.controller.js";
+import { createDesignation, deleteDesignation, getAllDesignations, getPaginatedDesignations, updateDesignation } from "../controllers/admin/designation.controller.js";
+import { createPayrollGroup, deletePayrollGroup, getAllPayrollGroups, getPaginatedPayrollGroups, updatePayrollGroup } from "../controllers/admin/payroll-group.controller.js";
+import { createHoliday, deleteHoliday, getAllHolidays, getPaginatedHolidays, updateHoliday } from "../controllers/admin/holiday.controller.js";
+import { createTravelpass, deleteTravelpass, getAllTravelpass, getPaginatedTravelpass, updateTravelpass } from "../controllers/admin/travelpass.controller.js";
+import { createDeductions, deleteDeductions, getAllDeductions, getPaginatedDeductions, updateDeductions } from "../controllers/admin/deduction.controller.js";
+import { createLeaveType, deleteLeaveType, getAllLeaveTypes, getPaginatedLeaveTypes, updateLeaveType } from "../controllers/admin/leavetype.controller.js";
 
 const router = express.Router();
 
