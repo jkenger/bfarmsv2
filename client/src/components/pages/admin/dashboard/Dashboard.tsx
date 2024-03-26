@@ -9,14 +9,15 @@ import {
 } from "lucide-react";
 import { GetQueryType, IconProperties, Links } from "@/types/common";
 import useMediaQuery from "@/components/hooks/useMediaQuery";
-import { Link, defer } from "react-router-dom";
-import { buttonVariants } from "@/components/ui/button";
+import { defer, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 import { getDashboard } from "./api/dashboard.api";
 import { QueryClient, useQuery } from "@tanstack/react-query";
 // import { addDays, startOfMonth } from "date-fns";
 
 import RecentAttendance from "./RecentAttendance";
+import { fetch } from "@/lib/utils";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -28,11 +29,18 @@ function Dashboard() {
   const { data, isPending } = useQuery(
     getDashboard({ type: GetQueryType.ALL })
   );
+  const navigate = useNavigate()
   // const attendance = data?.overallStats?.attendance || [];
   // const ranking = data?.overallStats?.ranking || [];
   const recentAttendances = data?.overallStats?.recentAttendances || [];
   const isMobile = useMediaQuery("(max-width: 1180px)");
   // const navigate = useNavigate();
+
+  async function handleLogout(){
+    navigate(Links.LOGIN);
+    await fetch.post("/auth/logout");
+   
+  }
 
   const MainContent = (
     <>
@@ -51,17 +59,15 @@ function Dashboard() {
               </Avatar>
               <span className="font-medium">Ken gervacio</span>
             </div>
-            <Link
-              to={Links.LOGIN}
-              className={buttonVariants({
-                size: "sm",
-                variant: "ghost",
-                className: "gap-2",
-              })}
+            <Button
+              size="sm"
+              variant= "ghost"
+              className= "gap-2"
+              onClick={handleLogout}
             >
               <LogOut size={IconProperties.SIZE} />
               <span>Log out</span>
-            </Link>
+            </Button>
           </div>
           <h1 className="text-lg font-semibold mt-4">Welcome, Ken Gervacio</h1>
           {/* Content */}
