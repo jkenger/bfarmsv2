@@ -1,6 +1,7 @@
 import { AuthProviderAccess } from "@/components/context/auth-provider";
 import { fetch } from "@/lib/utils";
 import { Links, QueryKeys } from "@/types/common";
+import { AxiosResponse } from "axios";
 
 import { redirect } from "react-router-dom";
 import { toast } from "sonner";
@@ -14,8 +15,8 @@ export const login = ({ form }: TMutation) => {
       });
       return result
     },
-    onSuccess: async (data) => {
-      const { account } = data.data;
+    onSuccess: async (data?: AxiosResponse) => {
+      const { account } = data?.data || {};
       toast.success(`Login Successfully`, {
         description: "You have successfully logged in.",
       });
