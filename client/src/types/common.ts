@@ -92,6 +92,10 @@ export enum QueryKeys {
   DELETE_TIME_CARD = "deleteTimeCard",
 
   SHEETS = "SHEETS",
+
+  LOGIN = "login",
+  LOGOUT = "logout",
+  SIGNUP = "signup",
 }
 
 export enum SortType {

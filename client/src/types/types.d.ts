@@ -197,6 +197,11 @@ type TStatus = {
   status: string;
 };
 
+type TLogin = {
+  email: string;
+  password: string;
+}
+
 type TGetQueryOptions = {
   type: GetQueryType;
   customParams?: {
@@ -244,4 +249,5 @@ type TDataFields = TEmployees &
   TTimeCard &
   TPayroll &
   TReceipt &
-  TStatus;
+  TStatus &
+  TLogin;

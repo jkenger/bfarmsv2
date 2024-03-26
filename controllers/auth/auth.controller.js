@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import passport from "passport";
 import { authenticator } from "otplib";
 import prisma from "../../prisma/db/db.js";
+import { StatusCodes } from "http-status-codes";
 
 
 export const signup = asyncHandler(async (req, res) => {
@@ -26,21 +27,20 @@ export const login = async (req, res, next) => {
       }
 
       if (!user.twofaEnabled) {
-        return res.json({
-          message: "Login successful",
-          twofaEnabled: false,
-          token: jwt.sign(
+        const token = jwt.sign(
             {
               user: { email: user.email },
             },
             process.env.JWT_SECRET
-          ),
-        });
+          )
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        })
+        await currentAccount(req, res)
       } else {
-        return res.json({
-          message: "Please complete 2-factor authentication",
-          twofaEnabled: true,
-          loginStep2VerificationToken: jwt.sign(
+        const token = jwt.sign(
             {
               // important to keep this payload different from a real/proper
               // authentication token payload so that this token cannot be used
@@ -50,7 +50,16 @@ export const login = async (req, res, next) => {
             },
             process.env.JWT_SECRET,
             { expiresIn: "5m" }
-          ),
+          )
+        res.cookie("loginStep2VerificationToken", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
+        return res.json({
+          message: "Please complete 2-factor authentication",
+          twofaEnabled: true,
+          loginStep2VerificationToken: token,
         });
       }
     }
@@ -75,19 +84,23 @@ export const loginStep2 = async (req, res) => {
       email: loginStep2VerificationToken.loginStep2Verification.email,
     },
   });
+
+  const jwtToken = jwt.sign(
+        {
+          user: { email: user.email },
+        },
+        process.env.JWT_SECRET
+      )
+
   if (!authenticator.check(token, user.twofaSecret)) {
     return res.status(400).json({
       message: "OTP verification failed: Invalid token",
     });
   } else {
+    res.cookie("token", jwtToken)
     return res.json({
       message: "OTP verification successful",
-      token: jwt.sign(
-        {
-          user: { email: user.email },
-        },
-        process.env.JWT_SECRET
-      ),
+      user: user,
     });
   }
 };
@@ -95,7 +108,6 @@ export const loginStep2 = async (req, res) => {
 
 // Get current account
 export const currentAccount = asyncHandler(async (req, res) => {
-  console.log("current user", req.user)
   const account = await prisma.account.findUnique({
     where: {
       email: req.user.email,
@@ -105,9 +117,9 @@ export const currentAccount = asyncHandler(async (req, res) => {
       twofaEnabled: true,
     }
   });
-  return res.json({
-    message: "Success",
-    user: account,
+  return res.status(StatusCodes.OK).json({
+    message: "Authenticated successfully",
+    account: account,
   });
 });
 

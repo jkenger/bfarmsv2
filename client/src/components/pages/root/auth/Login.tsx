@@ -1,12 +1,21 @@
-import { Link } from "react-router-dom";
-import BFARLogo from "../../ui/logo";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
-import { MoveRight } from "lucide-react";
-import { Links, Roles } from "@/types/common";
-import BfarHeading from "../../ui/bfar-heading";
+import {  Link } from "react-router-dom";
+import BFARLogo from "../../../ui/logo";
+import { Links, MutationType, Roles } from "@/types/common";
+import BfarHeading from "../../../ui/bfar-heading";
+import LoginFields from "./form/login-fields";
+import { useForm } from "react-hook-form";
+import { loginValues } from "./form/form-values";
+import FormSubmit from "../../admin/shareable/form-submit";
+import { useQueryProvider } from "@/components/context/query-provider";
+import { Form } from "@/components/ui/form";
 
 function Login({ assign }: { assign: Roles }) {
+  
+  const form = useForm<TDataFields>({
+    defaultValues: loginValues(),
+  });
+  const { createMutation } = useQueryProvider();
+
   return (
     <main className="flex h-screen">
       <div className="left-side w-full sm:2/5 md:w-1/3 flex items-center justify-center">
@@ -28,24 +37,15 @@ function Login({ assign }: { assign: Roles }) {
             </p>
           </div>
           <div className="inputs space-y-4">
-            <div>
-              <label htmlFor="email" className="">
-                Email address
-              </label>
-              <Input type="text" />
-            </div>
-            <div>
-              <label htmlFor="password" className="">
-                Password
-              </label>
-              <Input type="password" />
-            </div>
-          </div>
-          <div className="cta-submit w-full">
-            <Button type="submit" className="w-full">
-              Sign in{" "}
-              <MoveRight size={16} strokeWidth={1.75} className="ml-1 " />
-            </Button>
+            <Form {...form}>
+              <FormSubmit<TDataFields>
+                form={form}
+                mutation={createMutation}
+                mutationType={MutationType.CREATE}
+              >
+                <LoginFields form={form} />
+              </FormSubmit>
+            </Form>
           </div>
         </div>
       </div>

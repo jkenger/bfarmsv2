@@ -58,10 +58,11 @@ passport.use(
   new JwtStrategy(
     {
       secretOrKey: process.env.JWT_SECRET, // JWT secret key
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extract JWT token from Authorization header
+      jwtFromRequest: (req) => req.cookies.token, // Extract JWT token from Authorization header
     },
     async (token, done) => {
       try {
+        console.log("token", token);
         // Finding user by email from JWT token
         const user = await prisma.account.findUnique({
           where: {

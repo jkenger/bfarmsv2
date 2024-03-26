@@ -17,7 +17,7 @@ export const fetch = axios.create({
   baseURL: localUrl,
 
   // Only if there is a cookie
-  withCredentials: false,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

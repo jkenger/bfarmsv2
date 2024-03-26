@@ -6,7 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Error from "./components/pages/Error";
-import Login from "./components/pages/root/Login";
+import Login from "./components/pages/root/auth/Login";
 
 import { ThemeProvider } from "./components/context/theme-provider";
 import Admin from "./components/layouts/Admin";
@@ -40,7 +40,7 @@ import Designations from "./components/pages/admin/employees/Designations";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "sonner";
-import { QueryKeys, Roles } from "./types/common";
+import { Links, QueryKeys, Roles } from "./types/common";
 
 import QueryProvider from "./components/context/query-provider";
 import {
@@ -102,8 +102,11 @@ import {
 import Sheets from "./components/pages/admin/daily-time-records/Sheets";
 import { loader as CardLoader } from "./components/pages/admin/daily-time-records/Sheets";
 import { loader as dashboardLoader } from "./components/pages/admin/dashboard/Dashboard";
+import LoginStep2 from "./components/pages/root/auth/LoginStep2";
+import { login } from "./components/pages/root/auth/api/auth.api";
+import { AuthProviderAccess } from "./components/context/auth-provider";
+import SignedIn from "./components/pages/SignedIn";
 
-const isLoggedIn = true;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -111,6 +114,10 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+const isLoggedIn = AuthProviderAccess.user?.isAuthenticated;
+
+console.log(isLoggedIn);
 
 const router = createBrowserRouter([
   {
@@ -125,13 +132,36 @@ const router = createBrowserRouter([
   },
   {
     path: "login",
-    element: <Login assign={Roles.EMPLOYEE} />,
+    children: [
+      {
+        index: true,
+        element: isLoggedIn ? (<Navigate to={Links.DASHBOARD}/>) : (
+          <QueryProvider
+            api={{
+              create: login({ queryClient }),
+            }}
+            queryKeys={{
+              create: QueryKeys.LOGIN,
+            }}
+          >
+            <Login assign={Roles.EMPLOYEE} />
+          </QueryProvider>
+        ),
+      },
+      {
+        path: "step-2",
+        element: <LoginStep2 />,
+      },
+    ],
     errorElement: <Error />,
   },
 
   {
     path: "admin",
-    element: isLoggedIn ? <Admin /> : <Login assign={Roles.ADMIN} />,
+    element: 
+    <SignedIn>
+      <Admin />
+    </SignedIn>,
     errorElement: <Error />,
     children: [
       {

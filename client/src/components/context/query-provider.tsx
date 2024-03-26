@@ -7,19 +7,19 @@ import { AxiosResponse } from "axios";
 type Props = {
   children: React.ReactNode;
   api: {
-    create: {
+    create?: {
       mutationKey: QueryKeys[];
       mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
       onSuccess: (data?: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
-    edit: {
+    edit?: {
       mutationKey: QueryKeys[];
       mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
       onSuccess: (data?: AxiosResponse) => Promise<void>;
       onError: () => Promise<void>;
     };
-    delete: {
+    delete?: {
       mutationKey: QueryKeys[];
       mutationFn: (data: TDataFields) => Promise<AxiosResponse<any, any>>;
       onSuccess: (data?: AxiosResponse) => Promise<void>;
@@ -27,9 +27,9 @@ type Props = {
     };
   };
   queryKeys: {
-    create: QueryKeys;
-    edit: QueryKeys;
-    delete: QueryKeys;
+    create?: QueryKeys;
+    edit?: QueryKeys;
+    delete?: QueryKeys;
   };
 };
 
@@ -38,9 +38,9 @@ const QueryProviderContext = React.createContext<TQueryContext>(
 );
 
 function QueryProvider({ children, api, queryKeys }: Props) {
-  const createMutation = useMutation(api.create);
-  const editMutation = useMutation(api.edit);
-  const deleteMutation = useMutation(api.delete);
+  const createMutation = useMutation(api.create || {});
+  const editMutation = useMutation(api.edit || {});
+  const deleteMutation = useMutation(api.delete || {});
   const deletedActivities = useMutationState({
     filters: {
       mutationKey: [queryKeys.delete],

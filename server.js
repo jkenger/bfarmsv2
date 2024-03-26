@@ -50,7 +50,7 @@ const whitelist = [
 
 const corsOptions = {
   // true,nly if there is a cookie
-  credentials: false,
+  credentials: true,
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);

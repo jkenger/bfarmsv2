@@ -8,12 +8,14 @@ type Props<T> = {
   mutation?: UseMutationResult<void, Error, TDataFields, unknown>;
   mutationType: MutationType;
   children: React.ReactNode;
+  onSubmitFn?: () => void;
 };
 
 function FormSubmit<T extends TDataFields>({
   form,
   mutation,
   children,
+  onSubmitFn,
   mutationType = MutationType.CREATE,
 }: Props<T>) {
   // const formValues = form.getValues();
@@ -32,6 +34,7 @@ function FormSubmit<T extends TDataFields>({
     console.log(data);
     mutation?.mutate(data as TDataFields);
     form.reset();
+    onSubmitFn?.();
     closeSheet?.click();
   };
 
