@@ -65,6 +65,13 @@ export const login = async (req, res, next) => {
     }
   )(req, res, next);
 };
+
+export const logout = async (req, res) => {
+  res.clearCookie("token");
+  return res.json({
+    message: "Logout successful",
+  });
+};
 export const loginStep2 = async (req, res) => {
   let loginStep2VerificationToken = null;
   try {

@@ -1,5 +1,5 @@
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
-import { UseMutationResult } from "@tanstack/react-query";
+import { MutateOptions, UseMutationResult } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { MutationType } from "@/types/common";
 
@@ -9,6 +9,7 @@ type Props<T> = {
   mutationType: MutationType;
   children: React.ReactNode;
   onSubmitFn?: () => void;
+  mutationOptions?: MutateOptions<void, Error, TDataFields, unknown> | undefined;
 };
 
 function FormSubmit<T extends TDataFields>({
@@ -17,6 +18,7 @@ function FormSubmit<T extends TDataFields>({
   children,
   onSubmitFn,
   mutationType = MutationType.CREATE,
+  mutationOptions,
 }: Props<T>) {
   // const formValues = form.getValues();
   const onSubmit: SubmitHandler<T> = (data) => {
@@ -32,7 +34,7 @@ function FormSubmit<T extends TDataFields>({
       return;
     }
     console.log(data);
-    mutation?.mutate(data as TDataFields);
+    mutation?.mutate(data as TDataFields, mutationOptions);
     form.reset();
     onSubmitFn?.();
     closeSheet?.click();

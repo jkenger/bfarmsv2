@@ -1,4 +1,4 @@
-import {  Link } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import BFARLogo from "../../../ui/logo";
 import { Links, MutationType, Roles } from "@/types/common";
 import BfarHeading from "../../../ui/bfar-heading";
@@ -9,12 +9,14 @@ import FormSubmit from "../../admin/shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { Form } from "@/components/ui/form";
 
+
 function Login({ assign }: { assign: Roles }) {
   
   const form = useForm<TDataFields>({
     defaultValues: loginValues(),
   });
   const { createMutation } = useQueryProvider();
+  const navigate = useNavigate()
 
   return (
     <main className="flex h-screen">
@@ -29,7 +31,7 @@ function Login({ assign }: { assign: Roles }) {
             <p className="text-sm">
               Access {assign === Roles.ADMIN ? Roles.EMPLOYEE : Roles.ADMIN}{" "}
               <Link
-                to={assign === Roles.ADMIN ? Links.LOGIN : Links.ADMIN_LOGIN}
+                to={assign === Roles.ADMIN ? Links.LOGIN : Links.LOGIN}
                 className="text-primary"
               >
                 portal.
@@ -42,6 +44,10 @@ function Login({ assign }: { assign: Roles }) {
                 form={form}
                 mutation={createMutation}
                 mutationType={MutationType.CREATE}
+                mutationOptions={{
+                  onSuccess: () => {
+                    navigate(Links.DASHBOARD);
+                }}}
               >
                 <LoginFields form={form} />
               </FormSubmit>

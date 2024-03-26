@@ -555,18 +555,15 @@ const prisma = new PrismaClient().$extends({
     },
     user: {
       async $allOperations({ operation, args, query }) {
+        console.log(args);
         if (operation === "create" || operation === "update") {
-          const user = await prisma.user.findUnique({
-            where: {
-              id: args.data?.id || args.where.id,
-            },
-          });
+         
           return await query({
             ...args,
             data: {
               ...args.data,
-              fullName: `${user.lastName} ${user.firstName} ${
-                user.middleName ? user.middleName : ""
+              fullName: `${args?.data?.lastName} ${args?.data?.firstName} ${
+                args?.data?.middleName ? args.data.middleName : ""
               }`,
             },
           });

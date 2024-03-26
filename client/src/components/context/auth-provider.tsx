@@ -1,5 +1,4 @@
-import { fetch } from "@/lib/utils";
-import React, { createContext, useEffect } from "react";
+import React, { createContext } from "react";
 
 type TAuth = {
   user: {
@@ -17,7 +16,6 @@ const AuthContext = createContext<TAuth | null>(null);
 export const AuthProviderAccess: TAuth= {
   user: null,
   setUser: () => {},
-
 };
 
 export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
@@ -25,20 +23,6 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
   const [user, setUser] = React.useState(null);
   AuthProviderAccess.user = user;
   AuthProviderAccess.setUser = setUser;
-
-  useEffect(()=>{
-    const fetchAccount = async () => {
-      try {
-        const response = await fetch.get("/auth/current-account");
-        console.log(response);
-        setUser({...response.data.account, isAuthenticated: true});
-        
-      } catch (error) {
-         setUser(null);
-      }
-    }
-    fetchAccount();
-  }, [])
 
   return (
     <AuthContext.Provider

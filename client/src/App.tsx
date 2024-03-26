@@ -34,6 +34,7 @@ import { loader as leaveTypesLoader } from "./components/pages/admin/leaves/type
 import AdminPayroll, {
   loader as payrollLoader,
 } from "./components/pages/admin/payroll/Payroll";
+import {loader as adminLoader} from "./components/layouts/Admin";
 
 import Designations from "./components/pages/admin/employees/Designations";
 
@@ -105,7 +106,6 @@ import { loader as dashboardLoader } from "./components/pages/admin/dashboard/Da
 import LoginStep2 from "./components/pages/root/auth/LoginStep2";
 import { login } from "./components/pages/root/auth/api/auth.api";
 import { AuthProviderAccess } from "./components/context/auth-provider";
-import SignedIn from "./components/pages/SignedIn";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -158,10 +158,8 @@ const router = createBrowserRouter([
 
   {
     path: "admin",
-    element: 
-    <SignedIn>
-      <Admin />
-    </SignedIn>,
+    loader: adminLoader(queryClient),
+    element: <Admin />,
     errorElement: <Error />,
     children: [
       {

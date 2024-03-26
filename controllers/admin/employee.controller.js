@@ -21,10 +21,10 @@ export const createEmployee = asyncHandler(async (req, res) => {
         designationId: item.designationId ? item.designationId : null,
         payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
         deductions: item.deductions?.length ? item.deductions : null,
+        accountId: item.accountId ? item.accountId : null,
       };
     }),
   ];
-
   await models.addModel(res, data, prisma.user, {
     type: "explicit",
     fields: ["deductions"],
@@ -40,6 +40,7 @@ export const updateEmployee = asyncHandler(async (req, res) => {
         designationId: item.designationId ? item.designationId : null,
         payrollGroupId: item.payrollGroupId ? item.payrollGroupId : null,
         deductions: item.deductions.length ? item.deductions : null,
+        accountId: item.accountId ? item.accountId : null,
       };
     }),
   ];

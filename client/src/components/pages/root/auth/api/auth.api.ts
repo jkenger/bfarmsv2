@@ -20,7 +20,7 @@ export const login = ({ form }: TMutation) => {
       toast.success(`Login Successfully`, {
         description: "You have successfully logged in.",
       });
-      redirect(Links.DASHBOARD);
+      
       AuthProviderAccess?.setUser(account);
       form?.reset();
     },
@@ -32,3 +32,18 @@ export const login = ({ form }: TMutation) => {
     },
   };
 };
+
+export const getUser = () => {
+  return {
+    queryKey: [QueryKeys.GET_USER],
+    queryFn: async () => {
+      try{
+        const response = await fetch.get("/auth/current-account");
+        AuthProviderAccess.setUser(response.data.account);
+        return response.data.account;
+      }catch(error){
+        return redirect(Links.LOGIN);
+      }
+    },
+  };
+}

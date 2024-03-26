@@ -6,6 +6,7 @@ import {
   generate2faSecret,
   login,
   loginStep2,
+  logout,
   profile,
   signup,
   verifyOtp,
@@ -25,6 +26,13 @@ router.post(
   "/login",
   passport.authenticate("login", { session: false }), // Authenticate using the "login" strategy
   login // Call login controller function
+);
+
+// Route for user logout
+router.post(
+  "/logout",
+  passport.authenticate("jwt", { session: false }), // Authenticate using the "jwt" strategy
+  logout
 );
 
 // Route for user second step login (if applicable)

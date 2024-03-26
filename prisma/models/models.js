@@ -69,17 +69,21 @@ export const models = {
     // DONE: make it dynamic for multiple fields
     if (relation?.type === "explicit") {
       const createQuery = createExplicitQuery(data[0], relation);
-
-      const dataAdded = await prismaModel.create({ data: createQuery });
-      return res.status(StatusCodes.OK).json(
-        jsonReturn
-          ? jsonReturn
-          : {
-              data: dataAdded,
-            }
-      );
+      try{
+        const dataAdded = await prismaModel.create({ data: createQuery });
+        return res.status(StatusCodes.OK).json(
+          jsonReturn
+            ? jsonReturn
+            : {
+                data: dataAdded,
+              }
+        );
+      }catch(error){
+        console.log(error)
+      }
+      
     }
-
+    
     const dataAdded = await prismaModel.create({
       data: data[0],
     });

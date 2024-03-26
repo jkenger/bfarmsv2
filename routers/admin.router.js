@@ -25,6 +25,7 @@ import { createHoliday, deleteHoliday, getAllHolidays, getPaginatedHolidays, upd
 import { createTravelpass, deleteTravelpass, getAllTravelpass, getPaginatedTravelpass, updateTravelpass } from "../controllers/admin/travelpass.controller.js";
 import { createDeductions, deleteDeductions, getAllDeductions, getPaginatedDeductions, updateDeductions } from "../controllers/admin/deduction.controller.js";
 import { createLeaveType, deleteLeaveType, getAllLeaveTypes, getPaginatedLeaveTypes, updateLeaveType } from "../controllers/admin/leavetype.controller.js";
+import passport from "passport";
 
 const router = express.Router();
 
@@ -40,7 +41,7 @@ router.get("/", (req, res) => {
 // @Desc    : Read Dashboard
 // @Method  : GET
 // @Access  : Private (Admin)
-router.route("/dashboard").get(getDashboard);
+router.route("/dashboard").get(passport.authenticate("jwt", {session: false}), getDashboard);
 
 // Attendance Routes
 // @Desc    : Read and Create Attendance
