@@ -52,7 +52,7 @@ function Dashboard() {
               <span className="font-medium">Ken gervacio</span>
             </div>
             <Link
-              to={Links.ADMIN_LOGIN}
+              to={Links.LOGIN}
               className={buttonVariants({
                 size: "sm",
                 variant: "ghost",

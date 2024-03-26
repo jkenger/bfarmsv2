@@ -29,7 +29,7 @@ router.post(
 );
 
 // Route for user logout
-router.post(
+router.get(
   "/logout",
   passport.authenticate("jwt", { session: false }), // Authenticate using the "jwt" strategy
   logout
