@@ -5,6 +5,7 @@ import {
   eachDayOfInterval,
   isWeekend,
 } from "date-fns";
+import bcrypt from "bcrypt";
 import { countWeekdays, setDateTime } from "../../lib/helpers.js";
 
 import cron from "node-cron";
@@ -392,6 +393,17 @@ const prisma = new PrismaClient().$extends({
         const allEmployeesCount = allEmployees.length;
 
         return { allEmployees, allEmployeesCount, employees };
+      },
+    },
+    account: {
+      async verifyPassword(email, password) {
+        const user = await prisma.account.findUnique({
+          where: {
+            email,
+          },
+        });
+        console.log(user)
+        return await bcrypt.compare(password, user.password);
       },
     },
   },

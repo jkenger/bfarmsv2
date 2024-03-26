@@ -15,45 +15,45 @@ datasource db {
 // }
 
 model Attendance {
-  id               String    @id @default(uuid())
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId           String
-  fullName         String?
-  attendanceDate   DateTime?
-  amTimeIn         DateTime?
-  amTimeOut        DateTime?
-  pmTimeIn         DateTime?
-  pmTimeOut        DateTime?
-  noOfHoursWorked  Float?
-  undertime        Float?  
-  travelPass       String?
-  isHalfDay        Boolean?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id              String    @id @default(uuid())
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  fullName        String?
+  attendanceDate  DateTime?
+  amTimeIn        DateTime?
+  amTimeOut       DateTime?
+  pmTimeIn        DateTime?
+  pmTimeOut       DateTime?
+  noOfHoursWorked Float?
+  undertime       Float?
+  travelPass      String?
+  isHalfDay       Boolean?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model TimeCard {
-  id             String       @id @default(uuid())
+  id             String   @id @default(uuid())
   from           DateTime
   to             DateTime
   name           String?
   sheets         Sheet[]
   isAllEmployees Boolean
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Sheet {
-  id             String       @id @default(uuid())
-  from           DateTime
-  to             DateTime
-  name           String?
-  timeCard       TimeCard     @relation(fields: [timeCardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  timeCardId     String
-  userId         String
-  attendances    Json[]
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id          String   @id @default(uuid())
+  from        DateTime
+  to          DateTime
+  name        String?
+  timeCard    TimeCard @relation(fields: [timeCardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  timeCardId  String
+  userId      String
+  attendances Json[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 // model Card {
@@ -84,27 +84,38 @@ model User {
   lastName   String
   age        Int
   avatar     String?
-  
 
-  payrollGroup    PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
-  payrollGroupId  String?
+  payrollGroup   PayrollGroup? @relation(fields: [payrollGroupId], references: [id])
+  payrollGroupId String?
 
-  designation     Designation? @relation(fields: [designationId], references: [id] )
-  designationId   String?
+  designation   Designation? @relation(fields: [designationId], references: [id])
+  designationId String?
 
-  receipts        Receipt[]
+  receipts Receipt[]
 
-  attendances     Attendance[]
+  attendances Attendance[]
 
-  deductions      Deduction[]
+  deductions Deduction[]
 
-  travelPass      Travelpass[]
+  travelPass Travelpass[]
 
+  Account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // houseOwned House[]  @relation("HouseOwner")
   // houseBuild House[]  @relation("HouseBuilder")
+}
+
+model Account {
+  id           String  @id @default(uuid())
+  email        String  @unique
+  password     String
+  twofaEnabled Boolean @default(false)
+  twofaSecret  String  @default("")
+  roles        String[]
+  users        User[]
 }
 
 model Designation {
@@ -119,7 +130,7 @@ model Designation {
 
 model Receipt {
   id                   String   @id @default(uuid())
-  payroll              Payroll @relation(fields: [payrollId], references: [id], onDelete: Cascade,  onUpdate: Cascade)
+  payroll              Payroll  @relation(fields: [payrollId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   payrollId            String
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId               String
@@ -151,7 +162,7 @@ model Payroll {
   fundCluster    String?
   projectName    String?
   programName    String?
-  receipts       Receipt[]       
+  receipts       Receipt[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
@@ -161,7 +172,7 @@ model PayrollGroup {
   name        String
   fundCluster String
   programName String?
-  users       User[] 
+  users       User[]
   payrolls    Payroll[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -178,15 +189,15 @@ model Holiday {
 }
 
 model Travelpass {
-  id        String   @id @default(uuid())
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id        String    @id @default(uuid())
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId    String
   typeOf    String
   start     DateTime
   end       DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  expireAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expireAt  DateTime?
 }
 
 model Deduction {

@@ -1,4 +1,5 @@
-// Description: Main server file
+
+
 
 // Dependencies
 import express from "express";
@@ -10,23 +11,25 @@ import cookieParser from "cookie-parser";
 // Routes imports
 import index from "./routers/index.router.js";
 import admin from "./routers/admin.router.js";
+import auth from "./routers/auth.router.js";
+import passportAuth from "./middlewares/auth.middleware.js";
 
 // Middleware imports
 import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 
-// Prisma imports
-import { PrismaClient } from "@prisma/client";
-
 // Publics
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+
+
+// @TODO: Integrate Auth
+
 
 // Config
 dotenv.config();
 process.env.TZ = "Asia/Singapore";
 // console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-// Constants
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
@@ -65,9 +68,15 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+
+
+
 // Routes
 app.use("/api/v1", index);
 app.use("/api/v1/admin", admin);
+// Auth
+app.use(passportAuth.initialize());
+app.use("/api/v1/auth", auth);
 
 // Tests from prisma routes
 // app.get("/api/v1/test", async (req, res) => {
