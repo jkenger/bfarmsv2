@@ -58,7 +58,8 @@ passport.use(
   new JwtStrategy(
     {
       secretOrKey: process.env.JWT_SECRET, // JWT secret key
-      jwtFromRequest: (req) => req.cookies.token, // Extract JWT token from Authorization header
+      jwtFromRequest: (req) =>
+        req.cookies.token, // Extract JWT token from Authorization header
     },
     async (token, done) => {
       try {

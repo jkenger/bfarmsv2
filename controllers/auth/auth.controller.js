@@ -57,9 +57,9 @@ export const login = async (req, res, next) => {
           sameSite: "strict",
         });
         return res.json({
+          user: user?.email,
           message: "Please complete 2-factor authentication",
           twofaEnabled: true,
-          loginStep2VerificationToken: token,
         });
       }
     }
@@ -68,15 +68,16 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res) => {
   res.clearCookie("token");
-  return res.json({
+  return res.status(StatusCodes.OK).json({
     message: "Logout successful",
   });
 };
 export const loginStep2 = async (req, res) => {
   let loginStep2VerificationToken = null;
+  let step2Token = req.cookies.loginStep2VerificationToken;
   try {
     loginStep2VerificationToken = jwt.verify(
-      req.body.loginStep2VerificationToken,
+      step2Token,
       process.env.JWT_SECRET
     );
   } catch (err) {

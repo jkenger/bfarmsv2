@@ -1,3 +1,4 @@
+import { useQueryProvider } from "@/components/context/query-provider";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -20,7 +21,7 @@ type Props = {
 
 function LoginFields({ form }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const { createMutation } = useQueryProvider();
   useLayoutEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -34,7 +35,7 @@ function LoginFields({ form }: Props) {
           <FormItem>
             <FormLabel className="text-xs text-foreground">Email</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="column_data" {...field} />
+              <Input type="email" placeholder="column_data" {...field} disabled={createMutation.isPending}/>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -48,18 +49,19 @@ function LoginFields({ form }: Props) {
           <FormItem>
             <FormLabel className="text-xs text-foreground">Password</FormLabel>
             <FormControl>
-              <Input type="text" placeholder="column_data" {...field} />
+              <Input type="password" placeholder="column_data" {...field} disabled={createMutation.isPending}/>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <div
-        className="flex justify-end w-full gap-2"
-        id="sheetFooter"
-      >
-        <Button variant="default" type="submit">
-          Login
+      <div className="flex justify-end w-full gap-2" id="sheetFooter">
+        <Button
+          variant="default"
+          type="submit"
+          disabled={createMutation.isPending}
+        >
+          {createMutation.isPending ? "Loading..." : "Sign in"}
         </Button>
       </div>
     </>

@@ -202,6 +202,10 @@ type TLogin = {
   password: string;
 }
 
+type TStep2 = {
+  twofaToken: string;
+}
+
 type TGetQueryOptions = {
   type: GetQueryType;
   customParams?: {
@@ -250,4 +254,5 @@ type TDataFields = TEmployees &
   TPayroll &
   TReceipt &
   TStatus &
-  TLogin;
+  TLogin &
+  TStep2

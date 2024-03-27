@@ -2,6 +2,7 @@ import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { MutateOptions, UseMutationResult } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { MutationType } from "@/types/common";
+import { cn } from "@/lib/utils";
 
 type Props<T> = {
   form: UseFormReturn<T & FieldValues, unknown, undefined>;
@@ -10,6 +11,7 @@ type Props<T> = {
   children: React.ReactNode;
   onSubmitFn?: () => void;
   mutationOptions?: MutateOptions<void, Error, TDataFields, unknown> | undefined;
+  formClasses?: string;
 };
 
 function FormSubmit<T extends TDataFields>({
@@ -19,6 +21,7 @@ function FormSubmit<T extends TDataFields>({
   onSubmitFn,
   mutationType = MutationType.CREATE,
   mutationOptions,
+  formClasses = "",
 }: Props<T>) {
   // const formValues = form.getValues();
   const onSubmit: SubmitHandler<T> = (data) => {
@@ -43,7 +46,7 @@ function FormSubmit<T extends TDataFields>({
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="my-4 text-xs flex flex-col gap-4"
+      className={cn("my-4 text-xs flex flex-col gap-4", formClasses)}
     >
       {children}
     </form>

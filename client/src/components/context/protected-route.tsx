@@ -1,23 +1,15 @@
-import { Navigate, Outlet, redirect } from "react-router-dom";
-
-import { QueryClient } from "@tanstack/react-query";
-import { getUser } from "../pages/root/auth/api/auth.api";
-import { useEffect, useState } from "react";
 import { fetch } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Links } from "@/types/common";
+import { useNavigate } from "react-router-dom";
 
-export const loader = (queryClient: QueryClient) => async () => {
-  try{
-    return await queryClient.ensureQueryData(getUser())
-  }catch (error) {
-    return redirect("/login");
-  }
-};
-
-function Admin() {
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(true);
+  const navigate = useNavigate();
+
   async function logoutUser() {
+    navigate(Links.LOGIN);
     await fetch.post("/auth/logout");
     toast({
       title: "Logged out",
@@ -42,11 +34,5 @@ function Admin() {
     logoutUser();
   }, [isAuth]);
 
-  return (
-    <section className="bg-background">
-      {isAuth ? <Outlet /> : <Navigate to={Links.LOGIN} replace={true} /> } 
-    </section>
-  );
-}
-
-export default Admin;
+  return <>{children}</>;
+};

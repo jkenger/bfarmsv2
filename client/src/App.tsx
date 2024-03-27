@@ -104,7 +104,7 @@ import Sheets from "./components/pages/admin/daily-time-records/Sheets";
 import { loader as CardLoader } from "./components/pages/admin/daily-time-records/Sheets";
 import { loader as dashboardLoader } from "./components/pages/admin/dashboard/Dashboard";
 import LoginStep2 from "./components/pages/root/auth/LoginStep2";
-import { login } from "./components/pages/root/auth/api/auth.api";
+import { login, loginStep2 } from "./components/pages/root/auth/api/auth.api";
 import { AuthProviderAccess } from "./components/context/auth-provider";
 
 const queryClient = new QueryClient({
@@ -135,10 +135,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: isLoggedIn ? (<Navigate to={Links.DASHBOARD}/>) : (
+        element: isLoggedIn ? (
+          <Navigate to={Links.DASHBOARD} />
+        ) : (
           <QueryProvider
             api={{
-              create: login({ queryClient }),
+              create: login(),
             }}
             queryKeys={{
               create: QueryKeys.LOGIN,
@@ -150,7 +152,18 @@ const router = createBrowserRouter([
       },
       {
         path: "step-2",
-        element: <LoginStep2 />,
+        element: (
+          <QueryProvider
+            api={{
+              create: loginStep2(),
+            }}
+            queryKeys={{
+              create: QueryKeys.LOGIN_STEP2,
+            }}
+          >
+            <LoginStep2 />
+          </QueryProvider>
+        ),
       },
     ],
     errorElement: <Error />,
@@ -159,261 +172,260 @@ const router = createBrowserRouter([
   {
     path: "admin",
     loader: adminLoader(queryClient),
-    element: <Admin />,
+    element: (
+      <Navigation>
+        <Admin />
+      </Navigation>
+    ),
     errorElement: <Error />,
     children: [
       {
-        element: <Navigation />,
+        index: true,
+        path: "dashboard",
+        loader: dashboardLoader(queryClient),
+        element: <AdminDashboard />,
+      },
+      {
+        path: "employees",
         children: [
           {
             index: true,
-            path: "dashboard",
-            loader: dashboardLoader(queryClient),
-            element: <AdminDashboard />,
-          },
-          {
-            path: "employees",
-            children: [
-              {
-                index: true,
-                loader: employeesLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createEmployee({ queryClient }),
-                      edit: editEmployee({ queryClient }),
-                      delete: deleteEmployee({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_EMPLOYEE,
-                      edit: QueryKeys.EDIT_EMPLOYEE,
-                      delete: QueryKeys.DELETE_EMPLOYEE,
-                    }}
-                  >
-                    <AdminEmployees />
-                  </QueryProvider>
-                ),
-              },
-              {
-                path: "designations",
-                loader: designationsLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createDesignation({ queryClient }),
-                      edit: editDesignation({ queryClient }),
-                      delete: deleteDesignation({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_DESIGNATION,
-                      edit: QueryKeys.EDIT_DESIGNATION,
-                      delete: QueryKeys.DELETE_DESIGNATION,
-                    }}
-                  >
-                    <Designations />
-                  </QueryProvider>
-                ),
-              },
-            ],
-          },
-          {
-            path: "daily-time-records",
-            children: [
-              {
-                index: true,
-                loader: dtrLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createDTR({ queryClient }),
-                      edit: editDTR({ queryClient }),
-                      delete: deleteDTR({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_ATTENDANCE,
-                      edit: QueryKeys.EDIT_ATTENDANCE,
-                      delete: QueryKeys.DELETE_ATTENDANCE,
-                    }}
-                  >
-                    <AdminDailyTyimeRecord />
-                  </QueryProvider>
-                ),
-              },
-              {
-                path: "time-cards",
-                loader: timeCardLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createTimeCard({ queryClient }),
-                      edit: editTimeCard({ queryClient }),
-                      delete: deleteTimeCard({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_TIME_CARD,
-                      edit: QueryKeys.EDIT_TIME_CARD,
-                      delete: QueryKeys.DELETE_TIME_CARD,
-                    }}
-                  >
-                    <TimeCards />
-                  </QueryProvider>
-                ),
-              },
-              {
-                path: "time-cards/:id",
-                loader: CardLoader(queryClient),
-                element: <Sheets />,
-              },
-            ],
-          },
-          {
-            path: "payroll",
-            children: [
-              {
-                path: "",
-                loader: payrollLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createPayroll({ queryClient }),
-                      edit: editPayroll({ queryClient }),
-                      delete: deletePayroll({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_PAYROLL,
-                      edit: QueryKeys.EDIT_PAYROLL,
-                      delete: QueryKeys.DELETE_PAYROLL,
-                    }}
-                  >
-                    <AdminPayroll />
-                  </QueryProvider>
-                ),
-              },
-              {
-                path: ":id/receipt",
-                loader: payrollReceiptLoader(queryClient),
-                element: <Receipt />,
-              },
-              {
-                path: "groups",
-                loader: payrollGroupLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createPayrollGroup({ queryClient }),
-                      edit: editPayrollGroup({ queryClient }),
-                      delete: deletePayrollGroup({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_PAYROLL_GROUP,
-                      edit: QueryKeys.EDIT_PAYROLL_GROUP,
-                      delete: QueryKeys.DELETE_PAYROLL_GROUP,
-                    }}
-                  >
-                    <PayrollGroups />
-                  </QueryProvider>
-                ),
-              },
-            ],
-          },
-          {
-            path: "holidays",
-            loader: holidaysLoader(queryClient),
+            loader: employeesLoader(queryClient),
             element: (
               <QueryProvider
                 api={{
-                  create: createHoliday({ queryClient }),
-                  edit: editHoliday({ queryClient }),
-                  delete: deleteHoliday({ queryClient }),
+                  create: createEmployee({ queryClient }),
+                  edit: editEmployee({ queryClient }),
+                  delete: deleteEmployee({ queryClient }),
                 }}
                 queryKeys={{
-                  create: QueryKeys.CREATE_HOLIDAY,
-                  edit: QueryKeys.EDIT_HOLIDAY,
-                  delete: QueryKeys.DELETE_HOLIDAY,
+                  create: QueryKeys.CREATE_EMPLOYEE,
+                  edit: QueryKeys.EDIT_EMPLOYEE,
+                  delete: QueryKeys.DELETE_EMPLOYEE,
                 }}
               >
-                <AdminHolidays />
+                <AdminEmployees />
               </QueryProvider>
             ),
           },
           {
-            path: "travelpass",
-            loader: travelpassLoader(queryClient),
+            path: "designations",
+            loader: designationsLoader(queryClient),
             element: (
               <QueryProvider
                 api={{
-                  create: createTravelpass({ queryClient }),
-                  edit: editTravelpass({ queryClient }),
-                  delete: deleteTravelpass({ queryClient }),
+                  create: createDesignation({ queryClient }),
+                  edit: editDesignation({ queryClient }),
+                  delete: deleteDesignation({ queryClient }),
                 }}
                 queryKeys={{
-                  create: QueryKeys.CREATE_TRAVELPASS,
-                  edit: QueryKeys.EDIT_TRAVELPASS,
-                  delete: QueryKeys.DELETE_TRAVELPASS,
+                  create: QueryKeys.CREATE_DESIGNATION,
+                  edit: QueryKeys.EDIT_DESIGNATION,
+                  delete: QueryKeys.DELETE_DESIGNATION,
                 }}
               >
-                <AdminTravelPass />
+                <Designations />
               </QueryProvider>
             ),
-          },
-          {
-            path: "deductions",
-            loader: deductionsLoader(queryClient),
-            element: (
-              <QueryProvider
-                api={{
-                  create: createDeduction({ queryClient }),
-                  edit: editDeduction({ queryClient }),
-                  delete: deleteDeduction({ queryClient }),
-                }}
-                queryKeys={{
-                  create: QueryKeys.CREATE_DEDUCTION,
-                  edit: QueryKeys.EDIT_DEDUCTION,
-                  delete: QueryKeys.DELETE_DEDUCTION,
-                }}
-              >
-                <AdminDeductions />
-              </QueryProvider>
-            ),
-          },
-          {
-            path: "leaves",
-            children: [
-              {
-                index: true,
-                element: <AdminLeaves />,
-              },
-              {
-                path: "types",
-                loader: leaveTypesLoader(queryClient),
-                element: (
-                  <QueryProvider
-                    api={{
-                      create: createLeaveType({ queryClient }),
-                      edit: editLeaveType({ queryClient }),
-                      delete: deleteLeaveType({ queryClient }),
-                    }}
-                    queryKeys={{
-                      create: QueryKeys.CREATE_LEAVE_TYPE,
-                      edit: QueryKeys.EDIT_LEAVE_TYPE,
-                      delete: QueryKeys.DELETE_LEAVE_TYPE,
-                    }}
-                  >
-                    <AdminLeaveTypes />
-                  </QueryProvider>
-                ),
-              },
-            ],
-          },
-          {
-            path: "",
-            element: <Navigate to="/admin/dashboard" />,
-          },
-          {
-            path: "*",
-            element: <Navigate to="/admin/dashboard" />,
           },
         ],
+      },
+      {
+        path: "daily-time-records",
+        children: [
+          {
+            index: true,
+            loader: dtrLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createDTR({ queryClient }),
+                  edit: editDTR({ queryClient }),
+                  delete: deleteDTR({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_ATTENDANCE,
+                  edit: QueryKeys.EDIT_ATTENDANCE,
+                  delete: QueryKeys.DELETE_ATTENDANCE,
+                }}
+              >
+                <AdminDailyTyimeRecord />
+              </QueryProvider>
+            ),
+          },
+          {
+            path: "time-cards",
+            loader: timeCardLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createTimeCard({ queryClient }),
+                  edit: editTimeCard({ queryClient }),
+                  delete: deleteTimeCard({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_TIME_CARD,
+                  edit: QueryKeys.EDIT_TIME_CARD,
+                  delete: QueryKeys.DELETE_TIME_CARD,
+                }}
+              >
+                <TimeCards />
+              </QueryProvider>
+            ),
+          },
+          {
+            path: "time-cards/:id",
+            loader: CardLoader(queryClient),
+            element: <Sheets />,
+          },
+        ],
+      },
+      {
+        path: "payroll",
+        children: [
+          {
+            path: "",
+            loader: payrollLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createPayroll({ queryClient }),
+                  edit: editPayroll({ queryClient }),
+                  delete: deletePayroll({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_PAYROLL,
+                  edit: QueryKeys.EDIT_PAYROLL,
+                  delete: QueryKeys.DELETE_PAYROLL,
+                }}
+              >
+                <AdminPayroll />
+              </QueryProvider>
+            ),
+          },
+          {
+            path: ":id/receipt",
+            loader: payrollReceiptLoader(queryClient),
+            element: <Receipt />,
+          },
+          {
+            path: "groups",
+            loader: payrollGroupLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createPayrollGroup({ queryClient }),
+                  edit: editPayrollGroup({ queryClient }),
+                  delete: deletePayrollGroup({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_PAYROLL_GROUP,
+                  edit: QueryKeys.EDIT_PAYROLL_GROUP,
+                  delete: QueryKeys.DELETE_PAYROLL_GROUP,
+                }}
+              >
+                <PayrollGroups />
+              </QueryProvider>
+            ),
+          },
+        ],
+      },
+      {
+        path: "holidays",
+        loader: holidaysLoader(queryClient),
+        element: (
+          <QueryProvider
+            api={{
+              create: createHoliday({ queryClient }),
+              edit: editHoliday({ queryClient }),
+              delete: deleteHoliday({ queryClient }),
+            }}
+            queryKeys={{
+              create: QueryKeys.CREATE_HOLIDAY,
+              edit: QueryKeys.EDIT_HOLIDAY,
+              delete: QueryKeys.DELETE_HOLIDAY,
+            }}
+          >
+            <AdminHolidays />
+          </QueryProvider>
+        ),
+      },
+      {
+        path: "travelpass",
+        loader: travelpassLoader(queryClient),
+        element: (
+          <QueryProvider
+            api={{
+              create: createTravelpass({ queryClient }),
+              edit: editTravelpass({ queryClient }),
+              delete: deleteTravelpass({ queryClient }),
+            }}
+            queryKeys={{
+              create: QueryKeys.CREATE_TRAVELPASS,
+              edit: QueryKeys.EDIT_TRAVELPASS,
+              delete: QueryKeys.DELETE_TRAVELPASS,
+            }}
+          >
+            <AdminTravelPass />
+          </QueryProvider>
+        ),
+      },
+      {
+        path: "deductions",
+        loader: deductionsLoader(queryClient),
+        element: (
+          <QueryProvider
+            api={{
+              create: createDeduction({ queryClient }),
+              edit: editDeduction({ queryClient }),
+              delete: deleteDeduction({ queryClient }),
+            }}
+            queryKeys={{
+              create: QueryKeys.CREATE_DEDUCTION,
+              edit: QueryKeys.EDIT_DEDUCTION,
+              delete: QueryKeys.DELETE_DEDUCTION,
+            }}
+          >
+            <AdminDeductions />
+          </QueryProvider>
+        ),
+      },
+      {
+        path: "leaves",
+        children: [
+          {
+            index: true,
+            element: <AdminLeaves />,
+          },
+          {
+            path: "types",
+            loader: leaveTypesLoader(queryClient),
+            element: (
+              <QueryProvider
+                api={{
+                  create: createLeaveType({ queryClient }),
+                  edit: editLeaveType({ queryClient }),
+                  delete: deleteLeaveType({ queryClient }),
+                }}
+                queryKeys={{
+                  create: QueryKeys.CREATE_LEAVE_TYPE,
+                  edit: QueryKeys.EDIT_LEAVE_TYPE,
+                  delete: QueryKeys.DELETE_LEAVE_TYPE,
+                }}
+              >
+                <AdminLeaveTypes />
+              </QueryProvider>
+            ),
+          },
+        ],
+      },
+      {
+        path: "",
+        element: <Navigate to="/admin/dashboard" />,
+      },
+      {
+        path: "*",
+        element: <Navigate to="/admin/dashboard" />,
       },
     ],
   },

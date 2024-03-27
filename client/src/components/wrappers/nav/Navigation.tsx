@@ -1,10 +1,12 @@
-import { Outlet } from "react-router-dom";
 
-import { createContext, useContext, useState } from "react";
+
+import { createContext, useContext,  useState } from "react";
 
 import Main from "../Main";
 import SideNav from "./SideNav";
 import TopNav from "./TopNav";
+
+
 
 type TNavigationContext = {
   isMenuOpen: boolean;
@@ -30,7 +32,9 @@ type TNavigationContext = {
 
 const NavigationContext = createContext<TNavigationContext | null>(null);
 
-function Navigation() {
+function Navigation({children}: {children: React.ReactNode}) {
+
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [overViewState, setOverViewState] = useState(true);
   const [employeeState, setEmployeeState] = useState(true);
@@ -95,7 +99,7 @@ function Navigation() {
       <div className={`flex flex-col md:flex-row`}>
         <SideNav />
         <Main>
-          <Outlet />
+          {children}
         </Main>
       </div>
     </NavigationContext.Provider>

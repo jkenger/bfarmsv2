@@ -1,12 +1,11 @@
 import { AuthProviderAccess } from "@/components/context/auth-provider";
 import { fetch } from "@/lib/utils";
 import { Links, QueryKeys } from "@/types/common";
-import { AxiosResponse } from "axios";
 
 import { redirect } from "react-router-dom";
 import { toast } from "sonner";
 
-export const login = ({ form }: TMutation) => {
+export const login = () => {
   return {
     mutationKey: [QueryKeys.LOGIN],
     mutationFn: async (data: TLogin) => {
@@ -15,19 +14,33 @@ export const login = ({ form }: TMutation) => {
       });
       return result
     },
-    onSuccess: async (data?: AxiosResponse) => {
-      const { account } = data?.data || {};
-      toast.success(`Login Successfully`, {
-        description: "You have successfully logged in.",
-      });
-      
-      AuthProviderAccess?.setUser(account);
-      form?.reset();
-    },
     onError: async () => {
       toast.error(`Login Failed`, {
         description:
           "The email or password you entered is incorrect. Please try again.",
+      });
+    },
+  };
+};
+
+export const loginStep2 = () => {
+  return {
+    mutationKey: [QueryKeys.LOGIN_STEP2],
+    mutationFn: async (data: TStep2) => {
+      const result = await fetch.post("/auth/login-step2", {
+        ...data,
+      });
+      return result;
+    },
+    onSuccess: async () => {
+      toast.success(`Login Successfully`, {
+        description: "You have successfully logged in.",
+      });
+    },
+    onError: async () => {
+      toast.error(`Invalid 2FA Code`, {
+        description:
+          "The OTP you entered is incorrect. Please try again.",
       });
     },
   };

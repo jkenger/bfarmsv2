@@ -18,6 +18,7 @@ import { QueryClient, useQuery } from "@tanstack/react-query";
 
 import RecentAttendance from "./RecentAttendance";
 import { fetch } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
 
 export const loader = (queryClient: QueryClient) => async () => {
   return defer({
@@ -29,7 +30,8 @@ function Dashboard() {
   const { data, isPending } = useQuery(
     getDashboard({ type: GetQueryType.ALL })
   );
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
   // const attendance = data?.overallStats?.attendance || [];
   // const ranking = data?.overallStats?.ranking || [];
   const recentAttendances = data?.overallStats?.recentAttendances || [];
@@ -37,8 +39,18 @@ function Dashboard() {
   // const navigate = useNavigate();
 
   async function handleLogout(){
-    navigate(Links.LOGIN);
-    await fetch.post("/auth/logout");
+    try{
+      const result = await fetch.get("/auth/logout");
+      if(result.status === 200){
+        navigate(Links.LOGIN);
+      }
+    }catch(error){
+      toast({
+        title: "Error",
+        description: "An error occurred while logging out",
+      })
+    }
+    
    
   }
 

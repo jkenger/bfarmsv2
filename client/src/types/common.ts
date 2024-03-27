@@ -1,6 +1,7 @@
 export enum Links {
   ROOT = "/",
   LOGIN = "/login",
+  LOGIN_STEP2 = "/login/step-2",
 
   DASHBOARD = "/admin/dashboard",
 
@@ -94,6 +95,7 @@ export enum QueryKeys {
 
   GET_USER = "getUser",
   LOGIN = "login",
+  LOGIN_STEP2 = "loginStep2",
   LOGOUT = "logout",
   SIGNUP = "signup",
 }

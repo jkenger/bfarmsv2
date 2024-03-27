@@ -45,8 +45,16 @@ function Login({ assign }: { assign: Roles }) {
                 mutation={createMutation}
                 mutationType={MutationType.CREATE}
                 mutationOptions={{
-                  onSuccess: () => {
-                    navigate(Links.DASHBOARD);
+                  onSuccess: (data: void) => {
+                    console.log(data)
+                    // @ts-expect-error: data is void
+                    const is2FAEnabled = data.data.twofaEnabled
+                    if(is2FAEnabled){
+                      // @ts-expect-error: data is void
+                      navigate(Links.LOGIN_STEP2 + `?email=${data.data.user}`);
+                    }else{
+                      navigate(Links.DASHBOARD);
+                    }
                 }}}
               >
                 <LoginFields form={form} />
