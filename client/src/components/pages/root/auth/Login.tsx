@@ -1,4 +1,4 @@
-import {  Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BFARLogo from "../../../ui/logo";
 import { Links, MutationType, Roles } from "@/types/common";
 import BfarHeading from "../../../ui/bfar-heading";
@@ -9,14 +9,12 @@ import FormSubmit from "../../admin/shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
 import { Form } from "@/components/ui/form";
 
-
 function Login({ assign }: { assign: Roles }) {
-  
   const form = useForm<TDataFields>({
     defaultValues: loginValues(),
   });
   const { createMutation } = useQueryProvider();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <main className="flex h-screen">
@@ -46,16 +44,20 @@ function Login({ assign }: { assign: Roles }) {
                 mutationType={MutationType.CREATE}
                 mutationOptions={{
                   onSuccess: (data: void) => {
-                    console.log(data)
+                    console.log(data);
                     // @ts-expect-error: data is void
-                    const is2FAEnabled = data.data.twofaEnabled
-                    if(is2FAEnabled){
-                      // @ts-expect-error: data is void
-                      navigate(Links.LOGIN_STEP2 + `?email=${data.data.user}`);
-                    }else{
+                    const is2FAEnabled = data.data.twofaEnabled;
+                    if (is2FAEnabled) {
+                      navigate(
+                        Links.LOGIN_STEP2 +
+                          // @ts-expect-error: data is void
+                          `?email=${data.data.user}&devOTP=${data.data.devOTP}&devTimeRemaining=${data.data.devTimeRemaining}`
+                      );
+                    } else {
                       navigate(Links.DASHBOARD);
                     }
-                }}}
+                  },
+                }}
               >
                 <LoginFields form={form} />
               </FormSubmit>

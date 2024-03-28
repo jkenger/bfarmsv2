@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button";
 import BFARLogo from "@/components/ui/logo";
 import { IconProperties, Links, MutationType } from "@/types/common";
 import { ChevronLeft } from "lucide-react";
@@ -10,16 +10,16 @@ import FormSubmit from "../../admin/shareable/form-submit";
 import { useQueryProvider } from "@/components/context/query-provider";
 import LoginStep2Fields from "./form/login-step2-fields";
 
-
-
 const LoginStep2 = () => {
-   const form = useForm<TDataFields>({
-     defaultValues: step2Values(),
-   });
+  const form = useForm<TDataFields>({
+    defaultValues: step2Values(),
+  });
   const { createMutation } = useQueryProvider();
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const email = searchParams.get("email") ?? "";
+  const twofaCode = searchParams.get("devOTP") ?? "";
+  const timeRemaining = searchParams.get("devTimeRemaining") ?? "";
   return (
     <main className="relative w-screen h-[100vh]">
       <Link
@@ -63,10 +63,19 @@ const LoginStep2 = () => {
               <LoginStep2Fields form={form} />
             </FormSubmit>
           </Form>
+          <div>
+            <p className="text-yellow-500">DEV PURPOSE ONLY:</p>
+            <h2 className="text-lg font-bold">Time Remaining</h2>
+            <p className="text-xs ml-2 mt-2">{timeRemaining}s</p>
+          </div>
+          <div>
+            <h2 className="text-lg font-bold">2FA Code</h2>
+            <p className="text-xs ml-2 mt-2">{twofaCode}</p>
+          </div>
         </div>
       </div>
     </main>
   );
-}
+};
 
-export default LoginStep2
+export default LoginStep2;
