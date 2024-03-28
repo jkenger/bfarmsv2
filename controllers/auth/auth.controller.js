@@ -91,6 +91,7 @@ export const loginStep2 = async (req, res) => {
     return res.status(401).json({
       message: "You are not authorized to perform login step-2",
       err: err,
+      step2Token,
     });
   }
 
