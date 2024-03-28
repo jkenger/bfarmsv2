@@ -57,7 +57,7 @@ export const login = async (req, res, next) => {
         );
         res.cookie("loginStep2VerificationToken", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === "development" ? false : true,
           sameSite: "strict",
         });
         return res.json({
