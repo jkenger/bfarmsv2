@@ -81,6 +81,7 @@ export const logout = async (req, res) => {
 };
 export const loginStep2 = async (req, res) => {
   let loginStep2VerificationToken = null;
+  //@TODO: step2Token is not working on production
   let step2Token = req.cookies.loginStep2VerificationToken;
   try {
     loginStep2VerificationToken = jwt.verify(
@@ -91,7 +92,6 @@ export const loginStep2 = async (req, res) => {
     return res.status(401).json({
       message: "You are not authorized to perform login step-2",
       err: err,
-      step2Token,
     });
   }
 
