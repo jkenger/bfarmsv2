@@ -1,3 +1,34 @@
+// Controller function to get current account details
+export const currentAccount = asyncHandler(async (req, res) => {
+  // Business Logic:
+  // This function retrieves the current account details of the authenticated user
+  // and returns a JSON response containing the account details.
+  const account = await prisma.account.findUnique({
+    where: {
+      email: req.user.email,
+    },
+    select: {
+      email: true,
+      twofaEnabled: true,
+    },
+  });
+  return res.status(StatusCodes.OK).json({
+    message: "Authenticated successfully",
+    account: account,
+  });
+});
+
+// Controller function for user profile
+export const profile = async (req, res) => {
+  // Business Logic:
+  // This function retrieves the profile information of the authenticated user
+  // and returns a JSON response containing the profile data.
+  return res.json({
+    message: "Success",
+    user: req.user,
+  });
+};
+
 // Middleware to handle asynchronous routes
 export const signup = asyncHandler(async (req, res) => {
   // Business Logic:
@@ -141,37 +172,6 @@ export const loginStep2 = async (req, res) => {
       user: user,
     });
   }
-};
-
-// Controller function to get current account details
-export const currentAccount = asyncHandler(async (req, res) => {
-  // Business Logic:
-  // This function retrieves the current account details of the authenticated user
-  // and returns a JSON response containing the account details.
-  const account = await prisma.account.findUnique({
-    where: {
-      email: req.user.email,
-    },
-    select: {
-      email: true,
-      twofaEnabled: true,
-    },
-  });
-  return res.status(StatusCodes.OK).json({
-    message: "Authenticated successfully",
-    account: account,
-  });
-});
-
-// Controller function for user profile
-export const profile = async (req, res) => {
-  // Business Logic:
-  // This function retrieves the profile information of the authenticated user
-  // and returns a JSON response containing the profile data.
-  return res.json({
-    message: "Success",
-    user: req.user,
-  });
 };
 
 // Controller function to generate two-factor authentication secret
