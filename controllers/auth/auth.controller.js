@@ -1,3 +1,12 @@
+import asyncHandler from "express-async-handler";
+import qrcode from "qrcode";
+import jwt from "jsonwebtoken";
+import passport from "passport";
+import { authenticator } from "otplib";
+import prisma from "../../prisma/db/db.js";
+import { StatusCodes } from "http-status-codes";
+import otplib from "otplib";
+
 // Controller function to get current account details
 export const currentAccount = asyncHandler(async (req, res) => {
   // Business Logic:
