@@ -1,6 +1,6 @@
 import otplib from "otplib";
 
-const SECRET = "KUZTWCBCNR6D2EQG";
+const SECRET = process.args[2];
 
 async function main() {
   while (true) {
