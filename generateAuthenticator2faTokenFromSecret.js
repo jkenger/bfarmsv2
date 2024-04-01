@@ -1,6 +1,6 @@
 import otplib from "otplib";
 
-const SECRET = "LIDWWCYBBUADCWDP";
+const SECRET = "KUZTWCBCNR6D2EQG";
 
 async function main() {
   while (true) {
