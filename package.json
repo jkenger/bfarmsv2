@@ -11,6 +11,7 @@
     "server": "nodemon server",
     "client": "cd client && npm run dev",
     "migrate-dev": "npx prisma db push && npm run dev",
+    "seed": "node prisma/seed",
     "start": "node server",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },

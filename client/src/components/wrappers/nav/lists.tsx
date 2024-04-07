@@ -14,7 +14,7 @@ import {
   SquareStack,
 } from "lucide-react";
 
-import { IconProperties, Links } from "@/types/common";
+import { IconProperties, Links, iconPropertiesDefault } from "@/types/common";
 import List from "./list";
 import ListSection from "./list-section";
 import SubLink from "./sub-link";
@@ -38,6 +38,8 @@ function Lists() {
     handleDeductionState,
     leaveState,
     handleLeaveState,
+    accountState,
+    handleAccountState,
   } = useNavigation();
 
   const icon = {
@@ -278,6 +280,24 @@ function Lists() {
                 />
               }
               title="Manage Leave Types"
+            />
+          </>
+        )}
+      </List>
+
+      <List className="md:hidden">
+        <ListSection
+          title="Account"
+          isOpen={accountState}
+          handleOnClick={handleAccountState}
+        />
+        {accountState && (
+          <>
+            <SubLink
+              to={Links.ACCOUNT_SETTINGS}
+              end
+              icon={<FileEdit className="z-5" {...iconPropertiesDefault} />}
+              title="Settings"
             />
           </>
         )}

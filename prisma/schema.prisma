@@ -99,8 +99,7 @@ model User {
 
   travelPass Travelpass[]
 
-  Account   Account? @relation(fields: [accountId], references: [id])
-  accountId String?
+  account         Account?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,11 +110,14 @@ model User {
 model Account {
   id           String  @id @default(uuid())
   email        String  @unique
+  username     String?  @unique
   password     String
   twofaEnabled Boolean @default(false)
   twofaSecret  String  @default("")
   roles        String[]
-  users        User[]
+  user   User? @relation(fields: [userId], references: [id])
+  userId String? @unique
+
 }
 
 model Designation {

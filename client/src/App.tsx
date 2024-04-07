@@ -34,7 +34,7 @@ import { loader as leaveTypesLoader } from "./components/pages/admin/leaves/type
 import AdminPayroll, {
   loader as payrollLoader,
 } from "./components/pages/admin/payroll/Payroll";
-import {loader as adminLoader} from "./components/layouts/Admin";
+import { loader as adminLoader } from "./components/layouts/Admin";
 
 import Designations from "./components/pages/admin/employees/Designations";
 
@@ -106,6 +106,8 @@ import { loader as dashboardLoader } from "./components/pages/admin/dashboard/Da
 import LoginStep2 from "./components/pages/root/auth/LoginStep2";
 import { login, loginStep2 } from "./components/pages/root/auth/api/auth.api";
 import { AuthProviderAccess } from "./components/context/auth-provider";
+import AccountSettings from "./components/pages/shared/account-settings/AccountSettings";
+import { editAccount } from "./components/pages/shared/account-settings/api/account-settings.api";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -418,6 +420,22 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: "account-settings",
+        // loader: leaveTypesLoader(queryClient),
+        element: (
+          <QueryProvider
+            api={{
+              edit: editAccount({ queryClient }),
+            }}
+            queryKeys={{
+              edit: QueryKeys.EDIT_ACCOUNT,
+            }}
+          >
+            <AccountSettings />
+          </QueryProvider>
+        ),
       },
       {
         path: "",

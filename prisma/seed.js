@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -54,14 +55,26 @@ const payrollGroups = [
   },
 ];
 
+const account = {
+  email: "admin@admin.com",
+  password: "admin1234",
+};
+
 async function main() {
   console.log(`Start seeding ...`);
-  for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
-    });
-    console.log(`Created user with id: ${user.id}`);
+
+  const canCreateFirstAccount = await prisma.account.count();
+  if (canCreateFirstAccount) {
+    throw new Error("First account already exists. Aborting seeding.");
   }
+  const hashedPassword = await bcrypt.hash(account.password, 10);
+  const createdAccount = await prisma.account.create({
+    data: {
+      ...account,
+      password: hashedPassword,
+    },
+  });
+  console.log(`Created user with id: ${createdAccount.id}`);
   console.log(`Seeding finished.`);
 }
 

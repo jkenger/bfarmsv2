@@ -76,11 +76,13 @@ function BreadCrumbs({ level, access, children, mobileButton }: TBreadCrumbs) {
 
 function Heading({
   title,
+  desc,
   mobileButton,
   children,
   access,
 }: {
   title: string;
+  desc?: string;
   children?: React.ReactNode;
   mobileButton?: React.ReactNode;
   access?: string;
@@ -88,9 +90,14 @@ function Heading({
   return (
     <>
       <div className="flex items-center justify-between w-full md:pt-0 lg:mb-0 lg:w-auto">
-        <div className="flex gap-2 items-center">
-          <h1 className="text-md font-semibold tracking-wide py-2">{title}</h1>
-          {access && <Badge variant="outline">{access}</Badge>}
+        <div className="flex flex-col">
+          <div className="flex gap-2 items-center">
+            <h1 className="text-md font-semibold tracking-wide py-2">
+              {title}
+            </h1>
+            {access && <Badge variant="outline">{access}</Badge>}
+          </div>
+          {desc && <p className="text-muted-foreground text-sm mb-2">{desc}</p>}
         </div>
 
         <div className="lg:hidden">{mobileButton}</div>

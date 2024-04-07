@@ -1,9 +1,9 @@
 import BfarHeading from "@/components/ui/bfar-heading";
 import BFARLogo from "@/components/ui/logo";
-import { Links } from "@/types/common";
-import { Link } from "react-router-dom";
+import { Links, iconPropertiesDefault } from "@/types/common";
+import { Link, useNavigate } from "react-router-dom";
 import NavAvatar from "./nav-avatar";
-import { Menu } from "lucide-react";
+import { LogOut, Menu, Settings } from "lucide-react";
 import { useNavigation } from "./Navigation";
 import {
   Popover,
@@ -14,10 +14,53 @@ import { ChevronLeft } from "lucide-react";
 import { IconProperties } from "@/types/common";
 import { useState } from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { useAuth } from "@/components/context/auth-provider";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { fetch } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
+
+export const AccountInfo = () => {
+  const { user } = useAuth();
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <NavAvatar />
+      <div className="flex flex-col items-start">
+        <span className="text-xs font-semibold tracking-wide">
+          {user?.email}
+        </span>
+        {/* <span className="font-semibold text-xs">
+          {user?.user?.firstName || "No Name"}
+        </span> */}
+        <span className="text-muted-foreground text-xs">
+          {user?.role?.length ? user?.role : "No Role"}
+        </span>
+        <span className="text-muted-foreground text-xs">
+          {user?.user?.employeeId || "No Employee ID"}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 function TopNav() {
   const { handleMenuOpen } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  async function handleLogout() {
+    try {
+      const result = await fetch.get(Links.LOGOUT);
+      if (result.status === 200) {
+        navigate(Links.LOGIN);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while logging out",
+      });
+    }
+  }
+
   return (
     <nav
       className={`border-b sticky md:py-3 top-0 z-30 w-full md:flex backdrop-blur-xl backdrop-saturate-150 bg-background/60 items-center `}
@@ -29,10 +72,10 @@ function TopNav() {
             <BfarHeading sizeClass="text-xl" />
           </div>
         </Link>
-
+        {/* Mobile Nav */}
         <div className="md:hidden flex items-center ">
           {/* <ModeToggle /> */}
-          <NavAvatar />
+          <NavAvatar url={user?.user?.avatar} />
           <Menu
             size={24}
             strokeWidth={1}
@@ -41,23 +84,12 @@ function TopNav() {
           />
         </div>
 
-        <div className="hidden md:flex items-center gap-2 md:mr-4">
+        <div className="hidden md:flex items-center gap-2 md:mr-4 cursor-pointer">
           <ModeToggle />
-          <NavAvatar />
           <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger>
               <div className="flex items-center gap-4">
-                <div className="flex flex-col items-start">
-                  <span className="text-xs font-semibold tracking-wide">
-                    John Doe
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    Super Admin
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    ID: 0200003000000
-                  </span>
-                </div>
+                <AccountInfo />
                 <span>
                   <ChevronLeft
                     size={IconProperties.SIZE}
@@ -68,22 +100,35 @@ function TopNav() {
                 </span>
               </div>
             </PopoverTrigger>
-            <PopoverContent className="text-xs p-0 bg-transparent rounded-md">
-              <div className="flex justify-between items-center bg-foreground text-background   py-6 px-4 rounded-md">
-                <div className="flex flex-col px-2">
-                  <span className="text-xs font-semibold tracking-wide">
-                    John Doe
+            <PopoverContent className="text-xs p-0 bg-background rounded-md">
+              <div className="relative flex justify-between items-center overflow-hidden  py-6 px-4 rounded-md">
+                <AccountInfo />
+                <BFARLogo cn="w-48 h-44 absolute -right-24 -bottom-20 opacity-0.5" />
+              </div>
+              {/* Menu */}
+              <div className="flex flex-col gap-2 p-2">
+                <Link
+                  to={Links.ACCOUNT_SETTINGS}
+                  className={buttonVariants({
+                    variant: "ghost",
+                  })}
+                >
+                  <span className="flex text-left w-full gap-2">
+                    <Settings {...iconPropertiesDefault} />
+                    Account Settings
                   </span>
-                  <span className="text-muted-background text-xs">
-                    Super Admin
+                </Link>
+                <Button
+                  variant="ghost"
+                  type="button"
+                  className="gap-2"
+                  onClick={handleLogout}
+                >
+                  <span className="flex text-left w-full gap-2">
+                    <LogOut {...iconPropertiesDefault} />
+                    Logout
                   </span>
-                  <span className=" text-xs text-muted-background">
-                    0200003000000
-                  </span>
-                </div>
-                <div>
-                  <BFARLogo cn="w-14 h-12" />
-                </div>
+                </Button>
               </div>
             </PopoverContent>
           </Popover>

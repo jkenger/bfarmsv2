@@ -4,9 +4,7 @@ import Main from "@/components/wrappers/Main";
 import { ResizableHandle, ResizablePanel } from "@/components/ui/resizable";
 import { Calendar } from "@/components/ui/calendar";
 
-import {
-  LogOut,
-} from "lucide-react";
+import { LogOut } from "lucide-react";
 import { GetQueryType, IconProperties, Links } from "@/types/common";
 import useMediaQuery from "@/components/hooks/useMediaQuery";
 import { defer, useNavigate } from "react-router-dom";
@@ -38,20 +36,18 @@ function Dashboard() {
   const isMobile = useMediaQuery("(max-width: 1180px)");
   // const navigate = useNavigate();
 
-  async function handleLogout(){
-    try{
-      const result = await fetch.get("/auth/logout");
-      if(result.status === 200){
+  async function handleLogout() {
+    try {
+      const result = await fetch.get(Links.LOGOUT);
+      if (result.status === 200) {
         navigate(Links.LOGIN);
       }
-    }catch(error){
+    } catch (error) {
       toast({
         title: "Error",
         description: "An error occurred while logging out",
-      })
+      });
     }
-    
-   
   }
 
   const MainContent = (
@@ -73,8 +69,8 @@ function Dashboard() {
             </div>
             <Button
               size="sm"
-              variant= "ghost"
-              className= "gap-2"
+              variant="ghost"
+              className="gap-2"
               onClick={handleLogout}
             >
               <LogOut size={IconProperties.SIZE} />
@@ -85,7 +81,10 @@ function Dashboard() {
           {/* Content */}
           {/* <PayrollStats isPending={isPending} />
           <OverallStats isPending={isPending} attendance={attendance} ranking={ranking} /> */}
-          <RecentAttendance isPending={isPending} recentAttendances={recentAttendances} />
+          <RecentAttendance
+            isPending={isPending}
+            recentAttendances={recentAttendances}
+          />
         </div>
       </div>
     </>

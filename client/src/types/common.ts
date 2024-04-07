@@ -2,6 +2,7 @@ export enum Links {
   ROOT = "/",
   LOGIN = "/login",
   LOGIN_STEP2 = "/login/step-2",
+  LOGOUT = "/auth/logout",
 
   DASHBOARD = "/admin/dashboard",
 
@@ -22,7 +23,7 @@ export enum Links {
   LEAVES = "/admin/leaves",
   LEAVE_TYPES = "/admin/leaves/types",
 
-  SETTINGS = "/admin/settings",
+  ACCOUNT_SETTINGS = "/admin/account-settings",
 }
 
 export enum Roles {
@@ -35,6 +36,11 @@ export enum IconProperties {
   SIZE_ICON = 14,
   STROKE_WIDTH = 2,
 }
+
+export const iconPropertiesDefault = {
+  size: IconProperties.SIZE,
+  strokeWidth: IconProperties.STROKE_WIDTH,
+};
 
 export enum QueryKeys {
   DASHBOARD = "dashboard",
@@ -92,6 +98,9 @@ export enum QueryKeys {
   DELETE_TIME_CARD = "deleteTimeCard",
 
   SHEETS = "SHEETS",
+
+  ACCOUNT = "account",
+  EDIT_ACCOUNT = "editAccount",
 
   GET_USER = "getUser",
   LOGIN = "login",

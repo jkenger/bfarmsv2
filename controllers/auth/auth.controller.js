@@ -12,15 +12,25 @@ export const currentAccount = asyncHandler(async (req, res) => {
   // Business Logic:
   // This function retrieves the current account details of the authenticated user
   // and returns a JSON response containing the account details.
+  console.log(req.user);
   const account = await prisma.account.findUnique({
     where: {
       email: req.user.email,
     },
     select: {
       email: true,
+      roles: true,
+      // users: {
+      //   select: {
+      //     employeeId: true,
+      //     rfId: true,
+      //     fullName: true,
+      //   },
+      // },
       twofaEnabled: true,
     },
   });
+  console.log(account);
   return res.status(StatusCodes.OK).json({
     message: "Authenticated successfully",
     account: account,
@@ -87,7 +97,7 @@ export const login = async (req, res, next) => {
         await currentAccount(req, res);
       } else {
         // If two-factor authentication is enabled for the user
-        const SECRET = "LIDWWCYBBUADCWDP";
+        const SECRET = "KUZTWCBCNR6D2EQG";
         const devOTP = otplib.authenticator.generate(SECRET); // Generate OTP
         const devTimeRemaining = otplib.authenticator.timeRemaining(); // Get time remaining for OTP
         // Generate JWT token for second step verification

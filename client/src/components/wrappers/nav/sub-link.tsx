@@ -2,6 +2,7 @@ import { Links } from "@/types/common";
 
 import React from "react";
 import { NavLink, useSearchParams } from "react-router-dom";
+import { useNavigation } from "./Navigation";
 
 function SubLink({
   to,
@@ -17,6 +18,7 @@ function SubLink({
   cn?: string;
 }) {
   const [searchParams] = useSearchParams();
+  const { handleMenuOpen } = useNavigation();
   const pathname = window.location.pathname;
   const params = pathname === to ? `?${searchParams.toString()}` : "";
 
@@ -29,6 +31,7 @@ function SubLink({
           `flex items-center gap-2 rounded-md p-2 text-muted-foreground ` + cn
         }
         end={end}
+        onClick={handleMenuOpen}
       >
         <span>{icon}</span>
         <span>{title}</span>

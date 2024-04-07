@@ -1,12 +1,8 @@
-
-
-import { createContext, useContext,  useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 import Main from "../Main";
 import SideNav from "./SideNav";
 import TopNav from "./TopNav";
-
-
 
 type TNavigationContext = {
   isMenuOpen: boolean;
@@ -28,13 +24,13 @@ type TNavigationContext = {
   handleDeductionState: () => React.SetStateAction<boolean>;
   leaveState: boolean;
   handleLeaveState: () => React.SetStateAction<boolean>;
+  accountState: boolean;
+  handleAccountState: () => React.SetStateAction<boolean>;
 };
 
 const NavigationContext = createContext<TNavigationContext | null>(null);
 
-function Navigation({children}: {children: React.ReactNode}) {
-
-  
+function Navigation({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [overViewState, setOverViewState] = useState(true);
   const [employeeState, setEmployeeState] = useState(true);
@@ -44,6 +40,7 @@ function Navigation({children}: {children: React.ReactNode}) {
   const [travelPassState, setTravelPassState] = useState(true);
   const [deductionState, setDeductionState] = useState(true);
   const [leaveState, setLeaveState] = useState(true);
+  const [accountState, setAccountState] = useState(true);
 
   const handleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -73,6 +70,10 @@ function Navigation({children}: {children: React.ReactNode}) {
     setLeaveState(!leaveState);
   };
 
+  const handleAccountState = () => {
+    setAccountState(!accountState);
+  };
+
   const value = {
     isMenuOpen,
     handleMenuOpen,
@@ -92,15 +93,15 @@ function Navigation({children}: {children: React.ReactNode}) {
     handleDeductionState,
     leaveState,
     handleLeaveState,
+    accountState,
+    handleAccountState,
   } as TNavigationContext;
   return (
     <NavigationContext.Provider value={value}>
       <TopNav />
       <div className={`flex flex-col md:flex-row`}>
         <SideNav />
-        <Main>
-          {children}
-        </Main>
+        <Main>{children}</Main>
       </div>
     </NavigationContext.Provider>
   );
