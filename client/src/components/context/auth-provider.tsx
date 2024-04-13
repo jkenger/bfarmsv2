@@ -4,7 +4,7 @@ type TAuth = {
   user: {
     id: string;
     email: string;
-    name: string;
+    username: string;
     role: string;
     isAuthenticated: boolean;
     user: TEmployees;

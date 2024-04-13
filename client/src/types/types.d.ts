@@ -197,14 +197,23 @@ type TStatus = {
   status: string;
 };
 
+type TAccount = {
+  email: string;
+  username?: string;
+  password: string;
+  roles: string[];
+  twofaEnabled: boolean;
+  user: TEmployees;
+};
+
 type TLogin = {
   email: string;
   password: string;
-}
+};
 
 type TStep2 = {
   twofaToken: string;
-}
+};
 
 type TGetQueryOptions = {
   type: GetQueryType;
@@ -255,4 +264,5 @@ type TDataFields = TEmployees &
   TReceipt &
   TStatus &
   TLogin &
-  TStep2
+  TAccount &
+  TStep2;
