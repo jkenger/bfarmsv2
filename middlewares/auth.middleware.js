@@ -1,5 +1,5 @@
 // Import necessary modules
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt"; // Importing JWT strategy and token extractor
+import { Strategy as JwtStrategy } from "passport-jwt"; // Importing JWT strategy and token extractor
 import LocalStrategy from "passport-local"; // Importing local strategy
 import bcrypt from "bcrypt"; // Importing bcrypt for password hashing
 import prisma from "../prisma/db/db.js"; // Importing Prisma for database operations

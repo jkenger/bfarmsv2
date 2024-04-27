@@ -1,6 +1,3 @@
-
-
-
 // Dependencies
 import express from "express";
 import cors from "cors";
@@ -21,9 +18,7 @@ import errorHandlerMiddleware from "./middlewares/errorHandler.js";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
-
 // @TODO: Integrate Auth
-
 
 // Config
 dotenv.config();
@@ -67,9 +62,6 @@ app.use(express.static(path.resolve(__dirname, "./client/dist")));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-
-
 
 // Routes
 app.use("/api/v1", index);

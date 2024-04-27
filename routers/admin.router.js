@@ -15,16 +15,80 @@ import {
   validateTravelpass,
 } from "../middlewares/validationMiddleware.js";
 import { getDashboard } from "../controllers/admin/dashboard.controller.js";
-import { createAttendance, deleteAttendance, getAllAttendance, getPaginatedAttendance, updateAttendance } from "../controllers/admin/attendance.controller.js";
-import { createTimeCard, deleteTimeCard, getAllSheets, getAllTimeCards, getPaginatedSheets, getPaginatedTimeCard, updateTimeCard } from "../controllers/admin/dtr.controller.js";
-import { createPayroll, deletePayroll, getAllPayroll, getAllReceipts, getPaginatedPayroll, getPaginatedReceipts, updatePayroll } from "../controllers/admin/payroll.controller.js";
-import { createEmployee, deleteEmployee, getAllEmployees, getPaginatedEmployees, updateEmployee } from "../controllers/admin/employee.controller.js";
-import { createDesignation, deleteDesignation, getAllDesignations, getPaginatedDesignations, updateDesignation } from "../controllers/admin/designation.controller.js";
-import { createPayrollGroup, deletePayrollGroup, getAllPayrollGroups, getPaginatedPayrollGroups, updatePayrollGroup } from "../controllers/admin/payroll-group.controller.js";
-import { createHoliday, deleteHoliday, getAllHolidays, getPaginatedHolidays, updateHoliday } from "../controllers/admin/holiday.controller.js";
-import { createTravelpass, deleteTravelpass, getAllTravelpass, getPaginatedTravelpass, updateTravelpass } from "../controllers/admin/travelpass.controller.js";
-import { createDeductions, deleteDeductions, getAllDeductions, getPaginatedDeductions, updateDeductions } from "../controllers/admin/deduction.controller.js";
-import { createLeaveType, deleteLeaveType, getAllLeaveTypes, getPaginatedLeaveTypes, updateLeaveType } from "../controllers/admin/leavetype.controller.js";
+import {
+  createAttendance,
+  deleteAttendance,
+  getAllAttendance,
+  getPaginatedAttendance,
+  updateAttendance,
+} from "../controllers/admin/attendance.controller.js";
+import {
+  createTimeCard,
+  deleteTimeCard,
+  getAllSheets,
+  getAllTimeCards,
+  getPaginatedSheets,
+  getPaginatedTimeCard,
+  updateTimeCard,
+} from "../controllers/admin/dtr.controller.js";
+import {
+  createPayroll,
+  deletePayroll,
+  getAllPayroll,
+  getAllReceipts,
+  getPaginatedPayroll,
+  getPaginatedReceipts,
+  updatePayroll,
+} from "../controllers/admin/payroll.controller.js";
+import {
+  createEmployee,
+  deleteEmployee,
+  getAllEmployees,
+  getPaginatedEmployees,
+  updateEmployee,
+} from "../controllers/admin/employee.controller.js";
+import {
+  createDesignation,
+  deleteDesignation,
+  getAllDesignations,
+  getPaginatedDesignations,
+  updateDesignation,
+} from "../controllers/admin/designation.controller.js";
+import {
+  createPayrollGroup,
+  deletePayrollGroup,
+  getAllPayrollGroups,
+  getPaginatedPayrollGroups,
+  updatePayrollGroup,
+} from "../controllers/admin/payroll-group.controller.js";
+import {
+  createHoliday,
+  deleteHoliday,
+  getAllHolidays,
+  getPaginatedHolidays,
+  updateHoliday,
+} from "../controllers/admin/holiday.controller.js";
+import {
+  createTravelpass,
+  deleteTravelpass,
+  getAllTravelpass,
+  getPaginatedTravelpass,
+  updateTravelpass,
+} from "../controllers/admin/travelpass.controller.js";
+import {
+  createDeductions,
+  deleteDeductions,
+  getAllDeductions,
+  getPaginatedDeductions,
+  updateDeductions,
+} from "../controllers/admin/deduction.controller.js";
+import {
+  createLeaveType,
+  deleteLeaveType,
+  getAllLeaveTypes,
+  getPaginatedLeaveTypes,
+  updateLeaveType,
+} from "../controllers/admin/leavetype.controller.js";
 import passport from "passport";
 
 const router = express.Router();
@@ -41,7 +105,9 @@ router.get("/", (req, res) => {
 // @Desc    : Read Dashboard
 // @Method  : GET
 // @Access  : Private (Admin)
-router.route("/dashboard").get(passport.authenticate("jwt", {session: false}), getDashboard);
+router
+  .route("/dashboard")
+  .get(passport.authenticate("jwt", { session: false }), getDashboard);
 
 // Attendance Routes
 // @Desc    : Read and Create Attendance

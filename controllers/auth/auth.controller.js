@@ -12,7 +12,6 @@ export const currentAccount = asyncHandler(async (req, res) => {
   // Business Logic:
   // This function retrieves the current account details of the authenticated user
   // and returns a JSON response containing the account details.
-  console.log(req.user);
   const account = await prisma.account.findUnique({
     where: {
       email: req.user.email,
