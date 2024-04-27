@@ -39,7 +39,7 @@ const AccountSettings = () => {
       <Main.Content>
         <div className="flex flex-col gap-6">
           {/* Toggle 2FA */}
-          <AccountSection title="Two-factor authentication"></AccountSection>
+          <AccountSection title="Two-factor authentication">asd</AccountSection>
 
           {/* Update account */}
           <AccountSection
